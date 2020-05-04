@@ -1,0 +1,10 @@
+[
+  {
+    "ParameterKey": "GitHubRepo",
+    "ParameterValue": "FETT-Portal"
+  },
+  {
+    "ParameterKey": "GitHubBranch",
+    "ParameterValue": "dev"
+  }
+]
