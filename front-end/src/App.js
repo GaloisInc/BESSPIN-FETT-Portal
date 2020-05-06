@@ -11,6 +11,7 @@ import * as authConfig from './.aws-config.js';
 import Nav from './components/Nav';
 import LoginBanner from './components/LoginBanner';
 import MainRouter from './containers/MainRouter';
+// import './styles/main.css';
 
 const _styles = {
   container: {
