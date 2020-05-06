@@ -1,0 +1,42 @@
+@tailwind base;
+
+h1 {
+  @apply font-body;
+  @apply text-5xl;
+  @apply font-bold;
+}
+
+h2 {
+  @apply font-body;
+  @apply text-4xl;
+  @apply font-bold;
+}
+
+h3 {
+  @apply font-body;
+  @apply text-3xl;
+  @apply font-light;
+}
+
+h4 {
+  @apply font-body;
+  @apply text-2xl;
+  @apply font-bold;
+}
+
+h5 {
+  @apply text-xl;
+  @apply font-body;
+}
+
+h6 {
+  @apply font-body;
+}
+
+p {
+  @apply font-body;
+  @apply font-medium;
+}
+
+@tailwind components;
+@tailwind utilities;
