@@ -21,3 +21,7 @@ Setup for VS Code is similar for mac or windows. The basics are as follows:
 
 - [boto3 docs](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/quickstart.html)
 - [aws examples. Thanks Brian!](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/sqs-example-using-queues.html)
+
+## Extra Credit
+
+`pip install pyboto3` for boto3 intellisense
