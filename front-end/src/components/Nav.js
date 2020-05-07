@@ -5,7 +5,7 @@ import { withStyles } from '@material-ui/core/styles';
 import { AppBar, Toolbar, IconButton, ListItem, ListItemIcon, ListItemText, Button } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import StoreIcon from '@material-ui/icons/Store';
-import logo from '../assets/fett_logo.png';
+import logo from '../assets/fettLogo.png';
 
 const _styles = {
   root: {
