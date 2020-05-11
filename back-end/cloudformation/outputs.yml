@@ -1,0 +1,11 @@
+Outputs:
+  S3WebsiteBucketID:
+    Value: !Ref S3WebsiteBucket
+  S3WebsiteBucketURL:
+    Value: !GetAtt S3WebsiteBucket.WebsiteURL
+  CloudFrontOriginID:
+    Value: !Ref CloudFrontOrigin
+  CloudFrontOriginURL:
+    Value: !Join ['', ['https://', !GetAtt CloudFrontOrigin.DomainName]]
+  AlarmTopicArn:
+    Value: !Ref AlarmTopic      

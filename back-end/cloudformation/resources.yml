@@ -1,0 +1,7 @@
+Resources:
+  AlarmTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      Subscription:
+      - Endpoint: 'kurt.hopfer@fivetalent.com'
+        Protocol: email

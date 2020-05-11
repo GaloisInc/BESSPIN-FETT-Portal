@@ -1,0 +1,45 @@
+module.exports = {
+  purge: [],
+  theme: {
+    fontFamily: {
+      header: ['futura-pt'],
+      body: ['futura-pt'],
+    },
+    colors: {
+      transparent: 'transparent',
+      black: '#131313',
+      white: '#fff',
+      teal: {
+        '100': '#EDF8FA',
+        '200': '#7EC8D0',
+        '300': '#62AEBS',
+        '400': '#43939B',
+        '500': '#46878E',
+        '600': '#437B81',
+        '700': '#285E64',
+        '800': '#2D4B4E',
+        '900': '#223426',
+      },
+      blue: {
+        '100': '#B1C3D9',
+        '200': '#7E95B1',
+        '300': '#49688B',
+        '400': '#364D67',
+        '500': '#314457',
+        '600': '#293A46',
+        '700': '#26343E',
+        '800': '#1E272F',
+        '900': '#1E2B34',
+      },
+    },
+    extend: {},
+  },
+  variants: {
+    backgroundColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
+    border: ['responsive', 'hover', 'focus', 'active', 'disabled'],
+    borderColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
+    color: ['responsive', 'hover', 'focus', 'active', 'disabled'],
+    textColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
+  },
+  plugins: [],
+};
