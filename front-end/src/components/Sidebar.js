@@ -11,7 +11,7 @@ import NavButton from './NavButton';
 const Sidebar = ({ isAdmin, history }) => {
   const { pathname } = history.location;
   return (
-    <div className="w-40 bg-blue-800 text-white pt-6 h-full" style={{ backgroundImage: 'linear-gradient(#1E272F, #314457)' }}>
+    <div className="w-40 bg-blue-800 text-gray-200 pt-6" style={{ backgroundImage: 'linear-gradient(#1E272F, #314457)' }}>
       {isAdmin ? (
         <ul>
           <NavButton currentRoute={pathname} icon={dashboard} routeName="dashboard" path="/admin-portal/dashboard" />

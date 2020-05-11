@@ -9,6 +9,17 @@ module.exports = {
       transparent: 'transparent',
       black: '#131313',
       white: '#fff',
+      gray: {
+        '100': '#FFFFFF',
+        '200': '#F4F4F4',
+        '300': '#E3E5E7',
+        '400': '#CFD1CS',
+        '500': '#BCC1CB',
+        '600': '#848D9A',
+        '700': '#646B74',
+        '800': '#424242',
+        '900': '#131313',
+      },
       teal: {
         '100': '#EDF8FA',
         '200': '#7EC8D0',
