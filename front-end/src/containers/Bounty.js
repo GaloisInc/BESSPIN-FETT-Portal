@@ -10,7 +10,7 @@ export default function Bounty() {
   return (
     <div className="flex-col h-full">
       <Header />
-      <div style={{ height: 'calc(100vh - 6em)' }} className="h-full flex flex-row">
+      <div style={{ minHeight: 'calc(100vh - 6em)' }} className="flex flex-row">
         <Sidebar />
         <div className="bg-blue-700 w-full">
           <Route path="/bounty-portal/dashboard" component={BountyDash} />

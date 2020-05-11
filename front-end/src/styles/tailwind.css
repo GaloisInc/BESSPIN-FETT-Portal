@@ -38,6 +38,7 @@ h5 {
 }
 
 h6 {
+  @apply text-base;
   @apply font-body;
 }
 
@@ -49,6 +50,10 @@ p {
 a {
   @apply font-body;
   @apply text-sm;
+}
+
+td.MuiTableCell-root {
+  @apply border-b-0;
 }
 
 @tailwind components;
