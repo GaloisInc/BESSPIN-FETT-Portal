@@ -207,6 +207,7 @@ body {
   left: 0;
   z-index: 99999;
   width: 100%;
+  height: 100vh;
 
   .applogin-background {
     background-color:#1E272F;
@@ -221,21 +222,48 @@ body {
 
   .applogin-container {
     position: relative;
-    min-width: 300px;
-    margin: 0 auto;
+	width: 300px;
+    height: 300px;
+    //background-image: url('../assets/loginstuffs.png');
+    margin: -200px auto 0;
     padding: 20px 0;
     box-sizing: border-box;
     text-align: center;
     color: #F4F4F4;
     font-size: 12px;
+    top: 50%;
 
     h1 {
-      padding-bottom: 8px;
+      padding-bottom: 0;
+      background-image: url('../assets/fett_logo_login.png');
+      width: 266px;
+      height: 85px;
+      margin: 0 auto;
+      
+      span {
+	      display: none;
+      }
     }
 
     p {
-      font-size: 14px;
+      font-size: 15px;
+      font-family: futura;
+      color: #46878E;
+      text-transform: uppercase;
+      margin-top: 0;
     }
+	
+	form {
+		width: 266px; margin: 24px auto;
+		.applogin-formfield {
+			display:block; width: 100%; margin: 5px auto 0;
+				label {display:block; text-align: left; font-family: futura; color: #f4f4f4;}
+				input {width: 100%; border: 1px solid #BCC1CB; background: none; height: 22px; border-radius: 3px; }
+		}
+		button {width: 100%; border: none; background: #f4f4f4; height: 24px; margin: 24px auto; border-radius: 3; 
+			&:hover {background: #46878E; color: #f4f4f4;}
+		}
+	}
   }
 }
 
@@ -245,7 +273,7 @@ body {
   position: relative;
   background-size: cover;
   background-repeat: no-repeat;
-  background-image: url('../assets/landingpage.png');
+  //background-image: url('../assets/landingpage.png');
   display: flex;
   flex-direction: row;
   justify-content: center;
