@@ -2,16 +2,12 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import { hot } from 'react-hot-loader/root';
-import { CognitoAuth, CognitoIdToken } from 'amazon-cognito-auth-js';
+import { Auth } from 'aws-amplify';
 import { withRouter } from 'react-router-dom';
-import * as JwtDecode from 'jwt-decode';
 import { ThemeProvider } from '@material-ui/styles';
 import { withStyles, createMuiTheme, mergeClasses } from '@material-ui/core/styles';
-import * as authConfig from './.aws-config.js';
-import Nav from './components/Nav';
-import LoginBanner from './components/LoginBanner';
+import { CircularProgress } from '@material-ui/core';
 import MainRouter from './containers/MainRouter';
-// import './styles/main.css';
 
 const _styles = {
   container: {
@@ -33,105 +29,85 @@ class App extends React.Component {
     super(props);
     this.state = {
       isAdmin: false,
-      loggedIn: false,
-      authData: authConfig,
+      isLoggedIn: false,
       storeId: null,
-      auth: null,
+      isAuthenticating: false,
     };
-    this.login = this.login.bind(this);
-    this.logout = this.logout.bind(this);
-    this.setStorage = this.setStorage.bind(this);
   }
 
-  componentWillMount() {
+  async componentDidMount() {
     const { history } = this.props;
-    const auth = new CognitoAuth(authConfig);
-    const sesh = auth.getCachedSession();
-    if (!sesh) {
+    this.setState({ isAuthenticating: true });
+    console.log('authenticating');
+    try {
+      await Auth.currentSession();
+    } catch (error) {
+      await this.setState({ isAuthenticating: false });
       history.push('/');
     }
-    const idToken = sesh.idToken.jwtToken;
-    let isAdmin = false;
-    let storeId = 0;
-    if (idToken) {
-      isAdmin = JwtDecode(idToken).locale === '001';
-      storeId = JwtDecode(idToken).locale;
-      // setInterval(() => {
-      //   if (new CognitoIdToken(idToken).getExpiration() * 1000 - new Date().getTimezoneOffset() < 60 * 1000) {
-      //     history.push('/logout');
-      //   }
-      // }, 30000);
-    }
-    const self = this;
-    auth.userhandler = {
-      onSuccess(result) {
-        self.setStorage(result);
-        history.push('/home');
-      },
-      onFailure(err) {
-        history.push('/');
-      },
-    };
-    this.setState({ auth, loggedIn: auth.isUserSignedIn(), isAdmin, storeId });
+    this.login();
   }
 
-  setStorage(tokens) {
-    const { accessToken, idToken } = tokens;
-    const userInfo = JwtDecode(idToken.jwtToken);
-    // TODO: Update to match and pass the ADMIN info
-    this.setState({
-      isAdmin: userInfo.locale === '',
-      loggedIn: true,
-      storeId: userInfo.locale,
-    });
-    sessionStorage.setItem('id', userInfo.locale);
-  }
-
-  login = () => {
-    const { auth } = this.state;
-    auth.getSession();
+  routeUser = user => {
+    // if (user.accessToken && user.accessToken.payload && user.accessToken.payload && Array.isArray(user.accessToken.payload)) {
+    //   console.log(user.accessToken.payload['cognito:groups']);
+    // }
   };
 
-  logout = () => {
-    const { authData } = this.state;
-    const auth = new CognitoAuth(authData);
-    sessionStorage.clear();
-    auth.signOut();
-    this.setState({ isAdmin: false, loggedIn: false });
+  login = async () => {
+    const { history } = this.props;
+
+    try {
+      const user = await Auth.currentSession();
+      if (user.isValid()) {
+        await this.setState({ isLoggedIn: true, isAdmin: true, isAuthenticating: false });
+        // this.routeUser(user);
+        history.push('/adminportal');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  logout = async () => {
+    try {
+      await Auth.signOut();
+
+      await this.setState({ isLoggedIn: false, isAdmin: false });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   render() {
-    const { classes } = this.props;
-    const { auth, isAdmin, loggedIn, storeId } = this.state;
+    const { isAdmin, isLoggedIn, storeId, isAuthenticating } = this.state;
     return (
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <ThemeProvider theme={theme}>
-          {loggedIn ? (
-            <div className={classes.container}>
-              <Nav isAdmin={isAdmin} loggedIn={loggedIn} />
-            </div>
-          ) : (
-            <LoginBanner />
+          {!isAuthenticating && (
+            <MainRouter
+              {...this.props}
+              setStorage={this.setStorage}
+              isLoggedIn={isLoggedIn}
+              login={this.login}
+              logout={this.logout}
+              isAdmin={isAdmin}
+              storeId={storeId}
+            />
           )}
-          <MainRouter
-            {...this.props}
-            auth={auth}
-            setStorage={this.setStorage}
-            loggedIn={loggedIn}
-            login={this.login}
-            logout={this.logout}
-            isAdmin={isAdmin}
-            storeId={storeId}
-          />
+          {isAuthenticating && (
+            <div className="self-auto">
+              <CircularProgress style={{ color: '#26343E' }} />
+            </div>
+          )}
         </ThemeProvider>
       </div>
     );
   }
 }
 export default (process.env.NODE_ENV === 'development' ? hot(withRouter(withStyles(_styles)(App))) : withRouter(withStyles(_styles)(App)));
-//
+
 App.propTypes = {
-  authState: PropTypes.object,
   history: ReactRouterPropTypes.history,
   classes: PropTypes.any,
 };
