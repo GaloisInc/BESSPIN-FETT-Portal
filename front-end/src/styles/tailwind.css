@@ -1,0 +1,60 @@
+@tailwind base;
+
+html,
+body,
+#root,
+.App {
+  @apply h-full;
+  @apply min-h-screen;
+}
+
+h1 {
+  @apply font-body;
+  @apply text-5xl;
+  @apply font-bold;
+}
+
+h2 {
+  @apply font-body;
+  @apply text-4xl;
+  @apply font-bold;
+}
+
+h3 {
+  @apply font-body;
+  @apply text-3xl;
+  @apply font-light;
+}
+
+h4 {
+  @apply font-body;
+  @apply text-2xl;
+  @apply font-bold;
+}
+
+h5 {
+  @apply text-xl;
+  @apply font-body;
+}
+
+h6 {
+  @apply text-base;
+  @apply font-body;
+}
+
+p {
+  @apply font-body;
+  @apply font-medium;
+}
+
+a {
+  @apply font-body;
+  @apply text-sm;
+}
+
+td.MuiTableCell-root {
+  @apply border-b-0;
+}
+
+@tailwind components;
+@tailwind utilities;

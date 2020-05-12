@@ -2,18 +2,18 @@
 @import "./_vars.scss";
 @import "./spinner.scss";
 @import "./modal.scss";
-@import url('https://fonts.googleapis.com/css?family=Proxima+Nova');
+// @import url('https://fonts.googleapis.com/css?family=Proxima+Nova');
 
 .flex {
-  display: flex
+  display: flex;
 }
 
 .flex-row {
-  flex-direction: row
+  flex-direction: row;
 }
 
 .flex-column {
-  flex-direction: column
+  flex-direction: column;
 }
 
 .flex-grow {
@@ -21,11 +21,11 @@
 }
 
 .justify-betweeen {
-  justify-content: space-between
+  justify-content: space-between;
 }
 
 .justify-center {
-  justify-content: center
+  justify-content: center;
 }
 
 .align-center {
@@ -34,23 +34,23 @@
 }
 
 .w-100 {
-  width: 100%
+  width: 100%;
 }
 
 .w-75 {
-  width: 75%
+  width: 75%;
 }
 
 .w-50 {
-  width: 50%
+  width: 50%;
 }
 
 .w-25 {
-  width: 25%
+  width: 25%;
 }
 
 .w-10 {
-  width: 10%
+  width: 10%;
 }
 
 .mb-1 {
@@ -192,7 +192,6 @@ h1 {
 h4 {
   color: $primary-red;
   font-size: 1.35em;
-
 }
 
 body {
@@ -200,7 +199,7 @@ body {
 }
 
 .applogin-banner {
-  font-family: 'proxima-nova', inherit;
+  font-family: "proxima-nova", inherit;
   position: absolute;
   min-width: 300px;
   top: 0;
@@ -210,14 +209,14 @@ body {
   height: 100vh;
 
   .applogin-background {
-    background-color:#1E272F;
-    opacity: .9;
+    background-color: #1e272f;
+    opacity: 0.9;
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    box-shadow: 0 0 2px 1px hsla(0, 0%, 69%, .3);
+    box-shadow: 0 0 2px 1px hsla(0, 0%, 69%, 0.3);
   }
 
   .applogin-container {
@@ -229,7 +228,7 @@ body {
     padding: 20px 0;
     box-sizing: border-box;
     text-align: center;
-    color: #F4F4F4;
+    color: #f4f4f4;
     font-size: 12px;
     top: 50%;
 
@@ -273,7 +272,7 @@ body {
   position: relative;
   background-size: cover;
   background-repeat: no-repeat;
-  //background-image: url('../assets/landingpage.png');
+
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -370,7 +369,6 @@ nav {
       }
     }
   }
-
 }
 
 // .btn-link {
@@ -434,10 +432,10 @@ nav {
 
 .btn-link {
   background: none;
-  color: #0645AD;
+  color: #0645ad;
   border: none;
   padding: 0;
-  border-bottom: 1px solid #0645AD;
+  border-bottom: 1px solid #0645ad;
   font: inherit;
   cursor: pointer;
 
@@ -455,7 +453,7 @@ nav {
     color: #000;
     border-bottom: none;
     i {
-    font-size: 1.5em;
+      font-size: 1.5em;
     }
   }
 }
@@ -467,6 +465,14 @@ nav {
 
     &:hover {
       color: $primary-red;
+    }
+  }
+}
+
+.portal-container {
+  .table-container {
+    tbody.MuiTableBody-root > :nth-of-type(2n) {
+      background-color: #293a46;
     }
   }
 }

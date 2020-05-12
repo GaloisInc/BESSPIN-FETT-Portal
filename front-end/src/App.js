@@ -11,6 +11,7 @@ import * as authConfig from './.aws-config.js';
 import Nav from './components/Nav';
 import LoginBanner from './components/LoginBanner';
 import MainRouter from './containers/MainRouter';
+// import './styles/main.css';
 
 const _styles = {
   container: {
@@ -103,7 +104,7 @@ class App extends React.Component {
     const { classes } = this.props;
     const { auth, isAdmin, loggedIn, storeId } = this.state;
     return (
-      <div style={{ display: 'flex', flexDirection: 'column' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <ThemeProvider theme={theme}>
           {loggedIn ? (
             <div className={classes.container}>
