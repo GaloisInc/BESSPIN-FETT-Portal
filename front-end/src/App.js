@@ -60,9 +60,9 @@ class App extends React.Component {
     try {
       const user = await Auth.currentSession();
       if (user.isValid()) {
-        await this.setState({ isLoggedIn: true, isAdmin: true, isAuthenticating: false });
+        await this.setState({ isLoggedIn: true, isAdmin: false, isAuthenticating: false });
         // this.routeUser(user);
-        history.push('/adminportal');
+        history.push('/bountyportal');
       }
     } catch (error) {
       console.log(error);
@@ -96,7 +96,7 @@ class App extends React.Component {
             />
           )}
           {isAuthenticating && (
-            <div className="self-auto">
+            <div className="h-screen w-full flex justify-center items-center">
               <CircularProgress style={{ color: '#26343E' }} />
             </div>
           )}

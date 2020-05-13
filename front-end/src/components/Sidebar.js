@@ -19,9 +19,9 @@ const Sidebar = ({ isAdmin, history }) => {
         </ul>
       ) : (
         <ul>
-          <NavButton currentRoute={pathname} icon={dashboard} routeName="dashboard" path="/bounty-portal/dashboard" />
-          <NavButton currentRoute={pathname} icon={details} routeName="learn" path="/bounty-portal/learn" />
-          <NavButton currentRoute={pathname} icon={rocket} routeName="launch" path="/bounty-portal/launch" />
+          <NavButton currentRoute={pathname} icon={dashboard} routeName="dashboard" path="/bountyportal/dashboard" />
+          <NavButton currentRoute={pathname} icon={details} routeName="learn" path="/bountyportal/learn" />
+          <NavButton currentRoute={pathname} icon={rocket} routeName="launch" path="/bountyportal/launch" />
         </ul>
       )}
     </div>

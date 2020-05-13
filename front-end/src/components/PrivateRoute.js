@@ -1,9 +1,11 @@
+import React from 'react';
+
 import { Redirect, Route } from 'react-router-dom';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import PropTypes from 'prop-types';
 
-export default function PrivateRoute({ component: Component, ...rest }) {
-  const checkAuth = rest.loggedIn;
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  const checkAuth = rest.isLoggedIn;
   return (
     <Route
       {...rest}
@@ -20,7 +22,9 @@ export default function PrivateRoute({ component: Component, ...rest }) {
       }
     />
   );
-}
+};
+
+export default PrivateRoute;
 PrivateRoute.propTypes = {
   location: ReactRouterPropTypes.location,
   history: ReactRouterPropTypes.history,
