@@ -7,6 +7,8 @@ import PropTypes from 'prop-types';
 // import ReactRouterPropTypes from 'react-router-prop-types';
 import { CircularProgress } from '@material-ui/core';
 
+import backgroundImage from '../assets/fett_logo_login.png';
+
 const Login = props => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
@@ -44,6 +46,11 @@ const Login = props => {
   return (
     <div className="bg-blue-700 min-h-screen flex justify-center">
       <div className="w-64 flex-col self-center">
+        <h1 className="bg-no-repeat" style={{ backgroundImage: `url(${backgroundImage})`, height: '90px', width: '266px' }}>
+          <span className="hidden">FETT Portal</span>
+        </h1>
+        <p className="text-teal-500 uppercase text-center mb-8">Sign in to access FETT Portal</p>
+
         <label htmlFor="username" className="text-gray-200 font-body mt-8">
           Username
         </label>
@@ -64,7 +71,7 @@ const Login = props => {
           className="w-full bg-blue-600 border-solid border border-gray-200 text-gray-200 p-1"
         />
         <button
-          className="bg-gray-200 hover:bg-gray-300 text-blue-700 font-bold py-1 px-2 rounded uppercase w-full mt-8"
+          className="bg-gray-200 hover:bg-teal-500 text-blue-700 hover:text-gray-200 font-bold py-1 px-2 rounded uppercase w-full mt-8"
           type="submit"
           onClick={event => handleSubmit(event)}
         >
