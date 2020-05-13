@@ -43,7 +43,10 @@ module.exports = {
         '900': '#1E2B34',
       },
     },
-    extend: {},
+    extend: {
+	    width: {
+		'72': '300px',
+    },
   },
   variants: {
     backgroundColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
