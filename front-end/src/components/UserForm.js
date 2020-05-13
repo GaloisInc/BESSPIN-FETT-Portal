@@ -14,7 +14,7 @@ export default function UserForm() {
     console.log('searching');
     // Todo implement ==> submit user
     try {
-      createUser(email, username);
+      createUser(username, role);
     } catch (error) {
       console.log(`failed to create user ${error}`);
     }

@@ -1,42 +1,88 @@
-import React, { Component } from 'react';
+/* eslint-disable jsx-a11y/label-has-associated-control */
+/* eslint-disable jsx-a11y/label-has-for */
+import React, { useState } from 'react';
 import { withRouter } from 'react-router-dom';
+import { Auth } from 'aws-amplify';
 import PropTypes from 'prop-types';
-import ReactRouterPropTypes from 'react-router-prop-types';
+// import ReactRouterPropTypes from 'react-router-prop-types';
+import { CircularProgress } from '@material-ui/core';
 
-class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-    this.login = this.login.bind(this);
-  }
+const Login = props => {
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-  componentDidMount() {
-    const { loggedIn, history } = this.props;
-    if (loggedIn) {
-      history.push('/home');
+  const handleSubmit = async () => {
+    try {
+      setIsLoading(true);
+      const user = await Auth.signIn(username, password);
+
+      if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+        await Auth.completeNewPassword(user, password);
+      }
+
+      props.login();
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      setPassword('');
+      if (error.code === 'PasswordResetRequiredException') {
+        // The error happens when the password is reset in the Cognito console
+        console.log(error.code);
+      } else if (error.code === 'NotAuthorizedException') {
+        // The error happens when the incorrect password is provided
+        console.log(error.code);
+      } else if (error.code === 'UserNotFoundException') {
+        console.log(error.code);
+        // The error happens when the supplied username/email does not exist in the Cognito user pool
+      } else {
+        console.log(error.code);
+      }
     }
-  }
-
-  login = () => {
-    const { auth } = this.props;
-    auth.getSession();
   };
 
-  render() {
-    return (
-      <div className="login-container">
-        {/* <img src={mock} alt="" style={{justifySelf: 'center', alignSelf: 'center', borderRadius: 20, height:450}} /> */}
-
-        {/* <button type="button" className="login-button" onClick={this.login}>
+  return (
+    <div className="bg-blue-700 min-h-screen flex justify-center">
+      <div className="w-64 flex-col self-center">
+        <label htmlFor="username" className="text-gray-200 font-body mt-8">
+          Username
+        </label>
+        <input
+          id="username"
+          value={username}
+          onChange={event => setUsername(event.target.value)}
+          className="w-full bg-blue-600 border-solid border border-gray-200 text-gray-200 p-1"
+        />
+        <label htmlFor="password" className="text-gray-200 font-body mt-8">
+          Password
+        </label>
+        <input
+          id="password"
+          value={password}
+          type="password"
+          onChange={event => setPassword(event.target.value)}
+          className="w-full bg-blue-600 border-solid border border-gray-200 text-gray-200 p-1"
+        />
+        <button
+          className="bg-gray-200 hover:bg-gray-300 text-blue-700 font-bold py-1 px-2 rounded uppercase w-full mt-8"
+          type="submit"
+          onClick={event => handleSubmit(event)}
+        >
           Login
-        </button> */}
+        </button>
+        {isLoading && (
+          <div className="self-auto">
+            <CircularProgress style={{ color: '#F4F4F4' }} />
+          </div>
+        )}
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
+
 export default withRouter(Login);
 Login.propTypes = {
-  auth: PropTypes.any.isRequired,
-  history: ReactRouterPropTypes.history,
-  loggedIn: PropTypes.bool.isRequired,
+  login: PropTypes.func,
+  // history: ReactRouterPropTypes.history,
+  // loggedIn: PropTypes.bool.isRequired,
 };

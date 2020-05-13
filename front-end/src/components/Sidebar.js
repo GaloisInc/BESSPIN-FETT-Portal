@@ -14,8 +14,8 @@ const Sidebar = ({ isAdmin, history }) => {
     <div className="w-40 bg-blue-800 text-gray-200 pt-6" style={{ backgroundImage: 'linear-gradient(#1E272F, #314457)' }}>
       {isAdmin ? (
         <ul>
-          <NavButton currentRoute={pathname} icon={dashboard} routeName="dashboard" path="/admin-portal/dashboard" />
-          <NavButton currentRoute={pathname} icon={users} routeName="users" path="/admin-portal/users" />
+          <NavButton currentRoute={pathname} icon={dashboard} routeName="dashboard" path="/adminportal/dashboard" />
+          <NavButton currentRoute={pathname} icon={users} routeName="users" path="/adminportal/users" />
         </ul>
       ) : (
         <ul>

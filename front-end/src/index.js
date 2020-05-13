@@ -1,9 +1,18 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import Amplify from 'aws-amplify';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import config from './.aws-config';
 import './styles/main.css';
+
+Amplify.configure(config);
+Amplify.configure({
+  Auth: {
+    mandatorySignIn: true,
+  },
+});
 
 ReactDOM.render(
   <BrowserRouter>
