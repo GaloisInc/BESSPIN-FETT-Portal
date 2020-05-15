@@ -21,7 +21,7 @@ phases:
       - npx serverless deploy --stage ${CURRENT_STAGE} --region us-west-2
       - aws cloudformation describe-stacks --stack-name ${STACK_NAME} > ${CODEBUILD_SRC_DIR}/stack-outputs.json
       - echo "----- Running Migrations ------"
-      - npm run migrate:${CURRENT_STAGE}
+      # - npm run migrate:${CURRENT_STAGE}
       - echo "----- Running Front-End Build ------"
       # retrieve nested values from your secrets manager secret after setting variable above in parameter-store
       # - echo ${TEST} | jq -r '.username'

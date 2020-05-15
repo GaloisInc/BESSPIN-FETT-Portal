@@ -1,8 +1,8 @@
 {
-  "VPC_SECURITY_GROUP_ID": "",
-  "VPC_SUBNET_ID_1": "",
-  "VPC_SUBNET_ID_2": "",
-  "VPC_SUBNET_ID_3": "",
-  "vpcId": "",
+  "VPC_SECURITY_GROUP_ID": "sg-0cd0e953fe5ea6a2c",
+  "VPC_SUBNET_ID_1": "subnet-01b25689f5ab6ca04",
+  "VPC_SUBNET_ID_2": "subnet-0bf8d6b46ba5eccca",
+  "VPC_SUBNET_ID_3": "subnet-093f391419a68a2e4",
+  "vpcId": "vpc-0e64e563ad342a2ad",
   "deploymentBucket": "galois-cicd"
 }

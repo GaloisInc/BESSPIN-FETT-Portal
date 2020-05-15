@@ -4,9 +4,11 @@ const { Response, Database } = require('../helpers');
 const db = new Database();
 exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false; /* eslint no-param-reassign: 0 */
-
+  console.log('at root', db);
   try {
     await db.makeConnection();
+    console.log('connection', db);
+
     const data = await db.query(
       `
        ////QUERY HERE
