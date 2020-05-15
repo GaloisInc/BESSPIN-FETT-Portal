@@ -7,7 +7,9 @@ import PropTypes from 'prop-types';
 // import ReactRouterPropTypes from 'react-router-prop-types';
 import { CircularProgress } from '@material-ui/core';
 
-import backgroundImage from '../assets/fett_logo_login.png';
+import backgroundCity from '../assets/fett_cityscape.png';
+import backgroundLogo from '../assets/fett_logo_login.png';
+import backgroundPlanet from '../assets/fett_planets.png';
 
 const Login = props => {
   const [username, setUsername] = useState('');
@@ -44,9 +46,16 @@ const Login = props => {
   };
 
   return (
-    <div className="bg-blue-700 min-h-screen flex justify-center">
+    <div
+      className="bg-blue-700 min-h-screen flex justify-center"
+      style={{
+        backgroundImage: `url(${backgroundCity}), url(${backgroundPlanet})`,
+        backgroundRepeat: 'repeat-x, no-repeat',
+        backgroundPosition: 'bottom center, 90% 5%',
+      }}
+    >
       <div className="w-64 flex-col self-center">
-        <h1 className="bg-no-repeat" style={{ backgroundImage: `url(${backgroundImage})`, height: '90px', width: '266px' }}>
+        <h1 className="bg-no-repeat" style={{ backgroundImage: `url(${backgroundLogo})`, height: '90px', width: '266px' }}>
           <span className="hidden">FETT Portal</span>
         </h1>
         <p className="text-teal-500 uppercase text-center mb-8">Sign in to access FETT Portal</p>
