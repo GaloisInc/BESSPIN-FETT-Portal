@@ -1,0 +1,77 @@
+Resources:
+  DBSubnetGroup:
+    Type: AWS::RDS::DBSubnetGroup
+    Properties:
+      DBSubnetGroupDescription: This is used for Aurora Serverless
+      DBSubnetGroupName: ${self:service.name}-${self:provider.stage}-rds-subnetgroup
+      SubnetIds:
+        - ${file(config/config.${self:provider.stage}.json):VPC_SUBNET_ID_1}
+        - ${file(config/config.${self:provider.stage}.json):VPC_SUBNET_ID_2}
+        - ${file(config/config.${self:provider.stage}.json):VPC_SUBNET_ID_3}
+  RDSAuroraServerlessCluster:
+    DependsOn: AuroraSecurityGroup
+    Type: AWS::RDS::DBCluster
+    Properties:
+      MasterUsername: ${ssm:/${self:service.name}/${self:provider.stage}/db-aurora/user}
+      MasterUserPassword: ${ssm:/${self:service.name}/${self:provider.stage}/db-aurora/password~true}
+      DatabaseName: ${self:service.name}${self:provider.stage}
+      Engine: aurora
+      EngineMode: serverless
+      ScalingConfiguration:
+        AutoPause: true
+        MaxCapacity: 16
+        MinCapacity: 2
+        SecondsUntilAutoPause: 500
+      DBSubnetGroupName:
+        Ref: DBSubnetGroup
+      VpcSecurityGroupIds: 
+        - !GetAtt AuroraSecurityGroup.GroupId
+  RDSEnpointSSM:
+    DependsOn: RDSAuroraServerlessCluster
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /${self:service.name}/${self:provider.stage}/db-aurora/endpoint
+      Type: String
+      Value: 
+        Fn::GetAtt:
+          - RDSAuroraServerlessCluster
+          - Endpoint.Address
+      Description: Endpoint for Fett Portal-${self:provider.stage}
+      Tags:
+        Environment: ${opt:stage}
+  RDSSchemaSSM:
+    Type: AWS::SSM::Parameter
+    Properties:
+      Name: /${self:service.name}/${self:provider.stage}/db-aurora/schema
+      Type: String
+      Value: FettPortal
+      Description: Schema of Fett Portal DB
+      Tags:
+        Environment: ${opt:stage}
+  AuroraSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: fett-portal AuroraDB Serverless
+      GroupName: ${self:service.name}-aurora-${self:provider.stage}
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: 3306
+        ToPort: 3306
+        Description: MYSQL/Aurora from Lambda
+      VpcId: ${file(config/config.${self:provider.stage}.json):vpcId}
+  LambdaSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: fett-portal Lambda
+      GroupName: ${self:service.name}-lambda-${self:provider.stage}
+      SecurityGroupEgress:
+        - IpProtocol: tcp
+          CidrIp: 0.0.0.0/0 
+          FromPort: 22
+          ToPort: 22
+      SecurityGroupIngress:
+        - IpProtocol: tcp 
+          CidrIp: 0.0.0.0/0
+          FromPort: 22
+          ToPort: 22
+      VpcId: ${file(config/config.${self:provider.stage}.json):vpcId}

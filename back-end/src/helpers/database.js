@@ -26,13 +26,13 @@ class Database {
     }
     try {
       // eslint-disable-next-line
-      const connectionInfo = await SsmHelper.getParametersByPath(`/fettportal/dev/db-aurora/`);
+      const connectionInfo = await SsmHelper.getParametersByPath(`/fettportal/${process.env.stage}/db-aurora/`);
       return Database.connectionObject({
         ...connectionInfo,
         database: knexFile[process.env.stage].connection.database,
       });
     } catch (e) {
-      console.log(e);
+      console.log(`get connection: ${e}`);
       throw e;
     }
   }
@@ -47,7 +47,8 @@ class Database {
       try {
         conn = await Database.getConnection();
       } catch (e) {
-        console.log(e);
+        console.log(`make connection: ${e}`);
+
         throw e;
       }
       if (conn === undefined) {

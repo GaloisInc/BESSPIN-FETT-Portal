@@ -1,17 +1,14 @@
 service:
   name: fettportal
-
 plugins:
   - serverless-pseudo-parameters
   - serverless-webpack
   - serverless-offline
-
 package:
   individually: true
   exclude:
     - exclude-me.js
     - front-end/**
-
 provider:
   name: aws
   runtime: nodejs12.x
@@ -19,7 +16,7 @@ provider:
   stage: ${opt:stage, 'dev'}
   stackName: ${opt:stage, 'dev'}-${self:service.name}
   versionFunctions: false
-  deploymentBucket: ${file(config/config.${self:provider.stage}.json):deploymentBucket}
+  deploymentBucket: !Ref ${self:service.name-${opt:stage, 'dev'}-artifacts
   tags:
     Project: FETT-Portal
     Environment: ${opt:stage, 'dev'}
@@ -44,16 +41,15 @@ provider:
         - ${file(cloudformation/outputs.yml):Outputs.AlarmTopicArn.Value}
   vpc:
     securityGroupIds:
-      - ${file(config/config.${self:provider.stage}.json):VPC_SECURITY_GROUP_ID}
+      - ${file(./config/config.${self:provider.stage}.json):VPC_SECURITY_GROUP_ID}
     subnetIds:
-      - ${file(config/config.${self:provider.stage}.json):VPC_SUBNET_ID_1}
-      - ${file(config/config.${self:provider.stage}.json):VPC_SUBNET_ID_2}
-      - ${file(config/config.${self:provider.stage}.json):VPC_SUBNET_ID_3}
+      - ${file(./config/config.${self:provider.stage}.json):VPC_SUBNET_ID_1}
+      - ${file(./config/config.${self:provider.stage}.json):VPC_SUBNET_ID_2}
+      - ${file(./config/config.${self:provider.stage}.json):VPC_SUBNET_ID_3}
   environment:
     region: ${self:provider.region}
     stage: ${self:provider.stage}
     alarmTopicArn: ${file(cloudformation/outputs.yml):Outputs.AlarmTopicArn.Value}
-
 custom:
   webpackIncludeModules: true
   webpack:
@@ -64,8 +60,6 @@ custom:
     dev: arn:aws:cognito-idp:us-west-2:319580086754:userpool/us-west-2_thdiGaAES
   ingestionEnabled:
     dev: true
-
-
 functions:
   getFromDatabase:
     handler: src/functions/getFromDatabase.handler
@@ -87,9 +81,13 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
-
+    vpc: 
+      securityGroupIds:
+        - !Ref LambdaSecurityGroup
 resources:
   - ${file(cloudformation/hosting.yml)}
   - ${file(cloudformation/resources.yml)}
   - ${file(cloudformation/outputs.yml)}
+  - ${file(cloudformation/aurora.yml)}
+
 
