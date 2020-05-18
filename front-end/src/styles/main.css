@@ -8237,6 +8237,10 @@ td.MuiTableCell-root {
   width: 16rem;
 }
 
+.w-72 {
+  width: 300px;
+}
+
 .w-auto {
   width: auto;
 }
@@ -18381,6 +18385,10 @@ td.MuiTableCell-root {
 
   .sm\:w-64 {
     width: 16rem;
+  }
+
+  .sm\:w-72 {
+    width: 300px;
   }
 
   .sm\:w-auto {
@@ -28530,6 +28538,10 @@ td.MuiTableCell-root {
     width: 16rem;
   }
 
+  .md\:w-72 {
+    width: 300px;
+  }
+
   .md\:w-auto {
     width: auto;
   }
@@ -38677,6 +38689,10 @@ td.MuiTableCell-root {
     width: 16rem;
   }
 
+  .lg\:w-72 {
+    width: 300px;
+  }
+
   .lg\:w-auto {
     width: auto;
   }
@@ -48822,6 +48838,10 @@ td.MuiTableCell-root {
 
   .xl\:w-64 {
     width: 16rem;
+  }
+
+  .xl\:w-72 {
+    width: 300px;
   }
 
   .xl\:w-auto {
