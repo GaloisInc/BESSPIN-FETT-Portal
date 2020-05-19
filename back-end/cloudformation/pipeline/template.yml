@@ -1,6 +1,8 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: github-codepipeline
 Parameters:
+  GitHubOwner:
+    Type: String
   GitHubRepo:
     Type: String
   GitHubBranch:
@@ -9,12 +11,12 @@ Parameters:
     Type: String
     Description: Name of bucket where CICD artifacts will be stored
   SecurityGroupIds:
-    Type: List
+    Type: CommaDelimitedList
     Description: Comma seperated list of security group ID's for pipeline to run as, will need to be able to connect to RDS
   Subnets:
-    Type: List
+    Type: CommaDelimitedList
     Description: Comma seperated list of subnets to put pipeline in, will need to be able to connect to RDS
-  VpvId:
+  VpcId:
     Type: String
     Description: ID of VPC to put pipeline in    
 Resources:
@@ -137,7 +139,7 @@ Resources:
               OutputArtifacts:
                 - Name: !Join ['-', [ !Ref 'AWS::StackName', SourceArtifact ] ]
               Configuration:
-                Owner: "{{resolve:secretsmanager:githubPersonalAccess:SecretString:gitHubOwner}}"
+                Owner: !Ref GitHubOwner
                 Repo: !Ref GitHubRepo
                 Branch: !Ref GitHubBranch
                 PollForSourceChanges: false
@@ -225,10 +227,10 @@ Resources:
       Source:
         Type: CODEPIPELINE
         BuildSpec: !Sub 'buildspecs/buildspec.${GitHubBranch}.yml'
-      VpcConfig:
-        SecurityGroupIds: !Ref SecurityGroupIds
-        Subnets: !Ref Subnets
-        VpcId: !Ref VpcId
+      # VpcConfig:
+      #   SecurityGroupIds: !Ref SecurityGroupIds
+      #   Subnets: !Ref Subnets
+      #   VpcId: !Ref VpcId
 
   # 'GithubWebhook' satisfies two requirements:
   # -- Means that updates are pushed from GitHub, rather than AWS having to poll
