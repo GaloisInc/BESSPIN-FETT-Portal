@@ -13,18 +13,18 @@
   },
   {
     "ParameterKey": "CICDS3Bucket",
-    "ParameterValue": "develop-portal-cicd"
+    "ParameterValue": "develop-portal-cicd-atrifacts"
   },
   {
     "ParameterKey": "SecurityGroupIds",
-    "ParameterValue": "sg-0181f51d4351890de"
+    "ParameterValue": "sg-058e105ee79ed11e9"
   },  
   {
     "ParameterKey": "Subnets",
-    "ParameterValue": "subnet-049d2519ac86e875d,subnet-0895b8fcf240d8203,subnet-0b13fe60835017f54"
+    "ParameterValue": "subnet-01b25689f5ab6ca04,subnet-0bf8d6b46ba5eccca,subnet-093f391419a68a2e4"
   },  
   {
     "ParameterKey": "VpcId",
-    "ParameterValue": "vpc-03d695e48c0ccde32"
+    "ParameterValue": "vpc-0e64e563ad342a2ad"
   }
 ]
