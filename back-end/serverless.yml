@@ -7,19 +7,18 @@ plugins:
 package:
   individually: true
   exclude:
-    - exclude-me.js
     - front-end/**
 provider:
   name: aws
   runtime: nodejs12.x
   region: us-west-2
-  stage: ${opt:stage, 'dev'}
-  stackName: ${opt:stage, 'dev'}-${self:service.name}
+  stage: ${opt:stage, 'develop'}
+  stackName: ${opt:stage}-${self:service.name}
   versionFunctions: false
-  deploymentBucket: !Ref ${self:service.name-${opt:stage, 'dev'}-artifacts
+  deploymentBucket: !Ref ${file(./config/config.${self:provider.stage}.json):deploymentBucket}
   tags:
     Project: FETT-Portal
-    Environment: ${opt:stage, 'dev'}
+    Environment: ${opt:stage}
     CreatedBy: Kurt Hopfer
   iamRoleStatements:
     - Effect: 'Allow'
@@ -32,7 +31,7 @@ provider:
         - "ssm:GetParameter"
         - "ssm:PutParameter"
       Resource:
-        - "arn:aws:ssm:us-west-2:#{AWS::AccountId}:parameter/fettportal/*" # RDS CREDS
+        - "arn:aws:ssm:us-west-2:#{AWS::AccountId}:parameter/fettportal/*"
         - "arn:aws:ssm:us-west-2:#{AWS::AccountId}:parameter/fettportal/*"
     - Effect: "Allow"
       Action:
@@ -41,7 +40,7 @@ provider:
         - ${file(cloudformation/outputs.yml):Outputs.AlarmTopicArn.Value}
   vpc:
     securityGroupIds:
-      - ${file(./config/config.${self:provider.stage}.json):VPC_SECURITY_GROUP_ID}
+      - ${file(cloudformation/outputs.yml):Outputs.LambdaSecurityGroup.Value}
     subnetIds:
       - ${file(./config/config.${self:provider.stage}.json):VPC_SUBNET_ID_1}
       - ${file(./config/config.${self:provider.stage}.json):VPC_SUBNET_ID_2}
@@ -50,16 +49,15 @@ provider:
     region: ${self:provider.region}
     stage: ${self:provider.stage}
     alarmTopicArn: ${file(cloudformation/outputs.yml):Outputs.AlarmTopicArn.Value}
+
 custom:
+  vpcId: ${file(config/config.${self:provider.stage}.json):vpcId}
   webpackIncludeModules: true
   webpack:
     webpackConfig: ./webpack.config.js
     packager: 'npm'
   lambdaArnBase: "arn:aws:lambda:${self:provider.region}:#{AWS::AccountId}:function:${self:service.name}-${self:provider.stage}"
-  authorizerPool:
-    dev: arn:aws:cognito-idp:us-west-2:319580086754:userpool/us-west-2_thdiGaAES
-  ingestionEnabled:
-    dev: true
+
 functions:
   getFromDatabase:
     handler: src/functions/getFromDatabase.handler
@@ -68,26 +66,13 @@ functions:
     - http:
         path: getFromDatabase
         method: get
-        cors:
-            origin: "*"
-            headers:
-              - Content-Type
-              - X-Amz-Date
-              - Authorization
-              - X-Api-Key
-              - X-Amz-Security-Token
-              - X-Amz-User-Agent
-            allowCredentials: false
-        authorizer:
-          name: authorizer
-          arn: ${self:custom.authorizerPool.${self:provider.stage}}
-    vpc: 
-      securityGroupIds:
-        - !Ref LambdaSecurityGroup
+        cors: true
+
 resources:
   - ${file(cloudformation/hosting.yml)}
   - ${file(cloudformation/resources.yml)}
-  - ${file(cloudformation/outputs.yml)}
   - ${file(cloudformation/aurora.yml)}
+  - ${file(cloudformation/outputs.yml)}
+
 
 
