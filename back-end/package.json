@@ -8,7 +8,7 @@
     "deploy": "export NODE_ENV=dev && npm run deploy:env",
     "deploy:production": "export NODE_ENV=production && npm run deploy:env",
     "deploy:stage": "export NODE_ENV=stage && npm run deploy:env",
-    "migrate:dev": "node ../buildspecs/helpers/setKnex.js dev && knex migrate:latest --env dev",
+    "migrate": "knex migrate:latest",
     "lint": "eslint ./src ./config --ext js --ext json --no-ignore --fix",
     "serve": "serverless offline start",
     "serve:watch": "nodemon -e js,jsx -x serverless offline start",
@@ -43,7 +43,7 @@
     "aws-sdk": "^2.468.0",
     "babel-eslint": "^10.0.1",
     "debug": "^4.1.1",
-    "knex": "^0.19.4",
+    "knex": "^0.21.1",
     "mysql": "^2.17.1",
     "node-fetch": "^2.6.0",
     "npx": "^10.2.0"
