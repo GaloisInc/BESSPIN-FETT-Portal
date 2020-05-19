@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
 import MaterialTable from 'material-table';
-import { Modal } from '@material-ui/core';
+import { Modal, Paper } from '@material-ui/core';
 import refresh from '../assets/refresh.svg';
 import search from '../assets/search.svg';
 import settings from '../assets/settings.svg';
 import InstanceModal from './InstanceModal';
+import alert from '../assets/alert.svg';
 
 export default function InstanceManagement() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -47,37 +48,50 @@ export default function InstanceManagement() {
 
   return (
     <>
-      <div className="mb-4 bg-blue-600 table-card" style={{ width: '700px', minHeight: '630px' }}>
-        <div className="flex flex-row items-center justify-between pl-4 mt-2 mb-4">
-          <h5 className="text-gray-200 uppercase">instance management</h5>
+      <div className="bg-blue-600 table-card" style={{ width: '700px', minHeight: '630px' }}>
+        <div className="flex flex-row items-center justify-between pl-4 mt-4 mb-2">
+          <h5 className="font-medium text-gray-200 uppercase">environment management</h5>
           <div className="flex flex-row items-center mr-4">
             <form className="relative">
               <input
-                className="bg-blue-600 border border-gray-200 border-solid"
+                className="bg-blue-600 border border-gray-200 border-solid rounded"
                 type="text"
                 value={searchTerm}
                 name="name"
                 onChange={event => setSearchTerm(event.target.value)}
                 onSubmit={handleSearch}
               />
-              <img className="absolute top-0 right-0 mt-2 mr-2" src={search} alt="" />
+              <img className="absolute top-0 right-0 mt-1 mr-2" src={search} alt="" />
             </form>
-            <button className="ml-4 cursor-pointer " type="button">
+            <button className="ml-4 cursor-pointer focus:outline-none" type="button">
               <img className="h-4" src={refresh} alt="" />
             </button>
           </div>
         </div>
         <MaterialTable
+          components={{
+            Container: props => <Paper {...props} elevation={0} />,
+          }}
           columns={[
-            { title: 'Team', field: 'team' },
-            { title: 'F1 Instance', field: 'f1Instance' },
-            { title: 'Idle Time', field: 'idleTime' },
-            { title: 'Status', field: 'status' },
+            {
+              title: '',
+              field: 'alert',
+              width: '1em',
+              render: data => (
+                <div className="w-3">
+                  <img src={alert} alt="" />
+                </div>
+              ),
+            },
+            { title: 'TEAM', field: 'team', width: '8em' },
+            { title: 'F1 INSTANCE', field: 'f1Instance', width: '12em' },
+            { title: 'IDLE TIME', field: 'idleTime', width: '8em' },
+            { title: 'STATUS', field: 'status', width: '6em' },
             {
               title: '',
               field: 'detailsView',
               render: data => (
-                <button type="button" onClick={() => handleOpen(data)}>
+                <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none">
                   <img src={settings} alt="" />
                 </button>
               ),
