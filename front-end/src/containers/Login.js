@@ -84,13 +84,8 @@ const Login = props => {
           type="submit"
           onClick={event => handleSubmit(event)}
         >
-          Login
+          {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Login'}
         </button>
-        {isLoading && (
-          <div className="self-auto">
-            <CircularProgress style={{ color: '#F4F4F4' }} />
-          </div>
-        )}
       </div>
     </div>
   );
