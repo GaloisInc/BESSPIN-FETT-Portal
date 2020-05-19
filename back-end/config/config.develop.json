@@ -1,9 +1,8 @@
 {
-  "VPC_SECURITY_GROUP_ID": "sg-0181f51d4351890de",
-  "VPC_SUBNET_ID_1": "subnet-0b13fe60835017f54",
-  "VPC_SUBNET_ID_2": "subnet-0895b8fcf240d8203",
-  "VPC_SUBNET_ID_3": "subnet-049d2519ac86e875d",
-  "vpcId": "vpc-03d695e48c0ccde32",
-  "LambdaSecurityGroup":"sg-0181f51d4351890de",
-  "deploymentBucket": "develop-portal-cicd"
+  "VPC_SECURITY_GROUP_ID": "sg-058e105ee79ed11e9",
+  "VPC_SUBNET_ID_1": "subnet-01b25689f5ab6ca04",
+  "VPC_SUBNET_ID_2": "subnet-0bf8d6b46ba5eccca",
+  "VPC_SUBNET_ID_3": "subnet-093f391419a68a2e4",
+  "vpcId": "vpc-0e64e563ad342a2ad",
+  "deploymentBucket": "develop-portal-cicd-atrifacts"
 }

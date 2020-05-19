@@ -15,7 +15,8 @@ provider:
   stage: ${opt:stage, 'develop'}
   stackName: ${opt:stage}-${self:service.name}
   versionFunctions: false
-  deploymentBucket: ${file(config/config.${self:provider.stage}.json):deploymentBucket}
+  deploymentBucket: 
+    name: ${file(config/config.${self:provider.stage}.json):deploymentBucket}
   tags:
     Project: FETT-Portal
     Environment: ${opt:stage}
@@ -40,11 +41,11 @@ provider:
         - ${file(cloudformation/outputs.yml):Outputs.AlarmTopicArn.Value}
   vpc:
     securityGroupIds:
-      - ${file(cloudformation/outputs.yml):Outputs.LambdaSecurityGroup.Value}
+      - ${file(config/config.${self:provider.stage}.json):VPC_SECURITY_GROUP_ID}
     subnetIds:
-      - ${file(./config/config.${self:provider.stage}.json):VPC_SUBNET_ID_1}
-      - ${file(./config/config.${self:provider.stage}.json):VPC_SUBNET_ID_2}
-      - ${file(./config/config.${self:provider.stage}.json):VPC_SUBNET_ID_3}
+      - ${file(config/config.${self:provider.stage}.json):VPC_SUBNET_ID_1}
+      - ${file(config/config.${self:provider.stage}.json):VPC_SUBNET_ID_2}
+      - ${file(config/config.${self:provider.stage}.json):VPC_SUBNET_ID_3}
   environment:
     region: ${self:provider.region}
     stage: ${self:provider.stage}
