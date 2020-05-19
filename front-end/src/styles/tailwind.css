@@ -57,13 +57,16 @@ a {
 td.MuiTableCell-root {
   @apply border-b-0;
   @apply py-2;
-  @apply pl-8;
+  @apply px-2;
+  @apply font-body;
+  @apply text-base;
 }
 
 th.MuiTableCell-root {
   @apply border-b-0;
   @apply py-2;
-  @apply pl-8;
+  @apply px-2;
+  @apply font-body;
 }
 
 .btn-gray {
