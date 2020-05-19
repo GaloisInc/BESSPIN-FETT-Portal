@@ -11,7 +11,9 @@ Resources:
   RDSAuroraServerlessCluster:
     DependsOn: AuroraSecurityGroup
     Type: AWS::RDS::DBCluster
+    DeletionPolicy: Delete
     Properties:
+      DeletionProtection: false
       MasterUsername: ${ssm:/${self:service.name}/${self:provider.stage}/db-aurora/user}
       MasterUserPassword: !Join ['', ['{{resolve:secretsmanager:', !Ref Secret, '}}' ]]
       DatabaseName: ${self:service.name}${self:provider.stage}
@@ -34,16 +36,16 @@ Resources:
       GenerateSecretString:
         PasswordLength: 16
         ExcludeCharacters: '"@/\'
-  RDSEndpointSSM:
-    DependsOn: RDSAuroraServerlessCluster
-    Type: AWS::SSM::Parameter
-    Properties:
-      Name: /${self:service.name}/${self:provider.stage}/db-aurora/endpoint
-      Type: String
-      Value: !GetAtt RDSAuroraServerlessCluster.Endpoint.Address
-      Description: Endpoint for Fett Portal-${self:provider.stage}
-      Tags:
-        Environment: ${opt:stage}
+  # RDSEndpointSSM:
+  #   DependsOn: RDSAuroraServerlessCluster
+  #   Type: AWS::SSM::Parameter
+  #   Properties:
+  #     Name: /${self:service.name}/${self:provider.stage}/db-aurora/endpoint
+  #     Type: String
+  #     Value: !GetAtt RDSAuroraServerlessCluster.Endpoint.Address
+  #     Description: Endpoint for Fett Portal-${self:provider.stage}
+  #     Tags:
+  #       Environment: ${opt:stage}
   RDSSchemaSSM:
     Type: AWS::SSM::Parameter
     Properties:
