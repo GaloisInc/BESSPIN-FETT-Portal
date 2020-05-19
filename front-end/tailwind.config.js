@@ -44,9 +44,9 @@ module.exports = {
       },
     },
     extend: {
-	    width: {
-			'72': '300px',
-		},
+      width: {
+        '72': '300px',
+      },
     },
   },
   variants: {

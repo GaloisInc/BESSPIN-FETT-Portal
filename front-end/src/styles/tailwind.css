@@ -1,4 +1,6 @@
 @tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 html,
 body,
@@ -54,7 +56,23 @@ a {
 
 td.MuiTableCell-root {
   @apply border-b-0;
+  @apply py-2;
+  @apply px-2;
+  @apply font-body;
+  @apply text-base;
 }
 
-@tailwind components;
-@tailwind utilities;
+th.MuiTableCell-root {
+  @apply border-b-0;
+  @apply py-2;
+  @apply px-2;
+  @apply font-body;
+}
+
+.btn-gray {
+  @apply bg-gray-200;
+  @apply text-blue-700;
+  @apply font-bold;
+  @apply rounded;
+  @apply uppercase;
+}

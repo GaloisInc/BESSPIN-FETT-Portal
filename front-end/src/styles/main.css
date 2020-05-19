@@ -578,62 +578,6 @@ video {
   height: auto;
 }
 
-html,
-body,
-#root,
-.App {
-  height: 100%;
-  min-height: 100vh;
-}
-
-h1 {
-  font-family: futura-pt;
-  font-size: 3rem;
-  font-weight: 700;
-}
-
-h2 {
-  font-family: futura-pt;
-  font-size: 2.25rem;
-  font-weight: 700;
-}
-
-h3 {
-  font-family: futura-pt;
-  font-size: 1.875rem;
-  font-weight: 300;
-}
-
-h4 {
-  font-family: futura-pt;
-  font-size: 1.5rem;
-  font-weight: 700;
-}
-
-h5 {
-  font-size: 1.25rem;
-  font-family: futura-pt;
-}
-
-h6 {
-  font-size: 1rem;
-  font-family: futura-pt;
-}
-
-p {
-  font-family: futura-pt;
-  font-weight: 500;
-}
-
-a {
-  font-family: futura-pt;
-  font-size: 0.875rem;
-}
-
-td.MuiTableCell-root {
-  border-bottom-width: 0;
-}
-
 .container {
   width: 100%;
 }
@@ -10809,6 +10753,89 @@ td.MuiTableCell-root {
 
 .delay-1000 {
   transition-delay: 1000ms;
+}
+
+html,
+body,
+#root,
+.App {
+  height: 100%;
+  min-height: 100vh;
+}
+
+h1 {
+  font-family: futura-pt;
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+h2 {
+  font-family: futura-pt;
+  font-size: 2.25rem;
+  font-weight: 700;
+}
+
+h3 {
+  font-family: futura-pt;
+  font-size: 1.875rem;
+  font-weight: 300;
+}
+
+h4 {
+  font-family: futura-pt;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+h5 {
+  font-size: 1.25rem;
+  font-family: futura-pt;
+}
+
+h6 {
+  font-size: 1rem;
+  font-family: futura-pt;
+}
+
+p {
+  font-family: futura-pt;
+  font-weight: 500;
+}
+
+a {
+  font-family: futura-pt;
+  font-size: 0.875rem;
+}
+
+td.MuiTableCell-root {
+  border-bottom-width: 0;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-family: futura-pt;
+  font-size: 1rem;
+}
+
+th.MuiTableCell-root {
+  border-bottom-width: 0;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-family: futura-pt;
+}
+
+.btn-gray {
+  --bg-opacity: 1;
+  background-color: #F4F4F4;
+  background-color: rgba(244, 244, 244, var(--bg-opacity));
+  --text-opacity: 1;
+  color: #26343E;
+  color: rgba(38, 52, 62, var(--text-opacity));
+  font-weight: 700;
+  border-radius: 0.25rem;
+  text-transform: uppercase;
 }
 
 @media (min-width: 640px) {

@@ -2,71 +2,71 @@
 /* eslint-disable jsx-a11y/label-has-for */
 
 import React, { useState } from 'react';
-import { createUser } from '../services/cognito';
+import { createUser, createTeams } from '../services/cognito';
 
 export default function UserForm() {
-  const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
-  const [role, setRole] = useState('');
+  const [teamNumber, setTeamNumber] = useState('');
 
-  const handleSubmit = event => {
+  const handleCreateUser = event => {
     event.preventDefault();
-    console.log('searching');
-    // Todo implement ==> submit user
     try {
-      createUser(username, role);
+      createUser(email);
     } catch (error) {
       console.log(`failed to create user ${error}`);
     }
   };
-  return (
-    <div className="bg-blue-600 mb-8" style={{ width: '500px', minHeight: '630px' }}>
-      <h5 className="uppercase text-gray-200 pl-4 pt-2">New User</h5>
 
-      <div className="self-center bg-blue-700 mx-8 mt-4" style={{ minHeight: '500px' }}>
-        <form className="flex flex-col items-center w-auto my-4 mx-8">
-          <label htmlFor="username" className="text-gray-200 font-body mt-8">
-            User Name
-          </label>
-          <input
-            id="username"
-            value={username}
-            onChange={event => setUsername(event.target.value)}
-            className="w-full bg-blue-600 border-solid border border-gray-200 text-gray-200 p-1"
-          />
-          <label htmlFor="email" className="text-gray-200 font-body mt-8">
-            User Email
-          </label>
-          <input
-            id="email"
-            value={email}
-            onChange={event => setEmail(event.target.value)}
-            className="w-full bg-blue-600 border-solid border border-gray-200 text-gray-200 p-1"
-          />
-          <label htmlFor="role" className="text-gray-200 font-body mt-8">
-            Select Role
-          </label>
-          <select
-            id="role"
-            value={role}
-            onChange={event => setRole(event.target.value)}
-            className="w-full bg-blue-600 border-solid border border-gray-200 text-gray-200 p-1 block border hover:border-gray-300 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
-          >
-            <option value="Admin">Admin</option>
-            <option value="Researcher">Researcher</option>
-          </select>
-          <button
-            className="bg-gray-200 hover:bg-gray-300 text-blue-700 font-bold py-1 px-2 rounded uppercase w-full mt-8"
-            type="submit"
-            onClick={event => handleSubmit(event)}
-          >
-            Send Invite
-          </button>
-          <a className="self-end mt-4" href="">
-            <h5 className="text-teal-500 uppercase mr-4 underline">upload csv</h5>
-          </a>
-        </form>
-      </div>
+  const handleCreateTeams = event => {
+    event.preventDefault();
+    try {
+      createTeams(teamNumber);
+    } catch (error) {
+      console.log(`failed to create user ${error}`);
+    }
+  };
+
+  return (
+    <div className="bg-blue-600" style={{ width: '400px', minHeight: '630px' }}>
+      <h5 className="pt-16 pl-12 text-gray-200 uppercase">New Teams</h5>
+      <form className="flex flex-col px-12 ml-4">
+        <label htmlFor="teamNumber" className="mt-4 mb-1 text-gray-200 font-body">
+          Number of Teams
+        </label>
+        <input
+          type="number"
+          id="teamNumber"
+          value={teamNumber}
+          onChange={event => setTeamNumber(event.target.value)}
+          className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
+        />
+        <button
+          type="submit"
+          onClick={event => handleCreateTeams(event)}
+          className="w-full px-2 py-1 mt-6 font-bold text-blue-700 uppercase bg-gray-200 rounded hover:bg-gray-300 font-body"
+        >
+          Create Teams
+        </button>
+      </form>
+      <h5 className="pt-12 pl-12 text-gray-200 uppercase">New Admin</h5>
+      <form className="flex flex-col px-12 ml-4">
+        <label htmlFor="email" className="mt-4 mb-1 text-gray-200 font-body">
+          User Email
+        </label>
+        <input
+          id="email"
+          value={email}
+          onChange={event => setEmail(event.target.value)}
+          className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
+        />
+        <button
+          className="w-full px-2 py-1 mt-6 font-bold text-blue-700 uppercase bg-gray-200 rounded hover:bg-gray-300 font-body"
+          type="submit"
+          onClick={event => handleCreateUser(event)}
+        >
+          Send Invite
+        </button>
+      </form>
     </div>
   );
 }

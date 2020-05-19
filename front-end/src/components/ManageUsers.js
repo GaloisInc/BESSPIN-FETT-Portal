@@ -1,11 +1,15 @@
 import React, { useState } from 'react';
 import MaterialTable from 'material-table';
+import { Paper, Modal } from '@material-ui/core';
 import refresh from '../assets/refresh.svg';
 import search from '../assets/search.svg';
 import chevronRight from '../assets/chevronRight.svg';
+import UserModal from './UserModal';
 
 export default function ManageUsers() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [open, setOpen] = React.useState(false);
+  const [selectedUser, setSelectedUser] = useState('');
 
   const handleSearch = event => {
     event.preventDefault();
@@ -13,9 +17,13 @@ export default function ManageUsers() {
     // Todo implement ==> search
   };
 
-  const openModal = data => {
-    // ToDO implement ==> status modal
-    console.log('modalling', data);
+  const handleOpen = async data => {
+    await setSelectedUser(data);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
   };
 
   const dummyInstances = [
@@ -25,47 +33,50 @@ export default function ManageUsers() {
       role: 'admin',
     },
     {
-      username: 'username one',
-      email: 'mister.e@testing.fivetalent.com',
+      username: 'team one',
+      email: '',
       role: 'researcher',
     },
     {
-      username: 'team one',
-      email: 'mister.e@testing.fivetalent.com',
+      username: 'username two',
+      email: 'mister.t@testing.fivetalent.com',
       role: 'admin',
     },
   ];
 
   return (
-    <div className="bg-blue-600 mb-4 table-card" style={{ width: '700px', minHeight: '630px' }}>
-      <div className="flex flex-row justify-between pl-4 mt-2 items-center mb-4">
-        <h5 className="uppercase text-gray-200">current users</h5>
+    <div className="bg-blue-600 table-card" style={{ width: '700px', minHeight: '630px' }}>
+      <div className="flex flex-row items-center justify-between pl-8 mt-4 mb-4">
+        <h5 className="text-gray-200 uppercase">current teams/ users</h5>
         <div className="flex flex-row items-center mr-4">
           <form className="relative" onSubmit={event => handleSearch(event)}>
             <input
-              className="bg-blue-600 border-solid border border-gray-200"
+              className="bg-blue-600 border border-gray-200 border-solid rounded"
               type="text"
               value={searchTerm}
               name="name"
               onChange={event => setSearchTerm(event.target.value)}
             />
-            <img className="absolute right-0 top-0 mt-2 mr-2" src={search} alt="" />
+            <img className="absolute top-0 right-0 mt-1 mr-2" src={search} alt="" />
           </form>
-          <button className=" ml-4 cursor-pointer" type="button">
+          <button className="ml-4 cursor-pointer focus:outline-none " type="button">
             <img className="h-4" src={refresh} alt="" />
           </button>
         </div>
       </div>
       <MaterialTable
+        components={{
+          Container: props => <Paper {...props} elevation={0} />,
+        }}
         columns={[
-          { title: 'User Name', field: 'username' },
-          { title: 'Email', field: 'email' },
-          { title: 'Role', field: 'role' },
+          { title: 'USER NAME', field: 'username', width: '12em' },
+          { title: 'EMAIL', field: 'email' },
+          { title: 'ROLE', field: 'role' },
           {
             title: '',
             field: 'detailsView',
             render: data => (
-              <button type="button" onClick={() => openModal(data)}>
+              <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none">
                 <img src={chevronRight} alt="" />
               </button>
             ),
@@ -92,6 +103,9 @@ export default function ManageUsers() {
         }}
         data={dummyInstances}
       />
+      <Modal open={open} onClose={handleClose}>
+        <UserModal handleClose={handleClose} selectedUser={selectedUser} />
+      </Modal>
     </div>
   );
 }

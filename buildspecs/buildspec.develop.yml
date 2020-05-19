@@ -1,16 +1,12 @@
 version: 0.2
 env:
   variables:
-    STACK_NAME: fettportal-dev
-  # parameter-store:
-    # TEST: /aws/reference/secretsmanager/<SECRETS_PARAM_NAME>
+    STACK_NAME: fettportal-develop
 phases:
   install:
     runtime-versions:
         nodejs: 10
     commands:
-      - apt-get update
-      - apt-get -y install jq
       - parseStackOutput=${CODEBUILD_SRC_DIR}/buildspecs/helpers/parse-stack-outputs.sh
       - chmod +x $parseStackOutput
   build:
