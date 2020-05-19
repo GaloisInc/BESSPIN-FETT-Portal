@@ -33,13 +33,13 @@ export default function InstanceManagement() {
       status: 'provisioning',
     },
     {
-      team: 'team one',
+      team: 'team two',
       f1Instance: 'cambrian debian',
       idleTime: null,
       status: 'provisioning',
     },
     {
-      team: 'team one',
+      team: 'team three',
       f1Instance: 'cambrian debian',
       idleTime: null,
       status: 'provisioning',
@@ -105,7 +105,7 @@ export default function InstanceManagement() {
               fontSize: '1em',
             },
             rowStyle: rowData => ({
-              backgroundColor: rowData.tableData.id % 2 ? '#293A46' : '#314457',
+              backgroundColor: rowData.tableData.id % 2 ? '#293A46' : '#26343E',
               color: '#F4F4F4',
               textTransform: 'uppercase',
             }),

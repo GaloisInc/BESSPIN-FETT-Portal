@@ -69,7 +69,7 @@ export default function ManageUsers() {
           Container: props => <Paper {...props} elevation={0} />,
         }}
         columns={[
-          { title: 'USER NAME', field: 'username', width: '12em' },
+          { title: 'USER NAME', field: 'username', width: '12em', cellStyle: { paddingLeft: '2em' }, headerStyle: { paddingLeft: '2em' } },
           { title: 'EMAIL', field: 'email' },
           { title: 'ROLE', field: 'role' },
           {
@@ -90,7 +90,7 @@ export default function ManageUsers() {
             fontSize: '1em',
           },
           rowStyle: rowData => ({
-            backgroundColor: rowData.tableData.id % 2 ? '#293A46' : '#314457',
+            backgroundColor: rowData.tableData.id % 2 ? '#293A46' : '#26343E',
             color: '#F4F4F4',
             border: 'none',
             textTransform: 'uppercase',
