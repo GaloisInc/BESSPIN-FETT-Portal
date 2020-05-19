@@ -10811,14 +10811,19 @@ td.MuiTableCell-root {
   border-bottom-width: 0;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-  padding-left: 2rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-family: futura-pt;
+  font-size: 1rem;
 }
 
 th.MuiTableCell-root {
   border-bottom-width: 0;
   padding-top: 0.5rem;
   padding-bottom: 0.5rem;
-  padding-left: 2rem;
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  font-family: futura-pt;
 }
 
 .btn-gray {
