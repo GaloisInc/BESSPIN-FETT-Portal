@@ -17,7 +17,7 @@
   },
   {
     "ParameterKey": "SecurityGroupIds",
-    "ParameterValue": "sg-058e105ee79ed11e9"
+    "ParameterValue": "sg-0cd0e953fe5ea6a2c"
   },  
   {
     "ParameterKey": "Subnets",
