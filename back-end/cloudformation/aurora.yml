@@ -9,11 +9,17 @@ Resources:
         - ${file(config/config.${self:provider.stage}.json):VPC_SUBNET_ID_2}
         - ${file(config/config.${self:provider.stage}.json):VPC_SUBNET_ID_3}
   RDSAuroraServerlessCluster:
-    DependsOn: AuroraSecurityGroup
+    DependsOn: 
+      - AuroraSecurityGroup
+      - RDSUserSSM
+      - RDSSchemaSSM
+      - Secret
     Type: AWS::RDS::DBCluster
+    DeletionPolicy: Delete
     Properties:
+      DeletionProtection: false
       MasterUsername: ${ssm:/${self:service.name}/${self:provider.stage}/db-aurora/user}
-      MasterUserPassword: ${ssm:/${self:service.name}/${self:provider.stage}/db-aurora/password~true}
+      MasterUserPassword: !Join ['', ['{{resolve:secretsmanager:', !Ref Secret, '}}' ]]
       DatabaseName: ${self:service.name}${self:provider.stage}
       Engine: aurora
       EngineMode: serverless
@@ -26,17 +32,31 @@ Resources:
         Ref: DBSubnetGroup
       VpcSecurityGroupIds: 
         - !GetAtt AuroraSecurityGroup.GroupId
-  RDSEnpointSSM:
-    DependsOn: RDSAuroraServerlessCluster
+  Secret:
+    Type: 'AWS::SecretsManager::Secret'
+    Properties:
+      Name: ${self:service.name}-${self:provider.stage}-db-password
+      Description: 'RDS Password'
+      GenerateSecretString:
+        PasswordLength: 16
+        ExcludeCharacters: '"@/\'
+  # RDSEndpointSSM:
+  #   DependsOn: RDSAuroraServerlessCluster
+  #   Type: AWS::SSM::Parameter
+  #   Properties:
+  #     Name: /${self:service.name}/${self:provider.stage}/db-aurora/endpoint
+  #     Type: String
+  #     Value: !GetAtt RDSAuroraServerlessCluster.Endpoint.Address
+  #     Description: Endpoint for Fett Portal-${self:provider.stage}
+  #     Tags:
+  #       Environment: ${opt:stage}
+  RDSUserSSM:
     Type: AWS::SSM::Parameter
     Properties:
-      Name: /${self:service.name}/${self:provider.stage}/db-aurora/endpoint
+      Name: /${self:service.name}/${self:provider.stage}/db-aurora/user
       Type: String
-      Value: 
-        Fn::GetAtt:
-          - RDSAuroraServerlessCluster
-          - Endpoint.Address
-      Description: Endpoint for Fett Portal-${self:provider.stage}
+      Value: FettPortalMaster
+      Description: Schema of Fett Portal DB
       Tags:
         Environment: ${opt:stage}
   RDSSchemaSSM:
@@ -57,21 +77,6 @@ Resources:
       - IpProtocol: tcp
         FromPort: 3306
         ToPort: 3306
-        Description: MYSQL/Aurora from Lambda
-      VpcId: ${file(config/config.${self:provider.stage}.json):vpcId}
-  LambdaSecurityGroup:
-    Type: AWS::EC2::SecurityGroup
-    Properties:
-      GroupDescription: fett-portal Lambda
-      GroupName: ${self:service.name}-lambda-${self:provider.stage}
-      SecurityGroupEgress:
-        - IpProtocol: tcp
-          CidrIp: 0.0.0.0/0 
-          FromPort: 22
-          ToPort: 22
-      SecurityGroupIngress:
-        - IpProtocol: tcp 
-          CidrIp: 0.0.0.0/0
-          FromPort: 22
-          ToPort: 22
+        SourceSecurityGroupId: ${file(config/config.${self:provider.stage}.json):VPC_SECURITY_GROUP_ID}
+        Description: 3306 access from default SG
       VpcId: ${file(config/config.${self:provider.stage}.json):vpcId}

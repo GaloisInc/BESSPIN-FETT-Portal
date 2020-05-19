@@ -4,5 +4,5 @@
   "VPC_SUBNET_ID_2": "subnet-0bf8d6b46ba5eccca",
   "VPC_SUBNET_ID_3": "subnet-093f391419a68a2e4",
   "vpcId": "vpc-0e64e563ad342a2ad",
-  "deploymentBucket": "galois-cicd"
+  "deploymentBucket": "develop-portal-cicd-atrifacts"
 }

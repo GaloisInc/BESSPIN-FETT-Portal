@@ -42,7 +42,7 @@ Resources:
           Value: "FETT-Portal"
         - 
           Key: "Environment"
-          Value: ${opt:stage, 'dev'}
+          Value: ${opt:stage, 'develop'}
         - 
           Key: "CreatedBy"
           Value: "Kurt Hopfer"          
@@ -70,7 +70,7 @@ Resources:
           Value: "FETT-Portal"
         - 
           Key: "Environment"
-          Value: ${opt:stage, 'dev'}
+          Value: ${opt:stage, 'develop'}
         - 
           Key: "CreatedBy"
           Value: "Kurt Hopfer"          

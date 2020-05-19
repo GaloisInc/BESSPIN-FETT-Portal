@@ -1,66 +1,31 @@
 import React from 'react';
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
 import { Paper } from '@material-ui/core';
 import rocketDark from '../assets/rocketDark.svg';
 
-const LaunchTable = () => {
+const DashTable = () => {
   const dummyInstances = [
     {
-      type: 'LMCO',
-      processor: 'RV32',
-      os: 'FreeRTOS',
-    },
-    {
-      type: 'LMCO',
-      processor: 'RV64',
-      os: 'Linux',
-    },
-    {
-      type: 'SRI Cambridge',
-      processor: 'RV64',
-      os: 'FreeBSD',
-    },
-    {
-      type: 'UMich',
-      processor: 'RV32',
-      os: 'FreeRTOS',
-    },
-    {
-      type: 'MIT',
-      processor: 'RV64',
-      os: 'Linux',
-    },
-    {
-      type: 'Baseline',
-      processor: 'RV32',
-      os: 'FreeRTOS',
-    },
-    {
-      type: 'Baseline',
-      processor: 'RV64',
-      os: 'Linux',
-    },
-    {
-      type: 'Baseline',
-      processor: 'RV64',
-      os: 'FreeBSD',
+      instance: 'Baseline | RV64 | FreeBSD',
+      launched: '11:52 am',
+      status: 'Running',
     },
   ];
   return (
     <>
       <div className="mb-4 bg-blue-600 table-card" style={{ width: '800px', minHeight: '400px' }}>
         <div className="flex flex-row items-center justify-between pl-8 mt-2 mb-2">
-          <h5 className="text-gray-200 uppercase">instance configuration</h5>
+          <h5 className="text-gray-200 uppercase">instance history</h5>
         </div>
         <MaterialTable
           components={{
             Container: props => <Paper {...props} elevation={0} />,
           }}
           columns={[
-            { title: 'Type', field: 'type' },
-            { title: 'Processor', field: 'processor' },
-            { title: 'OS', field: 'os' },
+            { title: 'F1 Instance', field: 'instance' },
+            { title: 'Launched Time', field: 'launched' },
+            { title: 'Status', field: 'status' },
             {
               title: '',
               field: 'launch',
@@ -96,6 +61,6 @@ const LaunchTable = () => {
   );
 };
 
-LaunchTable.propTypes = {};
+// DashTable.propTypes = {};
 
-export default LaunchTable;
+export default DashTable;
