@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Learn = props => {
+export default function Learn() {
   const learnSnippets = [
     {
       title: 'SSITH Processors',
@@ -37,9 +37,9 @@ const Learn = props => {
   ));
 
   return (
-    <div className="p-6 pr-20">
-      <h1 className="text-gray-200 text-2xl font-normal uppercase">Learn</h1>
-      <p className="text-gray-200 text-sm leading-tight pt-2 pb-4 border-b">
+    <div className="h-full pt-6 pl-12 pr-12">
+      <h3 className="text-gray-200 uppercase">Learn</h3>
+      <p className="pt-4 text-gray-200 border-b">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Bibendum est
         ultricies integer quis. Iaculis urna id volutpat Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
         labore et dolore magna aliqua. Bibendum est ultricies integer quis. Iaculis urna id volutpat Lorem ipsum dolor sit amet, consectetur
@@ -50,6 +50,4 @@ const Learn = props => {
       {Snippet}
     </div>
   );
-};
-
-export default Learn;
+}
