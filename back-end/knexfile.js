@@ -68,7 +68,9 @@ const fetchConfiguration = async () =>
     });
   });
 module.exports = async () => {
+  console.log(`Setting ${process.env.CURRENT_STAGE} config`);
   const configuration = await fetchConfiguration();
+  console.log('config: ', configuration);
   return {
     client: 'mysql',
     connection: configuration,
