@@ -4,5 +4,6 @@
   "VPC_SUBNET_ID_2": "subnet-0895b8fcf240d8203",
   "VPC_SUBNET_ID_3": "subnet-049d2519ac86e875d",
   "vpcId": "vpc-03d695e48c0ccde32",
+  "LambdaSecurityGroup":"sg-0181f51d4351890de",
   "deploymentBucket": "develop-portal-cicd"
 }

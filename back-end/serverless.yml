@@ -15,7 +15,7 @@ provider:
   stage: ${opt:stage, 'develop'}
   stackName: ${opt:stage}-${self:service.name}
   versionFunctions: false
-  deploymentBucket: !Ref ${file(./config/config.${self:provider.stage}.json):deploymentBucket}
+  deploymentBucket: ${file(config/config.${self:provider.stage}.json):deploymentBucket}
   tags:
     Project: FETT-Portal
     Environment: ${opt:stage}
