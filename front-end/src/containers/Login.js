@@ -50,7 +50,7 @@ const Login = props => {
       className="bg-blue-700 min-h-screen flex justify-center"
       style={{
         backgroundImage: `url(${backgroundCity}), url(${backgroundPlanet})`,
-        backgroundRepeat: 'repeat-x, no-repeat',
+        backgroundRepeat: 'no-repeat, no-repeat',
         backgroundPosition: 'bottom center, 90% 5%',
       }}
     >
@@ -84,13 +84,8 @@ const Login = props => {
           type="submit"
           onClick={event => handleSubmit(event)}
         >
-          Login
+          {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Login'}
         </button>
-        {isLoading && (
-          <div className="self-auto">
-            <CircularProgress style={{ color: '#F4F4F4' }} />
-          </div>
-        )}
       </div>
     </div>
   );
