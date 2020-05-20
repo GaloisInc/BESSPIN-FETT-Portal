@@ -2,10 +2,10 @@ const aws = require('aws-sdk');
 
 const ssm = new aws.SSM();
 const secrets = new aws.SecretsManager();
-const getSecrets = async () =>
+const getSecrets = async stage =>
   secrets
     .getSecretValue({
-      SecretId: `fettportal-${process.env.CURRENT_STAGE}-db-password`,
+      SecretId: `fettportal-${stage}-db-password`,
     })
     .promise()
     .then(response => {
@@ -18,10 +18,10 @@ const getSecrets = async () =>
       throw err;
     });
 
-const getParameters = async () =>
+const getParameters = async stage =>
   ssm
     .getParametersByPath({
-      Path: `/fettportal/${process.env.CURRENT_STAGE}/db-aurora/`,
+      Path: `/fettportal/${stage}/db-aurora/`,
     })
     .promise()
     .then(response => {
@@ -49,9 +49,11 @@ const getParameters = async () =>
 
 const fetchConfiguration = async () =>
   new Promise(async (resolve, reject) => {
-    const env = process.env.CURRENT_STAGE;
+    const env = process.env.CURRENT_STAGE
+      ? process.env.CURRENT_STAGE
+      : process.env.NODE_ENV;
     if (!env) {
-      throw new Error('CURRENT_STAGE must be set');
+      throw new Error('CURRENT_STAGE or NODE_ENV must be set');
     }
     if (env === 'local') {
       return resolve({
@@ -73,7 +75,6 @@ const fetchConfiguration = async () =>
   });
 
 module.exports = async () => {
-  console.log(`Setting ${process.env.CURRENT_STAGE} config`);
   const configuration = await fetchConfiguration();
   return {
     client: 'mysql',
