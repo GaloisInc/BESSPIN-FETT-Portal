@@ -50,7 +50,7 @@ const Login = props => {
       className="bg-blue-700 min-h-screen flex justify-center"
       style={{
         backgroundImage: `url(${backgroundCity}), url(${backgroundPlanet})`,
-        backgroundRepeat: 'repeat-x, no-repeat',
+        backgroundRepeat: 'no-repeat, no-repeat',
         backgroundPosition: 'bottom center, 90% 5%',
       }}
     >
