@@ -8,6 +8,7 @@ import { ThemeProvider } from '@material-ui/styles';
 import { withStyles, createMuiTheme, mergeClasses } from '@material-ui/core/styles';
 import { CircularProgress } from '@material-ui/core';
 import MainRouter from './containers/MainRouter';
+import { GetFromDatabase } from './services/api';
 
 const _styles = {
   container: {
@@ -32,6 +33,7 @@ class App extends React.Component {
       isLoggedIn: false,
       storeId: null,
       isAuthenticating: false,
+      userType: 'admin',
     };
   }
 
@@ -41,12 +43,18 @@ class App extends React.Component {
     console.log('authenticating');
     try {
       await Auth.currentSession();
+      // this.getData();
     } catch (error) {
       await this.setState({ isAuthenticating: false });
       history.push('/');
     }
     this.login();
   }
+
+  handleRoleSwitch = async isAdmin => {
+    await this.setState({ isAdmin });
+    this.login();
+  };
 
   routeUser = user => {
     // if (user.accessToken && user.accessToken.payload && user.accessToken.payload && Array.isArray(user.accessToken.payload)) {
@@ -56,13 +64,18 @@ class App extends React.Component {
 
   login = async () => {
     const { history } = this.props;
-
+    const { isAdmin, userType } = this.state;
     try {
       const user = await Auth.currentSession();
       if (user.isValid()) {
-        await this.setState({ isLoggedIn: true, isAdmin: false, isAuthenticating: false });
+        await this.setState({ isLoggedIn: true, isAdmin: true, isAuthenticating: false });
         // this.routeUser(user);
-        history.push('/bountyportal');
+        // history.push('/adminportal');
+        if (isAdmin) {
+          history.push('/adminportal');
+        } else {
+          history.push('/bountyportal');
+        }
       }
     } catch (error) {
       console.log(error);
@@ -74,6 +87,15 @@ class App extends React.Component {
       await Auth.signOut();
 
       await this.setState({ isLoggedIn: false, isAdmin: false });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  getData = async () => {
+    try {
+      const data = await GetFromDatabase();
+      console.log(data);
     } catch (error) {
       console.log(error);
     }
@@ -93,10 +115,11 @@ class App extends React.Component {
               logout={this.logout}
               isAdmin={isAdmin}
               storeId={storeId}
+              handleRoleSwitch={this.handleRoleSwitch}
             />
           )}
           {isAuthenticating && (
-            <div className="h-screen w-full flex justify-center items-center">
+            <div className="flex items-center justify-center w-full h-screen">
               <CircularProgress style={{ color: '#26343E' }} />
             </div>
           )}

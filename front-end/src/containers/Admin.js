@@ -7,15 +7,15 @@ import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
 
 const Admin = props => {
-  const { isAdmin, isLoggedIn } = props;
+  const { isAdmin, isLoggedIn, handleRoleSwitch } = props;
   const checkAuth = isLoggedIn && isAdmin;
 
   return (
     <div className="flex-col h-full portal-container">
-      <Header isAdmin={isAdmin} />
+      <Header isAdmin={isAdmin} handleRoleSwitch={handleRoleSwitch} />
       <div style={{ minHeight: 'calc(100vh - 6em)' }} className="flex flex-row">
         <Sidebar isAdmin={isAdmin} />
-        <div className="bg-blue-700 w-full">
+        <div className="w-full bg-blue-700">
           {checkAuth ? (
             <>
               <Route path="/adminportal/dashboard" component={AdminDash} />
@@ -35,4 +35,5 @@ export default Admin;
 Admin.propTypes = {
   isAdmin: PropTypes.bool,
   isLoggedIn: PropTypes.bool,
+  handleRoleSwitch: PropTypes.func,
 };
