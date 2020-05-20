@@ -27,9 +27,9 @@ phases:
       - export REACT_APP_REDIRECT_URI=`$parseStackOutput CloudFrontOriginURL`/authorizing
       - export REACT_APP_LOGOUT_REDIRECT_URI=`$parseStackOutput CloudFrontOriginURL`
       - export REACT_APP_BASE_API_URI=`$parseStackOutput ServiceEndpoint`
-    #  - export REACT_APP_COGNITO_CLIENT_ID=########################
-      - export REACT_APP_COGNITO_DOMAIN='######################'
-      - export REACT_APP_COGNITO_USER_POOL_ID=######################
+      - export REACT_APP_COGNITO_CLIENT_ID=73h2mt51e5ke2dt0aq5g9n1qq9
+      - export REACT_APP_COGNITO_DOMAIN='https://fettportal-dev.auth.us-west-2.amazoncognito.com'
+      - export REACT_APP_COGNITO_USER_POOL_ID=us-west-2_TZpbYY6KB
       - export S3_HOSTING_BUCKET=`$parseStackOutput S3WebsiteBucketID`
       - export CLOUDFRONT_DISTRO=`$parseStackOutput CloudFrontOriginID`
       - cd ${CODEBUILD_SRC_DIR}/front-end
