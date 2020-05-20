@@ -8,13 +8,10 @@ exports.up = function(knex) {
       table.varchar('EmailAddress', 255).notNull();
       table.varchar('Role', 255).notNull();
       table
-        .timestamp('Created')
-        .notNull()
-        .knex.fn.now();
-      table
         .boolean('IsActive')
         .notNull()
         .defaultTo(true);
+      table.timestamps(true, true);
     }),
     knex.schema.createTable('Announcement', function(table) {
       table.increments('Id').primary();
@@ -23,13 +20,10 @@ exports.up = function(knex) {
       table.varchar('Type', 255).notNull();
       table.text('Payload');
       table
-        .timestamp('Created')
-        .notNull()
-        .knex.fn.now();
-      table
         .boolean('IsActive')
         .notNull()
         .defaultTo(true);
+      table.timestamps(true, true);
     }),
     knex.schema.createTable('InstanceConfiguration', function(table) {
       table.increments('Id').primary();
@@ -46,10 +40,6 @@ exports.up = function(knex) {
       table.integer('CreatedBy').references('User.Id');
       table.integer('Configuration').references('InstanceConfiguration.Id');
       table.varchar('Region', 255).notNull();
-      table
-        .timestamp('Created')
-        .notNull()
-        .knex.fn.now();
       table.varchar('Status', 255).notNull();
       table.varchar('F1EnvironmentId', 255).notNull();
       table.varchar('IpAddress', 255).notNull();
@@ -60,15 +50,11 @@ exports.up = function(knex) {
         .boolean('IsActive')
         .notNull()
         .defaultTo(true);
+      table.timestamps(true, true);
     }),
   ]);
 };
 
 exports.down = function(knex) {
-  return Promise.all([
-    knex.schema.dropTable('Environment'),
-    knex.schema.dropTable('InstanceConfiguration'),
-    knex.schema.dropTable('Announcement'),
-    knex.schema.dropTable('User'),
-  ]);
+  return Promise.all([knex.schema.dropTable('Environment'), knex.schema.dropTable('InstanceConfiguration'), knex.schema.dropTable('Announcement'), knex.schema.dropTable('User')]);
 };
