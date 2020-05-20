@@ -2,8 +2,8 @@ const aws = require('aws-sdk');
 
 const ssm = new aws.SSM();
 const secrets = new aws.SecretsManager();
-const getSecrets = async () => {
-  await secrets
+const getSecrets = async () =>
+  secrets
     .getSecretValue({
       SecretId: `fettportal-${process.env.CURRENT_STAGE}-db-password`,
     })
@@ -12,12 +12,13 @@ const getSecrets = async () => {
       if (!response) {
         throw new Error('Could not get DB password');
       }
+      console.log(response.SecretString);
       return response.SecretString;
     })
     .catch(err => {
       throw err;
     });
-};
+
 const getParameters = async () =>
   ssm
     .getParametersByPath({
@@ -62,15 +63,15 @@ const fetchConfiguration = async () =>
     const password = await getSecrets();
     return resolve({
       host: config.endpoint,
-      user: config.username,
+      user: config.user,
       password,
       database: config.schema,
     });
   });
+
 module.exports = async () => {
   console.log(`Setting ${process.env.CURRENT_STAGE} config`);
   const configuration = await fetchConfiguration();
-  console.log('config: ', configuration);
   return {
     client: 'mysql',
     connection: configuration,
