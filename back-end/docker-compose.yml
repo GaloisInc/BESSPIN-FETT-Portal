@@ -1,0 +1,14 @@
+version: "2"
+services:
+  db:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: fett-portal-develop-db
+    ports:
+      - 3306:3306
+    command: --max_allowed_packet=1073741824
+    mem_reservation: 1024m
+    mem_limit: 2048m    
+    environment:
+      MYSQL_ROOT_PASSWORD: "root"
