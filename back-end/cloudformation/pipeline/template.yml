@@ -227,10 +227,10 @@ Resources:
       Source:
         Type: CODEPIPELINE
         BuildSpec: !Sub 'buildspecs/buildspec.${GitHubBranch}.yml'
-      # VpcConfig:
-      #   SecurityGroupIds: !Ref SecurityGroupIds
-      #   Subnets: !Ref Subnets
-      #   VpcId: !Ref VpcId
+      VpcConfig:
+        SecurityGroupIds: !Ref SecurityGroupIds
+        Subnets: !Ref Subnets
+        VpcId: !Ref VpcId
 
   # 'GithubWebhook' satisfies two requirements:
   # -- Means that updates are pushed from GitHub, rather than AWS having to poll
