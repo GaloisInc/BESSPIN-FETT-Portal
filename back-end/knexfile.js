@@ -52,12 +52,13 @@ const fetchConfiguration = async () =>
       throw new Error('CURRENT_STAGE must be set');
     }
     if (env === 'local') {
-      return {
-        host: 'localhost',
-        user: 'FettPortalLocalMaster',
+      return resolve({
+        host: '127.0.0.1',
+        user: 'LocalMaster',
         password: 'HA*S#NFAjsjs*',
-        database: 'fettportal',
-      };
+        database: 'FettPortal',
+        port: 3306,
+      });
     }
     const config = await getParameters();
     const password = await getSecrets();
