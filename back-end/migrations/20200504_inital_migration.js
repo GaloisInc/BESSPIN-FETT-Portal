@@ -62,5 +62,10 @@ exports.up = async function(knex, Promise) {
 };
 
 exports.down = function(knex) {
-  return Promise.all([knex.schema.dropTable('Environment'), knex.schema.dropTable('InstanceConfiguration'), knex.schema.dropTable('Announcement'), knex.schema.dropTable('User')]);
+  return Promise.all([
+    knex.schema.dropTable('Environment'),
+    knex.schema.dropTable('InstanceConfiguration'),
+    knex.schema.dropTable('Announcement'),
+    knex.schema.dropTable('User'),
+  ]);
 };

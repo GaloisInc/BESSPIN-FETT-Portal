@@ -34,7 +34,10 @@ const getParameters = async () =>
         ssmValues[param.Name.split('/').pop()] = param.Value;
       });
       ['endpoint', 'user', 'schema'].forEach(param => {
-        if (!Object.prototype.hasOwnProperty.call(ssmValues, param) || !ssmValues[param]) {
+        if (
+          !Object.prototype.hasOwnProperty.call(ssmValues, param) ||
+          !ssmValues[param]
+        ) {
           throw new Error(`Could not locate ${param}`);
         }
       });
