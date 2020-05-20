@@ -12,7 +12,6 @@ const getSecrets = async () =>
       if (!response) {
         throw new Error('Could not get DB password');
       }
-      console.log(response.SecretString);
       return response.SecretString;
     })
     .catch(err => {
