@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import MaterialTable from 'material-table';
 import { Modal, Paper } from '@material-ui/core';
-import refresh from '../assets/refresh.svg';
-import search from '../assets/search.svg';
-import settings from '../assets/settings.svg';
+import refresh from '../../assets/refresh.svg';
+import search from '../../assets/search.svg';
+import settings from '../../assets/settings.svg';
 import InstanceModal from './InstanceModal';
-import alert from '../assets/alert.svg';
+import alert from '../../assets/alert.svg';
 
 export default function InstanceManagement() {
   const [searchTerm, setSearchTerm] = useState('');

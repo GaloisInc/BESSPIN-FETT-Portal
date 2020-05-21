@@ -2,11 +2,11 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import ReactRouterPropTypes from 'react-router-prop-types';
-import details from '../assets/details.svg';
-import users from '../assets/user.svg';
-import rocket from '../assets/rocket.svg';
-import dashboard from '../assets/dashboard.svg';
-import NavButton from './NavButton';
+import details from '../../assets/details.svg';
+import users from '../../assets/user.svg';
+import rocket from '../../assets/rocket.svg';
+import dashboard from '../../assets/dashboard.svg';
+import NavButton from '../NavButton';
 
 const Sidebar = ({ isAdmin, history }) => {
   const { pathname } = history.location;

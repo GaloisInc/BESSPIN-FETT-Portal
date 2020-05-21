@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/label-has-for */
 
 import React, { useState } from 'react';
-import { createUser, createTeams } from '../services/cognito';
+import { createUser, createTeams } from '../../../services/cognito';
 
 export default function UserForm() {
   const [email, setEmail] = useState('');

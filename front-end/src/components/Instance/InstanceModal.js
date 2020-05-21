@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import refresh from '../assets/refresh.svg';
-import close from '../assets/close.svg';
+import refresh from '../../assets/refresh.svg';
+import close from '../../assets/close.svg';
 import InstanceDetail from './InstanceDetail';
 
 const InstanceModal = ({ handleClose }) => (

@@ -1,11 +1,11 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import BountyDash from '../components/BountyDash';
-import BountyLaunch from '../components/BountyLaunch';
-import Learn from '../components/Learn';
-import Sidebar from '../components/Sidebar';
-import Header from '../components/Header';
+import BountyDash from '../components/Researcher/BountyDash';
+import BountyLaunch from '../components/Researcher/Launch/BountyLaunch';
+import Learn from '../components/Researcher/Learn/Learn';
+import Sidebar from '../components/Layout/Sidebar';
+import Header from '../components/Layout/Header';
 
 const Bounty = props => {
   const { isLoggedIn, handleRoleSwitch } = props;

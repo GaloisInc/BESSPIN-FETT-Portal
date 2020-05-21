@@ -1,5 +1,5 @@
 import React from 'react';
-import DashTable from './DashTable';
+import DashTable from './Dashboard/DashTable';
 
 export default function BountyDash() {
   return (
