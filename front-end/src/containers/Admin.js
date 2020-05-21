@@ -1,10 +1,10 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import AdminDash from '../components/AdminDash';
-import Users from '../components/Users';
-import Sidebar from '../components/Sidebar';
-import Header from '../components/Header';
+import AdminDash from '../components/Admin/AdminDash';
+import Users from '../components/Admin/Users/Users';
+import Sidebar from '../components/Layout/Sidebar';
+import Header from '../components/Layout/Header';
 
 const Admin = props => {
   const { isAdmin, isLoggedIn, handleRoleSwitch } = props;

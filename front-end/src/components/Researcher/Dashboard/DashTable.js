@@ -2,7 +2,7 @@ import React from 'react';
 // import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
 import { Paper } from '@material-ui/core';
-import rocketDark from '../assets/rocketDark.svg';
+import rocketDark from '../../../assets/rocketDark.svg';
 
 const DashTable = () => {
   const dummyInstances = [

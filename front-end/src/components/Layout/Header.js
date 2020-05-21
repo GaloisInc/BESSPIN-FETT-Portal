@@ -5,7 +5,7 @@ import PropTypes from 'prop-types';
 
 import ReactRouterPropTypes from 'react-router-prop-types';
 
-import fettLogo from '../assets/fettLogo.png';
+import fettLogo from '../../assets/fettLogo.png';
 
 const Header = ({ history, handleRoleSwitch }) => {
   const [open, setOpen] = useState(false);

@@ -2,8 +2,8 @@
 /* eslint-disable jsx-a11y/label-has-for */
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import close from '../assets/close.svg';
-import { updateUser } from '../services/cognito';
+import close from '../../../assets/close.svg';
+import { updateUser } from '../../../services/cognito';
 
 const UserModal = ({ handleClose, selectedUser }) => {
   const [email, setEmail] = useState(selectedUser.email);

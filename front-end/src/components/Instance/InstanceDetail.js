@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import DetailsIcon from '@material-ui/icons/Details';
-import alert from '../assets/alert.svg';
+import alert from '../../assets/alert.svg';
 
 export default function InstanceDetail() {
   const [open, setOpen] = useState(true);

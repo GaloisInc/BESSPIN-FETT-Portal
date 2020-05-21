@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import MaterialTable from 'material-table';
 import { Paper, Modal } from '@material-ui/core';
-import refresh from '../assets/refresh.svg';
-import search from '../assets/search.svg';
-import chevronRight from '../assets/chevronRight.svg';
+import refresh from '../../../assets/refresh.svg';
+import search from '../../../assets/search.svg';
+import chevronRight from '../../../assets/chevronRight.svg';
 import UserModal from './UserModal';
 
 export default function ManageUsers() {

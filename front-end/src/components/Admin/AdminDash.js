@@ -1,6 +1,6 @@
 import React from 'react';
-import InstanceManagement from './InstanceManagement';
-import Broadcast from './Broadcast';
+import InstanceManagement from '../Instance/InstanceManagement';
+import Broadcast from '../Broadcast';
 
 export default function AdminDash() {
   return (
