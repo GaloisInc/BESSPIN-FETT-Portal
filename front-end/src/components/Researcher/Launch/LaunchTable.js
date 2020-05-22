@@ -1,59 +1,19 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import MaterialTable from 'material-table';
 import { Paper } from '@material-ui/core';
 import rocketDark from '../../../assets/rocketDark.svg';
 import { getInstanceConfigurations } from '../../../services/api';
-// import { ec2Launcher } from '../../../services/launcher';
+import { ec2Launcher } from '../../../services/launcher';
 
 const LaunchTable = ({ history }) => {
-  const [instanceConfigurations, setInstanceConfigurations] = useState([
-    {
-      Type: 'LMCO',
-      Processor: 'RV32',
-      OS: 'FreeRTOS',
-    },
-    {
-      Type: 'LMCO',
-      Processor: 'RV64',
-      OS: 'Linux',
-    },
-    {
-      Type: 'SRI Cambridge',
-      Processor: 'RV64',
-      OS: 'FreeBSD',
-    },
-    {
-      Type: 'UMich',
-      Processor: 'RV32',
-      OS: 'FreeRTOS',
-    },
-    {
-      Type: 'MIT',
-      Processor: 'RV64',
-      OS: 'Linux',
-    },
-    {
-      Type: 'Baseline',
-      Processor: 'RV32',
-      OS: 'FreeRTOS',
-    },
-    {
-      Type: 'Baseline',
-      Processor: 'RV64',
-      OS: 'Linux',
-    },
-    {
-      Type: 'Baseline',
-      Processor: 'RV64',
-      OS: 'FreeBSD',
-    },
-  ]);
+  const [instanceConfigurations, setInstanceConfigurations] = useState([]);
 
   const fetchConfigurations = async () => {
     try {
       const configurations = await getInstanceConfigurations();
+      console.log(configurations);
       setInstanceConfigurations(configurations);
     } catch (error) {
       console.log(`Error fetching configurations${error}`);
@@ -66,10 +26,10 @@ const LaunchTable = ({ history }) => {
 
   const handleLaunch = async (event, configuration) => {
     event.preventDefault();
-    // const response = await ec2Launcher(configuration);
-    // if (response === 'success') {
-    //   history.push('./bountyportal/dashboard');
-    // }
+    const response = await ec2Launcher(configuration);
+    if (response === 'success') {
+      history.push('./');
+    }
     console.log('launching');
   };
 
@@ -130,4 +90,4 @@ LaunchTable.propTypes = {
   history: ReactRouterPropTypes.history,
 };
 
-export default LaunchTable;
+export default withRouter(LaunchTable);

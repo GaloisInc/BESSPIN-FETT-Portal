@@ -6,49 +6,7 @@ exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false; /* eslint no-param-reassign: 0 */
   try {
     await db.makeConnection();
-    // const data = await db.query(`SELECT * FROM "InstanceConfiguration"`);
-    const data = [
-      {
-        type: 'LMCO',
-        processor: 'RV32',
-        os: 'FreeRTOS',
-      },
-      {
-        type: 'LMCO',
-        processor: 'RV64',
-        os: 'Linux',
-      },
-      {
-        type: 'SRI Cambridge',
-        processor: 'RV64',
-        os: 'FreeBSD',
-      },
-      {
-        type: 'UMich',
-        processor: 'RV32',
-        os: 'FreeRTOS',
-      },
-      {
-        type: 'MIT',
-        processor: 'RV64',
-        os: 'Linux',
-      },
-      {
-        type: 'Baseline',
-        processor: 'RV32',
-        os: 'FreeRTOS',
-      },
-      {
-        type: 'Baseline',
-        processor: 'RV64',
-        os: 'Linux',
-      },
-      {
-        type: 'Baseline',
-        processor: 'RV64',
-        os: 'FreeBSD',
-      },
-    ];
+    const data = await db.query(`SELECT * FROM "InstanceConfiguration"`);
     return new Response({ items: data }).success();
   } catch (err) {
     console.log(err);
