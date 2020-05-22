@@ -8,20 +8,61 @@ import { getInstanceConfigurations } from '../../../services/api';
 // import { ec2Launcher } from '../../../services/launcher';
 
 const LaunchTable = ({ history }) => {
-  const [instanceConfigurations, setInstanceConfigurations] = useState([]);
+  const [instanceConfigurations, setInstanceConfigurations] = useState([
+    {
+      Type: 'LMCO',
+      Processor: 'RV32',
+      OS: 'FreeRTOS',
+    },
+    {
+      Type: 'LMCO',
+      Processor: 'RV64',
+      OS: 'Linux',
+    },
+    {
+      Type: 'SRI Cambridge',
+      Processor: 'RV64',
+      OS: 'FreeBSD',
+    },
+    {
+      Type: 'UMich',
+      Processor: 'RV32',
+      OS: 'FreeRTOS',
+    },
+    {
+      Type: 'MIT',
+      Processor: 'RV64',
+      OS: 'Linux',
+    },
+    {
+      Type: 'Baseline',
+      Processor: 'RV32',
+      OS: 'FreeRTOS',
+    },
+    {
+      Type: 'Baseline',
+      Processor: 'RV64',
+      OS: 'Linux',
+    },
+    {
+      Type: 'Baseline',
+      Processor: 'RV64',
+      OS: 'FreeBSD',
+    },
+  ]);
 
-  const fetchConfigurations = async () => {
-    try {
-      const configurations = await getInstanceConfigurations();
-      setInstanceConfigurations(configurations);
-    } catch (error) {
-      console.log(`Error fetching configurations${error}`);
-    }
-  };
+  // const fetchConfigurations = async () => {
+  //   try {
+  //     const configurations = await getInstanceConfigurations();
+  //     setInstanceConfigurations(configurations);
+  //   } catch (error) {
+  //     console.log(`Error fetching configurations${error}`);
+  //   }
+  // };
 
-  useEffect(() => {
-    fetchConfigurations();
-  }, [fetchConfigurations]);
+  // useEffect(() => {
+  //   fetchConfigurations();
+  // }, [fetchConfigurations]);
 
   const handleLaunch = async (event, configuration) => {
     event.preventDefault();
