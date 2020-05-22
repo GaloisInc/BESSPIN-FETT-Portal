@@ -1,52 +1,37 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import ReactRouterPropTypes from 'react-router-prop-types';
 import MaterialTable from 'material-table';
 import { Paper } from '@material-ui/core';
 import rocketDark from '../../../assets/rocketDark.svg';
+import { getInstanceConfigurations } from '../../../services/api';
+// import { ec2Launcher } from '../../../services/launcher';
 
-const LaunchTable = () => {
-  const dummyInstances = [
-    {
-      type: 'LMCO',
-      processor: 'RV32',
-      os: 'FreeRTOS',
-    },
-    {
-      type: 'LMCO',
-      processor: 'RV64',
-      os: 'Linux',
-    },
-    {
-      type: 'SRI Cambridge',
-      processor: 'RV64',
-      os: 'FreeBSD',
-    },
-    {
-      type: 'UMich',
-      processor: 'RV32',
-      os: 'FreeRTOS',
-    },
-    {
-      type: 'MIT',
-      processor: 'RV64',
-      os: 'Linux',
-    },
-    {
-      type: 'Baseline',
-      processor: 'RV32',
-      os: 'FreeRTOS',
-    },
-    {
-      type: 'Baseline',
-      processor: 'RV64',
-      os: 'Linux',
-    },
-    {
-      type: 'Baseline',
-      processor: 'RV64',
-      os: 'FreeBSD',
-    },
-  ];
+const LaunchTable = ({ history }) => {
+  const [instanceConfigurations, setInstanceConfigurations] = useState([]);
+
+  const fetchConfigurations = async () => {
+    try {
+      const configurations = await getInstanceConfigurations();
+      setInstanceConfigurations(configurations);
+    } catch (error) {
+      console.log(`Error fetching configurations${error}`);
+    }
+  };
+
+  useEffect(() => {
+    fetchConfigurations();
+  }, [fetchConfigurations]);
+
+  const handleLaunch = async (event, configuration) => {
+    event.preventDefault();
+    // const response = await ec2Launcher(configuration);
+    // if (response === 'success') {
+    //   history.push('./bountyportal/dashboard');
+    // }
+    console.log('launching');
+  };
+
   return (
     <>
       <div className="mb-4 bg-blue-600 table-card" style={{ width: '800px', minHeight: '400px' }}>
@@ -58,14 +43,18 @@ const LaunchTable = () => {
             Container: props => <Paper {...props} elevation={0} />,
           }}
           columns={[
-            { title: 'Type', field: 'type' },
-            { title: 'Processor', field: 'processor' },
-            { title: 'OS', field: 'os' },
+            { title: 'Type', field: 'Type' },
+            { title: 'Processor', field: 'Processor' },
+            { title: 'OS', field: 'OS' },
             {
               title: '',
-              field: 'launch',
+              field: 'Launch',
               render: data => (
-                <button className="flex flex-row items-center justify-around w-24 pr-4 btn-gray selected:outline-none" type="button">
+                <button
+                  className="flex flex-row items-center justify-around w-24 pr-4 btn-gray selected:outline-none"
+                  type="button"
+                  onClick={event => handleLaunch(event, data)}
+                >
                   <img src={rocketDark} alt="" className="w-3" />
                   <p className="self-center text-sm font-medium text-blue-900 uppercase">launch</p>
                 </button>
@@ -89,13 +78,15 @@ const LaunchTable = () => {
             toolbar: false,
             sorting: false,
           }}
-          data={dummyInstances}
+          data={instanceConfigurations}
         />
       </div>
     </>
   );
 };
 
-LaunchTable.propTypes = {};
+LaunchTable.propTypes = {
+  history: ReactRouterPropTypes.history,
+};
 
 export default LaunchTable;

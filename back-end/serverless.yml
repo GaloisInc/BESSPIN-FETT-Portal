@@ -30,6 +30,7 @@ provider:
       Action:
         - "ssm:GetParametersByPath"
         - "ssm:GetParameter"
+        - "ssm:GetParameters"
         - "ssm:PutParameter"
       Resource:
         - "arn:aws:ssm:us-west-2:#{AWS::AccountId}:parameter/fettportal/*"
@@ -58,6 +59,8 @@ custom:
     webpackConfig: ./webpack.config.js
     packager: 'npm'
   lambdaArnBase: "arn:aws:lambda:${self:provider.region}:#{AWS::AccountId}:function:${self:service.name}-${self:provider.stage}"
+  authorizerPool:
+    develop: arn:aws:cognito-idp:us-west-2:363527286999:userpool/us-west-2_TZpbYY6KB
 
 functions:
   getFromDatabase:
@@ -68,6 +71,22 @@ functions:
         path: getFromDatabase
         method: get
         cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getInstanceConfiguration:
+    handler: src/functions/getInstanceConfigurations.handler
+    timeout: 60
+    events:
+    - http:
+        path: getInstanceConfigurations
+        method: get
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+    environment:
+      CURRENT_STAGE: ${self:provider.stage}
 
 resources:
   - ${file(cloudformation/hosting.yml)}

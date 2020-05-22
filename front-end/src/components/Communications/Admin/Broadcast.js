@@ -14,38 +14,38 @@ export default function Broadcast() {
     // Todo implement ==> search
   };
   return (
-    <div className="bg-blue-600" style={{ width: '500px', minHeight: '630px' }}>
-      <div className="flex flex-row justify-between pl-4 mt-2 items-center mb-4">
-        <h5 className="uppercase text-gray-200">Broadcast</h5>
+    <div className="mb-4 bg-blue-600" style={{ width: '500px', minHeight: '630px' }}>
+      <div className="flex flex-row items-center justify-between pl-4 mt-2 mb-4">
+        <h5 className="text-gray-200 uppercase">Broadcast</h5>
         <a href="">
-          <h5 className="text-teal-500 uppercase mr-4 underline">view history</h5>
+          <h5 className="mr-4 text-teal-500 underline uppercase">view history</h5>
         </a>
       </div>
-      <div className="self-center bg-blue-700 m-8" style={{ minHeight: '500px' }}>
+      <div className="self-center m-8 bg-blue-700" style={{ minHeight: '500px' }}>
         <form className="flex flex-col items-center w-auto m-8">
-          <label htmlFor="team" className="text-gray-200 font-body mt-8">
+          <label htmlFor="team" className="mt-8 text-gray-200 font-body">
             Select Team
           </label>
           <select
             id="team"
             value={team}
             onChange={event => setTeam(event.target.value)}
-            className="w-full bg-blue-600 border-solid border border-gray-200 text-gray-200 p-1 block border hover:border-gray-300 rounded shadow leading-tight focus:outline-none focus:shadow-outline"
+            className="block w-full p-1 leading-tight text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded shadow hover:border-gray-300 focus:outline-none focus:shadow-outline"
           >
             <option value="Team 1">Team 1</option>
             <option value="Team 2">Team 2</option>
             <option value="Team 3">Team 3</option>
           </select>
-          <label htmlFor="vulnurability" className="text-gray-200 font-body mt-8">
+          <label htmlFor="vulnurability" className="mt-8 text-gray-200 font-body">
             Vulnerability
           </label>
           <input
             id="vulnurability"
             value={vulnurability}
             onChange={event => setVulnurability(event.target.value)}
-            className="w-full bg-blue-600 border-solid border border-gray-200 text-gray-200 p-1"
+            className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid"
           />
-          <label htmlFor="description" className="text-gray-200 font-body mt-8">
+          <label htmlFor="description" className="mt-8 text-gray-200 font-body">
             Description
           </label>
           <textarea
@@ -53,10 +53,10 @@ export default function Broadcast() {
             value={description}
             onChange={event => setDescription(event.target.value)}
             rows="7"
-            className="w-full bg-blue-600 border-solid border border-gray-200 text-gray-200 p-1"
+            className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid"
           />
           <button
-            className="bg-gray-200 hover:bg-gray-300 text-blue-700 font-bold py-1 px-2 rounded uppercase w-full mt-8"
+            className="w-full px-2 py-1 mt-8 font-bold text-blue-700 uppercase bg-gray-200 rounded hover:bg-gray-300"
             type="submit"
             onClick={event => handleSubmit(event)}
           >
