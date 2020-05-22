@@ -40,7 +40,7 @@ provider:
         - "secretsmanager:GetSecretValue"
       Resource:
         - ${file(cloudformation/outputs.yml):Outputs.RDSSecretsArn.Value}
-      - Effect: "Allow"
+    - Effect: "Allow"
       Action:
         - "sns:Publish"
       Resource:
