@@ -120,7 +120,7 @@ export const disableUser = async user =>
         const cognito = new AWS.CognitoIdentityServiceProvider(auth);
 
         const params = {
-          Username: user.email,
+          Username: user,
           UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
         };
 
@@ -175,7 +175,7 @@ export const resendInvite = email =>
 
         const params = {
           Username: email,
-          TemporaryPassword: password,
+          TemporaryPassword: `${password}1aA!`,
           MessageAction: 'RESEND',
           DesiredDeliveryMediums: ['EMAIL'],
           UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
