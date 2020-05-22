@@ -54,7 +54,7 @@ provider:
       - ${file(config/config.${self:provider.stage}.json):VPC_SUBNET_ID_3}
   environment:
     region: ${self:provider.region}
-    stage: ${self:provider.stage}
+    CURRENT_STAGE: ${self:provider.stage}
     alarmTopicArn: ${file(cloudformation/outputs.yml):Outputs.AlarmTopicArn.Value}
 
 custom:
@@ -90,8 +90,6 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
-    environment:
-      CURRENT_STAGE: ${self:provider.stage}
 
 resources:
   - ${file(cloudformation/hosting.yml)}
