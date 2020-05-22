@@ -3,6 +3,7 @@ import React from 'react';
 import MaterialTable from 'material-table';
 import { Paper } from '@material-ui/core';
 import rocketDark from '../../../assets/rocketDark.svg';
+import settings from '../../../assets/settings.svg';
 
 const DashTable = () => {
   const dummyInstances = [
@@ -30,9 +31,8 @@ const DashTable = () => {
               title: '',
               field: 'launch',
               render: data => (
-                <button className="flex flex-row items-center justify-around w-24 pr-4 btn-gray selected:outline-none" type="button">
-                  <img src={rocketDark} alt="" className="w-3" />
-                  <p className="self-center text-sm font-medium text-blue-900 uppercase">launch</p>
+                <button type="button" className="focus:outline-none">
+                  <img src={settings} alt="" />
                 </button>
               ),
             },
