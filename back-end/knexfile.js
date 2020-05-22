@@ -64,8 +64,8 @@ const fetchConfiguration = async () =>
         port: 3306,
       });
     }
-    const config = await getParameters();
-    const password = await getSecrets();
+    const config = await getParameters(env).catch(err => console.log(err));
+    const password = await getSecrets(env).catch(err => console.log(err));
     return resolve({
       host: config.endpoint,
       user: config.user,
