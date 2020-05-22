@@ -1,5 +1,6 @@
 import React from 'react';
 import DashTable from './Dashboard/DashTable';
+import Comms from '../Communications/Card';
 
 export default function BountyDash() {
   return (
@@ -11,6 +12,7 @@ export default function BountyDash() {
       </p>
       <div className="flex flex-row w-full mt-4">
         <DashTable />
+        <Comms />
       </div>
     </div>
   );
