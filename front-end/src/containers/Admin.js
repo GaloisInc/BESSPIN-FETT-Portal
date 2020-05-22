@@ -20,7 +20,7 @@ const Admin = props => {
             <>
               <Route path="/adminportal/dashboard" component={AdminDash} />
               <Route path="/adminportal/users" component={Users} />
-              <Route path="/adminportal" render={() => <Redirect to="adminportal/dashboard" />} />
+              <Route exact path="/adminportal" render={() => <Redirect to="adminportal/dashboard" />} />
             </>
           ) : (
             <Redirect to="/" />

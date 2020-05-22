@@ -31,9 +31,7 @@ class App extends React.Component {
     this.state = {
       isAdmin: false,
       isLoggedIn: false,
-      storeId: null,
       isAuthenticating: false,
-      userType: 'admin',
     };
   }
 
@@ -56,15 +54,9 @@ class App extends React.Component {
     this.login();
   };
 
-  routeUser = user => {
-    // if (user.accessToken && user.accessToken.payload && user.accessToken.payload && Array.isArray(user.accessToken.payload)) {
-    //   console.log(user.accessToken.payload['cognito:groups']);
-    // }
-  };
-
   login = async () => {
     const { history } = this.props;
-    const { isAdmin, userType } = this.state;
+    const { isAdmin } = this.state;
     try {
       const user = await Auth.currentSession();
       if (user.isValid()) {
@@ -102,7 +94,7 @@ class App extends React.Component {
   };
 
   render() {
-    const { isAdmin, isLoggedIn, storeId, isAuthenticating } = this.state;
+    const { isAdmin, isLoggedIn, isAuthenticating } = this.state;
     return (
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <ThemeProvider theme={theme}>
@@ -114,7 +106,6 @@ class App extends React.Component {
               login={this.login}
               logout={this.logout}
               isAdmin={isAdmin}
-              storeId={storeId}
               handleRoleSwitch={this.handleRoleSwitch}
             />
           )}

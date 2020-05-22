@@ -27,7 +27,7 @@ export default function UserForm() {
   };
 
   return (
-    <div className="bg-blue-600" style={{ width: '400px', minHeight: '630px' }}>
+    <div className="mb-4 bg-blue-600" style={{ width: '400px', minHeight: '630px' }}>
       <h5 className="pt-16 pl-12 text-gray-200 uppercase">New Teams</h5>
       <form className="flex flex-col px-12 ml-4">
         <label htmlFor="teamNumber" className="mt-4 mb-1 text-gray-200 font-body">
