@@ -48,7 +48,7 @@ export default function InstanceManagement() {
 
   return (
     <>
-      <div className="bg-blue-600 table-card" style={{ width: '700px', minHeight: '630px' }}>
+      <div className="mb-4 bg-blue-600 table-card" style={{ width: '700px', minHeight: '630px' }}>
         <div className="flex flex-row items-center justify-between pl-4 mt-4 mb-2">
           <h5 className="font-medium text-gray-200 uppercase">environment management</h5>
           <div className="flex flex-row items-center mr-4">

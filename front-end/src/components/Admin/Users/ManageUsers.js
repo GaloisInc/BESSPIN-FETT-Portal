@@ -28,7 +28,7 @@ export default function ManageUsers() {
 
   const dummyInstances = [
     {
-      username: 'username one',
+      username: 'mister.e@testing.fivetalent.com',
       email: 'mister.e@testing.fivetalent.com',
       role: 'admin',
     },
@@ -38,14 +38,14 @@ export default function ManageUsers() {
       role: 'researcher',
     },
     {
-      username: 'username two',
+      username: 'mister.t@testing.fivetalent.com',
       email: 'mister.t@testing.fivetalent.com',
       role: 'admin',
     },
   ];
 
   return (
-    <div className="bg-blue-600 table-card" style={{ width: '700px', minHeight: '630px' }}>
+    <div className="mb-4 bg-blue-600 table-card" style={{ width: '700px', minHeight: '630px' }}>
       <div className="flex flex-row items-center justify-between pl-8 mt-4 mb-4">
         <h5 className="text-gray-200 uppercase">current teams/ users</h5>
         <div className="flex flex-row items-center mr-4">
@@ -69,8 +69,7 @@ export default function ManageUsers() {
           Container: props => <Paper {...props} elevation={0} />,
         }}
         columns={[
-          { title: 'USER NAME', field: 'username', width: '12em', cellStyle: { paddingLeft: '2em' }, headerStyle: { paddingLeft: '2em' } },
-          { title: 'EMAIL', field: 'email' },
+          { title: 'USER NAME', field: 'username', width: '18em', cellStyle: { paddingLeft: '2em' }, headerStyle: { paddingLeft: '2em' } },
           { title: 'ROLE', field: 'role' },
           {
             title: '',

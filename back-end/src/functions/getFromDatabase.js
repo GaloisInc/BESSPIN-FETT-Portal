@@ -6,7 +6,8 @@ exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false; /* eslint no-param-reassign: 0 */
   try {
     await db.makeConnection();
-    const data = await db.query(`Select * from Users`);
+    const { query } = event;
+    const data = await db.query(`${query}`);
     return new Response({ items: data }).success();
   } catch (err) {
     console.log(err);
