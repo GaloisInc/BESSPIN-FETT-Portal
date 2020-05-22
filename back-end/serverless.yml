@@ -73,6 +73,17 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getInstanceConfiguration:
+    handler: src/functions/getInstanceConfigurations.handler
+    timeout: 60
+    events:
+    - http:
+        path: getInstanceConfigurations
+        method: get
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
 
 resources:
   - ${file(cloudformation/hosting.yml)}
