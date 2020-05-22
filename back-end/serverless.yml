@@ -85,6 +85,8 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
+    environment:
+      CURRENT_STAGE: ${self:provider.stage}
 
 resources:
   - ${file(cloudformation/hosting.yml)}
