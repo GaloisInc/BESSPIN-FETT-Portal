@@ -59,7 +59,7 @@ custom:
     packager: 'npm'
   lambdaArnBase: "arn:aws:lambda:${self:provider.region}:#{AWS::AccountId}:function:${self:service.name}-${self:provider.stage}"
   authorizerPool:
-    develop: arn:aws:cognito-idp:us-west-2:d3c7ff45-e72c-4f2f-a915-14f6cb87dead:userpool/us-west-2_TZpbYY6KB
+    develop: arn:aws:cognito-idp:us-west-2:363527286999:userpool/us-west-2_TZpbYY6KB
 
 functions:
   getFromDatabase:
