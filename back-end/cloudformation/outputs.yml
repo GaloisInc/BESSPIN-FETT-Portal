@@ -9,3 +9,5 @@ Outputs:
     Value: !Join ['', ['https://', !GetAtt CloudFrontOrigin.DomainName]]
   AlarmTopicArn:
     Value: !Ref AlarmTopic
+  RDSSecretsArn:
+    Value: !Ref Secret

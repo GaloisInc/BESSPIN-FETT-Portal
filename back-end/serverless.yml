@@ -37,6 +37,11 @@ provider:
         - "arn:aws:ssm:us-west-2:#{AWS::AccountId}:parameter/fettportal/*"
     - Effect: "Allow"
       Action:
+        - "secretsmanager:GetSecretValue"
+      Resource:
+        - ${file(cloudformation/outputs.yml):Outputs.RDSSecretsArn.Value}
+      - Effect: "Allow"
+      Action:
         - "sns:Publish"
       Resource:
         - ${file(cloudformation/outputs.yml):Outputs.AlarmTopicArn.Value}
