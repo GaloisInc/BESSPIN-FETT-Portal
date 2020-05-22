@@ -51,18 +51,18 @@ const LaunchTable = ({ history }) => {
     },
   ]);
 
-  // const fetchConfigurations = async () => {
-  //   try {
-  //     const configurations = await getInstanceConfigurations();
-  //     setInstanceConfigurations(configurations);
-  //   } catch (error) {
-  //     console.log(`Error fetching configurations${error}`);
-  //   }
-  // };
+  const fetchConfigurations = async () => {
+    try {
+      const configurations = await getInstanceConfigurations();
+      setInstanceConfigurations(configurations);
+    } catch (error) {
+      console.log(`Error fetching configurations${error}`);
+    }
+  };
 
-  // useEffect(() => {
-  //   fetchConfigurations();
-  // }, [fetchConfigurations]);
+  useEffect(() => {
+    fetchConfigurations();
+  }, [fetchConfigurations]);
 
   const handleLaunch = async (event, configuration) => {
     event.preventDefault();
