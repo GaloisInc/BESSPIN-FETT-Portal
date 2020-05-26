@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/label-has-for */
 
 import React, { useState } from 'react';
-import { createUser, createTeams } from '../../../services/cognito';
+import { createAdminUser, createTeams } from '../../../services/cognito';
 
 export default function UserForm() {
   const [email, setEmail] = useState('');
@@ -11,7 +11,7 @@ export default function UserForm() {
   const handleCreateUser = event => {
     event.preventDefault();
     try {
-      createUser(email);
+      createAdminUser(email);
     } catch (error) {
       console.log(`failed to create user ${error}`);
     }

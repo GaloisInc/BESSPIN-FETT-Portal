@@ -4,7 +4,7 @@ import ReactRouterPropTypes from 'react-router-prop-types';
 import MaterialTable from 'material-table';
 import { Paper } from '@material-ui/core';
 import rocketDark from '../../../assets/rocketDark.svg';
-import { getInstanceConfigurations } from '../../../services/api';
+import { getInstanceConfigurations } from '../../../services/api/instanceConfiguration';
 import { ec2Launcher } from '../../../services/launcher';
 
 const LaunchTable = ({ history }) => {
@@ -22,7 +22,8 @@ const LaunchTable = ({ history }) => {
 
   useEffect(() => {
     fetchConfigurations();
-  }, [fetchConfigurations]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleLaunch = async (event, configuration) => {
     event.preventDefault();
@@ -44,7 +45,7 @@ const LaunchTable = ({ history }) => {
             Container: props => <Paper {...props} elevation={0} />,
           }}
           columns={[
-            { title: 'Type', field: 'Type' },
+            { title: 'Type', field: 'Type', cellStyle: { paddingLeft: '2em' }, headerStyle: { paddingLeft: '2em' } },
             { title: 'Processor', field: 'Processor' },
             { title: 'OS', field: 'OS' },
             {

@@ -5,9 +5,15 @@ const db = new Database();
 exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false; /* eslint no-param-reassign: 0 */
   try {
+    const input = {
+      Username: event.email,
+      Role: event.role,
+      CreatedBy: event.myUserName,
+    };
     await db.makeConnection();
     const data = await db.query(
-      `SELECT * FROM InstanceConfiguration WHERE IsActive = true`
+      `INSERT INTO User(Email, Role, CreatedBy) VALUES (:Email, :Role, :CreatedBy)`,
+      input
     );
     return new Response({ items: data }).success();
   } catch (err) {
