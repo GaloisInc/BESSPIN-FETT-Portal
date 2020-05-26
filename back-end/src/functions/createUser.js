@@ -3,6 +3,7 @@ const { Response, Database } = require('../helpers');
 
 const db = new Database();
 exports.handler = async (event, context) => {
+  console.log(event);
   context.callbackWaitsForEmptyEventLoop = false; /* eslint no-param-reassign: 0 */
   try {
     const input = {
@@ -11,8 +12,10 @@ exports.handler = async (event, context) => {
       Role: event.role,
     };
     await db.makeConnection();
-    const data = await db.query(`INSERT INTO User SET ?`, input);
-    // 'INSERT INTO posts SET ?', {title: 'test'}
+    const data = await db.query(
+      `INSERT INTO User (EmailAddress, Role, UserName) values (:EmailAddress, :Role, :UserName)`,
+      input
+    );
     return new Response({ items: data }).success();
   } catch (err) {
     console.log(err);
