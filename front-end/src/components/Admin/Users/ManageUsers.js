@@ -68,8 +68,8 @@ export default function ManageUsers() {
           Container: props => <Paper {...props} elevation={0} />,
         }}
         columns={[
-          { title: 'USER NAME', field: 'username', width: '18em', cellStyle: { paddingLeft: '2em' }, headerStyle: { paddingLeft: '2em' } },
-          { title: 'ROLE', field: 'role' },
+          { title: 'USER NAME', field: 'UserName', width: '18em', cellStyle: { paddingLeft: '2em' }, headerStyle: { paddingLeft: '2em' } },
+          { title: 'ROLE', field: 'Role' },
           {
             title: '',
             field: 'detailsView',
