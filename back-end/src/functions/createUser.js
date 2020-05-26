@@ -11,10 +11,7 @@ exports.handler = async (event, context) => {
       CreatedBy: event.myUserName,
     };
     await db.makeConnection();
-    const data = await db.query(
-      `INSERT INTO User(Email, Role, CreatedBy) VALUES (:Email, :Role, :CreatedBy)`,
-      input
-    );
+    const data = await db.query(`INSERT INTO User ?`, input);
     return new Response({ items: data }).success();
   } catch (err) {
     console.log(err);
