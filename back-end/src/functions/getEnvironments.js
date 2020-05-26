@@ -7,7 +7,7 @@ exports.handler = async (event, context) => {
   try {
     await db.makeConnection();
     const data = await db.query(
-      `SELECT * FROM InstanceConfiguration WHERE IsActive = true`
+      `SELECT * FROM Environment WHERE IsActive = true`
     );
     return new Response({ items: data }).success();
   } catch (err) {

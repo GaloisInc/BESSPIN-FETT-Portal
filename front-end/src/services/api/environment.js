@@ -23,22 +23,6 @@ function handleErrors(response) {
   return response;
 }
 
-export const GetFromDatabase = () =>
-  new Promise(async (resolve, reject) => {
-    console.log(BASE_API);
-    const query = JSON.stringify({ query: `SELECT * FROM Users` });
-    fetch(`${BASE_API}/getFromDatabase`, {
-      headers: makeHeaders(),
-      body: query,
-    })
-      .then(handleErrors)
-      .then(response => response.json())
-      .then(body => resolve(body))
-      .catch(response => {
-        reject(response.json());
-      });
-  });
-
 export const getEnvironments = () =>
   new Promise(async (resolve, reject) => {
     fetch(`${BASE_API}/getEnvironments`, {

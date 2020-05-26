@@ -6,9 +6,7 @@ exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false; /* eslint no-param-reassign: 0 */
   try {
     await db.makeConnection();
-    const data = await db.query(
-      `SELECT * FROM InstanceConfiguration WHERE IsActive = true`
-    );
+    const data = await db.query(`SELECT * FROM User WHERE IsActive = true`);
     return new Response({ items: data }).success();
   } catch (err) {
     console.log(err);

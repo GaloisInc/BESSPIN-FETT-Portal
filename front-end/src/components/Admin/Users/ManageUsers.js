@@ -1,15 +1,32 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
 import { Paper, Modal } from '@material-ui/core';
 import refresh from '../../../assets/refresh.svg';
 import search from '../../../assets/search.svg';
 import chevronRight from '../../../assets/chevronRight.svg';
 import UserModal from './UserModal';
+import { getUsers } from '../../../services/api/user';
 
 export default function ManageUsers() {
   const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = React.useState(false);
   const [selectedUser, setSelectedUser] = useState('');
+  const [users, setUsers] = useState([]);
+
+  const fetchUsers = async () => {
+    try {
+      const response = await getUsers();
+      console.log(users);
+      setUsers(response);
+    } catch (error) {
+      console.log(`Error fetching configurations${error}`);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleSearch = event => {
     event.preventDefault();
@@ -25,24 +42,6 @@ export default function ManageUsers() {
   const handleClose = () => {
     setOpen(false);
   };
-
-  const dummyInstances = [
-    {
-      username: 'mister.e@testing.fivetalent.com',
-      email: 'mister.e@testing.fivetalent.com',
-      role: 'admin',
-    },
-    {
-      username: 'team one',
-      email: '',
-      role: 'researcher',
-    },
-    {
-      username: 'mister.t@testing.fivetalent.com',
-      email: 'mister.t@testing.fivetalent.com',
-      role: 'admin',
-    },
-  ];
 
   return (
     <div className="mb-4 bg-blue-600 table-card" style={{ width: '700px', minHeight: '630px' }}>
@@ -100,7 +99,7 @@ export default function ManageUsers() {
           toolbar: false,
           sorting: false,
         }}
-        data={dummyInstances}
+        data={users}
       />
       <Modal open={open} onClose={handleClose}>
         <UserModal handleClose={handleClose} selectedUser={selectedUser} />

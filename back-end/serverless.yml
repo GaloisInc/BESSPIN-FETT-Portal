@@ -56,6 +56,7 @@ provider:
     region: ${self:provider.region}
     CURRENT_STAGE: ${self:provider.stage}
     alarmTopicArn: ${file(cloudformation/outputs.yml):Outputs.AlarmTopicArn.Value}
+    CURRENT_STAGE: ${self:provider.stage}
 
 custom:
   vpcId: ${file(config/config.${self:provider.stage}.json):vpcId}
@@ -90,6 +91,60 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
+    environment:
+      CURRENT_STAGE: ${self:provider.stage}
+  getUsers:
+    handler: src/functions/getUsers.handler
+    timeout: 60
+    events:
+    - http:
+        path: getUsers
+        method: get
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+    environment:
+      CURRENT_STAGE: ${self:provider.stage}
+  getEnvironments:
+    handler: src/functions/getEnvironments.handler
+    timeout: 60
+    events:
+    - http:
+        path: getEnvironments
+        method: get
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+    environment:
+      CURRENT_STAGE: ${self:provider.stage}
+  createUser:
+    handler: src/functions/createUser.handler
+    timeout: 60
+    events:
+    - http:
+        path: createUser
+        method: get
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+    environment:
+      CURRENT_STAGE: ${self:provider.stage}
+  disableUser:
+    handler: src/functions/createUser.handler
+    timeout: 60
+    events:
+    - http:
+        path: createUser
+        method: get
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+    environment:
+      CURRENT_STAGE: ${self:provider.stage}
 
 resources:
   - ${file(cloudformation/hosting.yml)}

@@ -23,48 +23,43 @@ function handleErrors(response) {
   return response;
 }
 
-export const GetFromDatabase = () =>
+export const getUsers = () =>
   new Promise(async (resolve, reject) => {
-    console.log(BASE_API);
-    const query = JSON.stringify({ query: `SELECT * FROM Users` });
-    fetch(`${BASE_API}/getFromDatabase`, {
+    fetch(`${BASE_API}/getUsers`, {
       headers: makeHeaders(),
-      body: query,
     })
       .then(handleErrors)
       .then(response => response.json())
-      .then(body => resolve(body))
+      .then(body => {
+        resolve(body.items);
+      })
       .catch(response => {
         reject(response.json());
       });
   });
 
-export const getEnvironments = () =>
-  new Promise(async (resolve, reject) => {
-    fetch(`${BASE_API}/getEnvironments`, {
-      headers: makeHeaders(),
-    })
-      .then(handleErrors)
-      .then(response => response.json())
-      .then(body => resolve(body))
-      .catch(response => {
-        reject(response.json());
-      });
-  });
-
-export const createEnvironmentRecord = async configuration =>
+export const createUser = async (email, role) =>
   new Promise(async (resolve, reject) => {
     const sesh = await Auth.currentSession();
-    const myUserName = sesh.getAccessToken().payload.username;
+    const myUsername = sesh.getAccessToken().payload.username;
 
-    fetch(`${BASE_API}/createEnvironment`, {
+    fetch(`${BASE_API}/createUser`, {
       headers: makeHeaders(),
-      body: JSON.stringify({
-        OS: `${configuration.OS}`,
-        Processor: `${configuration.Processor}`,
-        Type: `${configuration.Type}`,
-        myUserName: `${myUserName}`,
-      }),
+      body: JSON.stringify({ email: `${email}`, role: `${role}`, myUsername: `${myUsername}` }),
+    })
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(body => resolve(body))
+      .catch(response => {
+        reject(response.json());
+      });
+  });
+
+export const disableDBUser = email =>
+  new Promise(async (resolve, reject) => {
+    fetch(`${BASE_API}/disableUser`, {
+      headers: makeHeaders(),
+      body: JSON.stringify({ email: `${email}` }),
     })
       .then(handleErrors)
       .then(response => response.json())

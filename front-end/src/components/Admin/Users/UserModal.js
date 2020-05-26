@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import close from '../../../assets/close.svg';
-import { updateUser, disableUser, resendInvite } from '../../../services/cognito';
+import { disableUser, resendInvite } from '../../../services/cognito';
 
 const UserModal = ({ handleClose, selectedUser }) => {
   const [email, setEmail] = useState(selectedUser.email);
