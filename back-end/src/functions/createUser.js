@@ -6,14 +6,13 @@ exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false; /* eslint no-param-reassign: 0 */
   try {
     const input = {
+      EmailAddress: event.email,
       UserName: event.email,
       Role: event.role,
     };
     await db.makeConnection();
-    const data = await db.query(
-      `INSERT INTO User (UserName, Role) VALUES ?`,
-      input
-    );
+    const data = await db.query(`INSERT INTO User SET ?`, input);
+    // 'INSERT INTO posts SET ?', {title: 'test'}
     return new Response({ items: data }).success();
   } catch (err) {
     console.log(err);
