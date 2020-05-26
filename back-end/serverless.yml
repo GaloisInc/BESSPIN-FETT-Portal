@@ -118,7 +118,7 @@ functions:
     events:
     - http:
         path: createUser
-        method: get
+        method: post
         cors: true
         authorizer:
           name: authorizer
@@ -128,8 +128,8 @@ functions:
     timeout: 60
     events:
     - http:
-        path: createUser
-        method: get
+        path: disableUser
+        method: put
         cors: true
         authorizer:
           name: authorizer

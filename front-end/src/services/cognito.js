@@ -28,7 +28,7 @@ export const createAdminUser = async email =>
 
         const params = {
           Username: email,
-          TemporaryPassword: password,
+          TemporaryPassword: `aB@4${password}`,
           DesiredDeliveryMediums: ['EMAIL'],
           UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
           UserAttributes: [
