@@ -56,12 +56,12 @@ export const createUser = async (email, role) =>
       });
   });
 
-export const disableDBUser = email =>
+export const disableDBUser = Id =>
   new Promise(async (resolve, reject) => {
     fetch(`${BASE_API}/disableUser`, {
       headers: await makeHeaders(),
       method: 'PUT',
-      body: JSON.stringify({ email: `${email}` }),
+      body: JSON.stringify({ Id: `${Id}` }),
     })
       .then(handleErrors)
       .then(response => response.json())
