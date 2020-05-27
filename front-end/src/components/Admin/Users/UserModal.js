@@ -10,16 +10,19 @@ const UserModal = ({ handleClose, selectedUser, fetchUsers }) => {
 
   const handleResendInvite = async event => {
     event.preventDefault();
-    await resendInvite(selectedUser.UserName);
-    fetchUsers();
-    handleClose();
+    const response = await resendInvite(selectedUser.UserName);
+    if (response) {
+      handleClose();
+    }
   };
 
   const handleDelete = async event => {
     event.preventDefault();
-    await disableUser(selectedUser);
-    fetchUsers();
-    handleClose();
+    const response = await disableUser(selectedUser);
+    if (response) {
+      fetchUsers();
+      handleClose();
+    }
   };
 
   console.log(selectedUser);

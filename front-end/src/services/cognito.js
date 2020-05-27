@@ -105,12 +105,12 @@ export const disableUser = async user =>
           UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
         };
 
-        cognito.adminDisableUser(params, function(err, data) {
+        cognito.adminDisableUser(params, async function(err, data) {
           if (err) {
             console.log(err, err.stack);
           } else {
-            disableDBUser(user.Id);
-            resolve('success');
+            const response = await disableDBUser(user.Id);
+            if (response) resolve('success');
           }
         });
       });
@@ -174,7 +174,7 @@ export const resendInvite = email =>
         cognito.adminCreateUser(params, function(err, data) {
           if (err) console.log(err, err.stack);
           // an error occurred
-          else console.log(data); // successful response
+          else resolve(data); // successful response
         });
       });
     } catch (error) {
