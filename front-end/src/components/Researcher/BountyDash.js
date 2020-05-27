@@ -1,5 +1,5 @@
 import React from 'react';
-import DashTable from './Dashboard/DashTable';
+import InstanceHistory from '../Instance/InstanceHistory';
 import Comms from '../Communications/Card';
 
 export default function BountyDash() {
@@ -11,8 +11,8 @@ export default function BountyDash() {
         purus ut faucibus pulvinar elementum integer.
       </p>
       <div className="flex flex-row w-full mt-4">
-        <DashTable />
-        <Comms />
+        <InstanceHistory />
+        <Comms userType="researcher" />
       </div>
     </div>
   );
