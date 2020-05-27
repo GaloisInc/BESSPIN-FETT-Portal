@@ -15,7 +15,7 @@ const UserModal = ({ handleClose, selectedUser }) => {
 
   const handleDelete = event => {
     event.preventDefault();
-    disableUser(selectedUser.UserName);
+    disableUser(selectedUser);
   };
 
   return (

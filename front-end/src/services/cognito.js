@@ -88,7 +88,7 @@ export const updateUser = async user =>
     }
   });
 
-export const disableUser = async username =>
+export const disableUser = async user =>
   new Promise(async (resolve, reject) => {
     try {
       Auth.currentCredentials().then(async res => {
@@ -101,7 +101,7 @@ export const disableUser = async username =>
         const cognito = new AWS.CognitoIdentityServiceProvider(auth);
 
         const params = {
-          Username: username,
+          Username: user.UserName,
           UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
         };
 
@@ -109,7 +109,7 @@ export const disableUser = async username =>
           if (err) {
             console.log(err, err.stack);
           } else {
-            disableDBUser(username);
+            disableDBUser(user.Id);
             resolve('success');
           }
         });
