@@ -44,7 +44,7 @@ export const createAdminUser = async email =>
             console.log(err, err.stack);
           } else {
             const response = createUser(email, 'admin');
-            return response;
+            resolve(response);
           }
           // an error occurred // successful response
         });
