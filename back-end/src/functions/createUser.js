@@ -14,7 +14,7 @@ exports.handler = async (event, context) => {
     await db.makeConnection();
 
     const creator = await db.query(
-      `SELECT Id from User WHERE UserName = body.myUsername`
+      `SELECT Id from User WHERE UserName = ${body.myUsername}`
     );
     const creatorId = creator[0].Id;
 
