@@ -23,14 +23,12 @@ function handleErrors(response) {
 export const getUsers = () =>
   new Promise(async (resolve, reject) => {
     const headers = await makeHeaders();
-    console.log(headers);
     fetch(`${BASE_API}/getUsers`, {
       headers,
     })
       .then(handleErrors)
       .then(response => response.json())
       .then(body => {
-        console.log(body);
         resolve(body.items);
       })
       .catch(response => {

@@ -8,7 +8,6 @@ import { ThemeProvider } from '@material-ui/styles';
 import { withStyles, createMuiTheme, mergeClasses } from '@material-ui/core/styles';
 import { CircularProgress } from '@material-ui/core';
 import MainRouter from './containers/MainRouter';
-import { GetFromDatabase } from './services/api';
 import { getMyUser } from './services/api/user';
 
 const _styles = {
@@ -40,7 +39,6 @@ class App extends React.Component {
   async componentDidMount() {
     const { history } = this.props;
     this.setState({ isAuthenticating: true });
-    console.log('authenticating');
     try {
       await Auth.currentSession();
     } catch (error) {
@@ -77,9 +75,6 @@ class App extends React.Component {
       this.setState({ name });
       const userData = await getMyUser(name);
       this.setState({ isAdmin: userData[0].Role === 'admin' });
-      console.log(name);
-      console.log(user);
-      console.log(userData);
       if (user.isValid()) {
         const { isAdmin } = this.state;
         await this.setState({ isLoggedIn: true, isAuthenticating: false });
