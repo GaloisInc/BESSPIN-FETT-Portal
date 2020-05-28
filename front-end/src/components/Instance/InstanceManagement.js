@@ -37,11 +37,11 @@ export default function InstanceManagement() {
   useEffect(() => {
     const filteredData = environments.filter(
       env =>
-        env.UserName.includes(searchTerm) ||
-        env.OS.includes(searchTerm) ||
-        env.Processor.includes(searchTerm) ||
-        env.Type.includes(searchTerm) ||
-        env.Status.includes(searchTerm)
+        env.UserName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        env.OS.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        env.Processor.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        env.Type.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        env.Status.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredEnvironments(filteredData);
   }, [environments, searchTerm]);
@@ -70,7 +70,7 @@ export default function InstanceManagement() {
           <div className="flex flex-row items-center mr-4">
             <form className="relative">
               <input
-                className="bg-blue-600 border border-gray-200 border-solid rounded"
+                className="pl-4 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded focus:outline-none"
                 type="text"
                 value={searchTerm}
                 name="name"

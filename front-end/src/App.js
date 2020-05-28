@@ -32,6 +32,7 @@ class App extends React.Component {
       isAdmin: false,
       isLoggedIn: false,
       isAuthenticating: false,
+      name: '',
     };
   }
 
@@ -41,7 +42,6 @@ class App extends React.Component {
     console.log('authenticating');
     try {
       await Auth.currentSession();
-      // this.getData();
     } catch (error) {
       await this.setState({ isAuthenticating: false });
       history.push('/');
@@ -59,6 +59,11 @@ class App extends React.Component {
     const { isAdmin } = this.state;
     try {
       const user = await Auth.currentSession();
+      const id = await user.getIdToken();
+      const name = id.payload['cognito:username'];
+      this.setState({ name });
+      console.log(name);
+      console.log(user);
       if (user.isValid()) {
         await this.setState({ isLoggedIn: true, isAdmin: true, isAuthenticating: false });
         // this.routeUser(user);
@@ -84,17 +89,8 @@ class App extends React.Component {
     }
   };
 
-  getData = async () => {
-    try {
-      const data = await GetFromDatabase();
-      console.log(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   render() {
-    const { isAdmin, isLoggedIn, isAuthenticating } = this.state;
+    const { isAdmin, isLoggedIn, isAuthenticating, name } = this.state;
     return (
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <ThemeProvider theme={theme}>
@@ -107,6 +103,7 @@ class App extends React.Component {
               logout={this.logout}
               isAdmin={isAdmin}
               handleRoleSwitch={this.handleRoleSwitch}
+              name={name}
             />
           )}
           {isAuthenticating && (

@@ -1,29 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
 import { Paper, Modal } from '@material-ui/core';
+import PropTypes from 'prop-types';
 import refresh from '../../../assets/refresh.svg';
 import search from '../../../assets/search.svg';
 import chevronRight from '../../../assets/chevronRight.svg';
 import UserModal from './UserModal';
-import { getUsers } from '../../../services/api/user';
 
-export default function ManageUsers() {
+const ManageUsers = ({ users, fetchUsers }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = React.useState(false);
   const [selectedUser, setSelectedUser] = useState('');
-  const [users, setUsers] = useState([]);
   const [filteredUsers, setFilteredUsers] = useState([]);
-
-  const fetchUsers = async () => {
-    try {
-      const response = await getUsers();
-      console.log(users);
-      setUsers(response);
-      setFilteredUsers(response);
-    } catch (error) {
-      console.log(`Error fetching configurations${error}`);
-    }
-  };
 
   useEffect(() => {
     fetchUsers();
@@ -31,7 +19,9 @@ export default function ManageUsers() {
   }, []);
 
   useEffect(() => {
-    const filteredData = users.filter(env => env.UserName.includes(searchTerm) || env.Role.includes(searchTerm));
+    const filteredData = users.filter(
+      env => env.UserName.toLowerCase().includes(searchTerm.toLowerCase()) || env.Role.toLowerCase().includes(searchTerm.toLowerCase())
+    );
     setFilteredUsers(filteredData);
   }, [searchTerm, users]);
 
@@ -65,7 +55,7 @@ export default function ManageUsers() {
             />
             <img className="absolute top-0 right-0 mt-1 mr-2" src={search} alt="" />
           </form>
-          <button className="ml-4 cursor-pointer focus:outline-none " type="button">
+          <button className="ml-4 cursor-pointer focus:outline-none " type="button" onClick={fetchUsers}>
             <img className="h-4" src={refresh} alt="" />
           </button>
         </div>
@@ -109,8 +99,15 @@ export default function ManageUsers() {
         data={filteredUsers}
       />
       <Modal open={open} onClose={handleClose}>
-        <UserModal handleClose={handleClose} selectedUser={selectedUser} />
+        <UserModal handleClose={handleClose} selectedUser={selectedUser} fetchUsers={fetchUsers} />
       </Modal>
     </div>
   );
-}
+};
+
+export default ManageUsers;
+
+ManageUsers.propTypes = {
+  users: PropTypes.array,
+  fetchUsers: PropTypes.func,
+};
