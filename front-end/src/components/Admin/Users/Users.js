@@ -1,8 +1,30 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import UserForm from './UserForm';
 import ManageUsers from './ManageUsers';
+import { getUsers } from '../../../services/api/user';
+import Spinner from '../../Spinner';
 
 export default function Users() {
+  const [users, setUsers] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const fetchUsers = async () => {
+    setIsLoading(true);
+    try {
+      const response = await getUsers();
+      console.log(users);
+      setUsers(response);
+      setIsLoading(false);
+    } catch (error) {
+      console.log(`Error fetching configurations${error}`);
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   return (
     <div className="h-full pt-6 pl-12">
       <h3 className="text-gray-200 uppercase">manage users</h3>
@@ -11,9 +33,10 @@ export default function Users() {
         purus ut faucibus pulvinar elementum integer.
       </p>
       <div className="flex flex-row flex-wrap justify-around w-full mt-4">
-        <UserForm />
-        <ManageUsers />
+        <UserForm fetchUsers={fetchUsers} />
+        <ManageUsers fetchUsers={fetchUsers} users={users} />
       </div>
+      {/* {isLoading && <Spinner />} */}
     </div>
   );
 }

@@ -7,7 +7,7 @@ import ReactRouterPropTypes from 'react-router-prop-types';
 
 import fettLogo from '../../assets/fettLogo.png';
 
-const Header = ({ history, handleRoleSwitch }) => {
+const Header = ({ history, handleRoleSwitch, name }) => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
 
@@ -46,7 +46,7 @@ const Header = ({ history, handleRoleSwitch }) => {
       <img className="h-16 pl-4" src={fettLogo} alt="Fett Logo Arc" />
       <div>
         <button type="button" ref={anchorRef} onClick={handleToggle} className="mr-20 text-lg text-gray-200 uppercase font-body">
-          Name
+          {name || 'Name'}
         </button>
         <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
           {({ TransitionProps, placement }) => (
@@ -73,4 +73,5 @@ export default withRouter(Header);
 Header.propTypes = {
   history: ReactRouterPropTypes.history,
   handleRoleSwitch: PropTypes.func,
+  name: PropTypes.string,
 };

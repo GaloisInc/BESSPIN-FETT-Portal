@@ -5,19 +5,27 @@ import PropTypes from 'prop-types';
 import close from '../../../assets/close.svg';
 import { disableUser, resendInvite } from '../../../services/cognito';
 
-const UserModal = ({ handleClose, selectedUser }) => {
+const UserModal = ({ handleClose, selectedUser, fetchUsers }) => {
   const [email, setEmail] = useState(selectedUser.UserName);
 
-  const handleResendInvite = event => {
+  const handleResendInvite = async event => {
     event.preventDefault();
-    resendInvite(selectedUser.UserName);
+    const response = await resendInvite(selectedUser.UserName);
+    if (response) {
+      handleClose();
+    }
   };
 
-  const handleDelete = event => {
+  const handleDelete = async event => {
     event.preventDefault();
-    disableUser(selectedUser);
+    const response = await disableUser(selectedUser);
+    if (response) {
+      fetchUsers();
+      handleClose();
+    }
   };
 
+  console.log(selectedUser);
   return (
     <div
       className="absolute text-4xl text-gray-200 bg-blue-600"
@@ -61,4 +69,5 @@ export default UserModal;
 UserModal.propTypes = {
   handleClose: PropTypes.func,
   selectedUser: PropTypes.object,
+  fetchUsers: PropTypes.func,
 };
