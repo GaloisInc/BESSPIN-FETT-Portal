@@ -6,7 +6,7 @@ const Navigation = props => (
   <ul>
     <li onClick={() => props.update('Broadcast')}>Broadcast</li>
     <li onClick={() => props.update('History')}>History</li>
-    <li onClick={() => props.update('Messages')}>Messages</li>
+	<li onClick={() => props.update('Messages')}>Messages</li>
   </ul>
 );
 

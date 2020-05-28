@@ -4,8 +4,8 @@ import React from 'react';
 
 const Navigation = props => (
   <ul>
-    <li>Announcements</li>
-    <li>Messages</li>
+    <li onClick={() => props.update('Announcements')}>Announcements</li>
+    <li onClick={() => props.update('ResMessages')}>Messages</li>
   </ul>
 );
 
