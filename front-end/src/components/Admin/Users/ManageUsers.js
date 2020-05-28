@@ -12,12 +12,14 @@ export default function ManageUsers() {
   const [open, setOpen] = React.useState(false);
   const [selectedUser, setSelectedUser] = useState('');
   const [users, setUsers] = useState([]);
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
   const fetchUsers = async () => {
     try {
       const response = await getUsers();
       console.log(users);
       setUsers(response);
+      setFilteredUsers(response);
     } catch (error) {
       console.log(`Error fetching configurations${error}`);
     }
@@ -28,10 +30,15 @@ export default function ManageUsers() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const handleSearch = event => {
+  useEffect(() => {
+    const filteredData = users.filter(env => env.UserName.includes(searchTerm) || env.Role.includes(searchTerm));
+    setFilteredUsers(filteredData);
+  }, [searchTerm, users]);
+
+  const handleSearch = async event => {
     event.preventDefault();
-    console.log('searching');
-    // Todo implement ==> search
+    const { value } = event.target;
+    setSearchTerm(value);
   };
 
   const handleOpen = async data => {
@@ -50,11 +57,11 @@ export default function ManageUsers() {
         <div className="flex flex-row items-center mr-4">
           <form className="relative" onSubmit={event => handleSearch(event)}>
             <input
-              className="bg-blue-600 border border-gray-200 border-solid rounded"
+              className="pl-4 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded focus:outline-none"
               type="text"
               value={searchTerm}
               name="name"
-              onChange={event => setSearchTerm(event.target.value)}
+              onChange={event => handleSearch(event)}
             />
             <img className="absolute top-0 right-0 mt-1 mr-2" src={search} alt="" />
           </form>
@@ -99,7 +106,7 @@ export default function ManageUsers() {
           toolbar: false,
           sorting: false,
         }}
-        data={users}
+        data={filteredUsers}
       />
       <Modal open={open} onClose={handleClose}>
         <UserModal handleClose={handleClose} selectedUser={selectedUser} />
