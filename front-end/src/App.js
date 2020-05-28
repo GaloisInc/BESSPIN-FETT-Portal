@@ -9,6 +9,7 @@ import { withStyles, createMuiTheme, mergeClasses } from '@material-ui/core/styl
 import { CircularProgress } from '@material-ui/core';
 import MainRouter from './containers/MainRouter';
 import { GetFromDatabase } from './services/api';
+import { getMyUser } from './services/api/user';
 
 const _styles = {
   container: {
@@ -50,24 +51,38 @@ class App extends React.Component {
   }
 
   handleRoleSwitch = async isAdmin => {
-    await this.setState({ isAdmin });
-    this.login();
+    const { history } = this.props;
+    try {
+      await this.setState({ isAdmin });
+      const user = await Auth.currentSession();
+      if (user.isValid()) {
+        await this.setState({ isLoggedIn: true, isAuthenticating: false });
+        if (isAdmin) {
+          history.push('/adminportal');
+        } else {
+          history.push('/bountyportal');
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   login = async () => {
     const { history } = this.props;
-    const { isAdmin } = this.state;
     try {
       const user = await Auth.currentSession();
       const id = await user.getIdToken();
       const name = id.payload['cognito:username'];
       this.setState({ name });
+      const userData = await getMyUser(name);
+      this.setState({ isAdmin: userData[0].Role === 'admin' });
       console.log(name);
       console.log(user);
+      console.log(userData);
       if (user.isValid()) {
-        await this.setState({ isLoggedIn: true, isAdmin: true, isAuthenticating: false });
-        // this.routeUser(user);
-        // history.push('/adminportal');
+        const { isAdmin } = this.state;
+        await this.setState({ isLoggedIn: true, isAuthenticating: false });
         if (isAdmin) {
           history.push('/adminportal');
         } else {
