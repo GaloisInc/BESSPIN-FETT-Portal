@@ -20,12 +20,15 @@ export default function Announcement() {
 		}
 	]
 	
-	const announcementDisplay = announcements.map(aId => {
+	const announcementDisplay = announcements.map((aId, index) => {
+		console.log(index);
 		return(
-			<div>
-				Team Name: {aId.team}
-				Type: {aId.type}
-				<p>{aId.message}</p>
+			<div className="p-4 pr-6 text-teal-500" key={index} style={{backgroundColor: index % 2 ? '#1E2B34' : '#26343E'}}>
+				<div className="flex flex-column justify-between">
+				<h6 className="uppercase"><span className="font-bold">Team Name:</span> {aId.team}</h6>
+				<h6 className="uppercase"><span className="font-bold">Type:</span> {aId.type}</h6>
+				</div>
+				<p className="text-gray-200 text-sm leading-tight pt-2">{aId.message}</p>
 			</div>
 		)
 	})
