@@ -14,14 +14,19 @@ exports.handler = async (event, context) => {
     await db.makeConnection();
 
     const creator = await db.query(
-      `SELECT Id from User WHERE UserName = '${body.myUsername}'`
+      `SELECT Id from User WHERE UserName = :UserName`,
+      { UserName: body.myUserName }
     );
     const creatorId = creator[0].Id;
 
     const data = await db.query(
-      `INSERT INTO User (EmailAddress, Role, UserName, CreatedBy) values ('${
-        body.email
-      }', '${body.role}', '${body.email}', ${creatorId})`
+      `INSERT INTO User (EmailAddress, Role, UserName, CreatedBy) values (:EmailAddress, :Role, :UserName, :CreatedBy)`,
+      {
+        EmailAddress: body.emailAddress,
+        Role: body.role,
+        UserName: body.username,
+        CreatedBy: creatorId,
+      }
     );
     return new Response({ items: data }).success();
   } catch (err) {

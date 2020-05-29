@@ -12,18 +12,24 @@ exports.handler = async (event, context) => {
 
   try {
     await db.makeConnection();
-
+    console.log(body);
     const creator = await db.query(
-      `SELECT Id from User WHERE UserName = '${body.myUserName}'`
+      `SELECT Id from User WHERE UserName = :UserName`,
+      { UserName: body.myUserName }
     );
+
     const creatorId = creator[0].Id;
 
     const data = await db.query(
-      `INSERT INTO Environment (CreatedBy, Configuration, F1EnvironmentId, IpAddress, Region, Status) values (${creatorId}, ${
-        body.Configuration
-      }, '${body.F1EnvironmentId}', '${body.IpAddress}', '${body.Region}', '${
-        body.Status
-      }')`
+      `INSERT INTO Environment (CreatedBy, Configuration, F1EnvironmentId, IpAddress, Region, Status) values (:CreatedBy, :Configuration, :F1EnvironmentId, :IpAddress, :Region, :Status)`,
+      {
+        CreatedBy: creatorId,
+        Configuration: body.Configuration,
+        F1EnvironmentId: body.F1EnvironmentId,
+        IpAddress: body.IpAddress,
+        Region: body.Region,
+        Status: body.Status,
+      }
     );
     return new Response({ items: data }).success();
   } catch (err) {
