@@ -29,11 +29,27 @@ export const getUsers = () =>
       .then(handleErrors)
       .then(response => response.json())
       .then(body => {
-        console.log(body);
         resolve(body.items);
       })
       .catch(response => {
         reject(response.json());
+      });
+  });
+
+export const getMyUser = async username =>
+  new Promise(async (resolve, reject) => {
+    const headers = await makeHeaders();
+
+    fetch(`${BASE_API}/getMyUser`, {
+      headers,
+      method: 'POST',
+      body: JSON.stringify({ username: `${username}` }),
+    })
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(body => resolve(body.items))
+      .catch(response => {
+        reject(response);
       });
   });
 
