@@ -38,38 +38,3 @@ export const GetFromDatabase = () =>
         reject(response.json());
       });
   });
-
-export const getEnvironments = () =>
-  new Promise(async (resolve, reject) => {
-    fetch(`${BASE_API}/getEnvironments`, {
-      headers: makeHeaders(),
-    })
-      .then(handleErrors)
-      .then(response => response.json())
-      .then(body => resolve(body))
-      .catch(response => {
-        reject(response.json());
-      });
-  });
-
-export const createEnvironmentRecord = async configuration =>
-  new Promise(async (resolve, reject) => {
-    const sesh = await Auth.currentSession();
-    const myUserName = sesh.getAccessToken().payload.username;
-
-    fetch(`${BASE_API}/createEnvironment`, {
-      headers: makeHeaders(),
-      body: JSON.stringify({
-        OS: `${configuration.OS}`,
-        Processor: `${configuration.Processor}`,
-        Type: `${configuration.Type}`,
-        myUserName: `${myUserName}`,
-      }),
-    })
-      .then(handleErrors)
-      .then(response => response.json())
-      .then(body => resolve(body))
-      .catch(response => {
-        reject(response.json());
-      });
-  });

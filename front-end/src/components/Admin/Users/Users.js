@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import UserForm from './UserForm';
-import ManageUsers from './ManageUsers';
 import { getUsers } from '../../../services/api/user';
 import Spinner from '../../Spinner';
+import ManageUsers from './ManageUsers';
 
 export default function Users() {
   const [users, setUsers] = useState([]);

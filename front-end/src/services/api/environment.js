@@ -5,11 +5,8 @@ const BASE_API = process.env.REACT_APP_BASE_API_URI;
 const makeHeaders = async () => {
   console.log('Stage: ', process.env.REACT_APP_STAGE);
   console.log('Process: ', process.env);
-
   const sesh = await Auth.currentSession();
-  const idToken = sesh.getIdToken().getJwtToken();
-  console.log(sesh.getAccessToken().payload.username);
-
+  const idToken = await sesh.getIdToken().getJwtToken();
   return {
     Authorization: idToken,
     'Content-Type': 'application/json',
@@ -26,13 +23,13 @@ function handleErrors(response) {
 export const getEnvironments = () =>
   new Promise(async (resolve, reject) => {
     fetch(`${BASE_API}/getEnvironments`, {
-      headers: makeHeaders(),
+      headers: await makeHeaders(),
     })
       .then(handleErrors)
       .then(response => response.json())
-      .then(body => resolve(body))
+      .then(body => resolve(body.items))
       .catch(response => {
-        reject(response.json());
+        reject(response);
       });
   });
 
