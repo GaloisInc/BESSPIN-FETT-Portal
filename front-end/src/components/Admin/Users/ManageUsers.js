@@ -1,3 +1,5 @@
+/* eslint-disable react/display-name */
+
 import React, { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
 import { Paper, Modal } from '@material-ui/core';
@@ -23,7 +25,8 @@ const ManageUsers = ({ users, fetchUsers }) => {
       env => env.UserName.toLowerCase().includes(searchTerm.toLowerCase()) || env.Role.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredUsers(filteredData);
-  }, [searchTerm, users]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
 
   const handleSearch = async event => {
     event.preventDefault();

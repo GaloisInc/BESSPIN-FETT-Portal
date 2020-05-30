@@ -3,6 +3,7 @@ import { Auth } from 'aws-amplify';
 const BASE_API = process.env.REACT_APP_BASE_API_URI;
 
 const makeHeaders = async () => {
+  console.log('Stage: ', process.env.REACT_APP_STAGE);
   const sesh = await Auth.currentSession();
   const idToken = await sesh.getIdToken().getJwtToken();
   return {
@@ -18,29 +19,29 @@ function handleErrors(response) {
   return response;
 }
 
-export const getEnvironments = () =>
+export const getAnnouncements = () =>
   new Promise(async (resolve, reject) => {
-    fetch(`${BASE_API}/getEnvironments`, {
+    fetch(`${BASE_API}/getAnnouncements`, {
       headers: await makeHeaders(),
     })
       .then(handleErrors)
       .then(response => response.json())
       .then(body => resolve(body))
       .catch(response => {
-        reject(response.json());
+        reject(response);
       });
   });
 
-export const createEnvironmentRecord = async configuration =>
+export const createAnnouncement = async announcement =>
   new Promise(async (resolve, reject) => {
     const sesh = await Auth.currentSession();
     const myUserName = sesh.getAccessToken().payload.username;
 
-    fetch(`${BASE_API}/createEnvironmentRecord`, {
+    fetch(`${BASE_API}/createAnnouncement`, {
       headers: await makeHeaders(),
       body: JSON.stringify({
         myUserName: `${myUserName}`,
-        ...configuration,
+        ...announcement,
       }),
       method: 'POST',
     })

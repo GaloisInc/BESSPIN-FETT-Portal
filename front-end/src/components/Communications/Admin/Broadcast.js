@@ -2,32 +2,57 @@
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createAnnouncement } from '../../../services/api/announcements';
+import { getTeams } from '../../../services/api/user';
+
 
 export default function Broadcast() {
-  const [team, setTeam] = useState('');
+  const [selectedTeam, setSelectedTeam] = useState('');
+  const [teams, setTeams] = useState('');
   const [vulnurability, setVulnurability] = useState('');
   const [description, setDescription] = useState('');
 
+  const fetchTeams = async () => {
+    try {
+      const teams = await getTeams();
+      console.log(teams);
+      setTeams(teams);
+    } catch (error) {
+      console.log(`Error fetching configurations${error}`);
+    }
+  };
+
+  useEffect(() => {
+    fetchTeams();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const teamOptions = Array.isArray(teams)? teams.map(team => {
+    return (<option value={`${team.UserName}`}>{`${team.UserName}`}</option>)
+  }) : '';
+
   const handleSubmit = event => {
     event.preventDefault();
-    console.log('submitting vulnurability');
-    // Todo implement ==> search
+    const newAnnouncement = {
+      Team: selectedTeam,
+      Type: vulnurability,
+      Payload: description,
+    }
+    createAnnouncement(newAnnouncement);
   };
   return (
-    <form className="flex flex-col items-center w-auto m-8">
+    <div className="flex flex-col items-center w-auto m-8">
       <label htmlFor="team" className="mt-8 text-gray-200 font-body">
         Select Team
       </label>
       <select
         id="team"
-        value={team}
-        onChange={event => setTeam(event.target.value)}
+        value={selectedTeam}
+        onChange={event => setSelectedTeam(event.target.value)}
         className="block w-full p-1 leading-tight text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded shadow hover:border-gray-300 focus:outline-none focus:shadow-outline"
       >
-        <option value="Team 1">Team 1</option>
-        <option value="Team 2">Team 2</option>
-        <option value="Team 3">Team 3</option>
+        {teamOptions}
       </select>
       <label htmlFor="vulnurability" className="mt-8 text-gray-200 font-body">
         Vulnerability
@@ -55,6 +80,6 @@ export default function Broadcast() {
       >
         Send
       </button>
-    </form>
+    </div>
   );
 }
