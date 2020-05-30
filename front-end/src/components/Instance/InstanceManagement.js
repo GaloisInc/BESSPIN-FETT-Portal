@@ -44,7 +44,8 @@ export default function InstanceManagement() {
         env.Status.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredEnvironments(filteredData);
-  }, [environments, searchTerm]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
 
   const handleSearch = event => {
     event.preventDefault();
