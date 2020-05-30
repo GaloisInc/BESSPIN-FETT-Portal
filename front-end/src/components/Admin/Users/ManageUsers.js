@@ -23,7 +23,8 @@ const ManageUsers = ({ users, fetchUsers }) => {
       env => env.UserName.toLowerCase().includes(searchTerm.toLowerCase()) || env.Role.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredUsers(filteredData);
-  }, [searchTerm, users]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [searchTerm]);
 
   const handleSearch = async event => {
     event.preventDefault();
