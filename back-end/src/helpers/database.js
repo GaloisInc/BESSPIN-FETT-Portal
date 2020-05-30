@@ -19,9 +19,9 @@ class Database {
     });
   }
 
-  async query(query) {
+  async query(query, params) {
     console.log('querying');
-    return this.pool.raw(query).then(data => data[0]);
+    return this.pool.raw(query, params).then(data => data[0]);
   }
 }
 module.exports = Database;

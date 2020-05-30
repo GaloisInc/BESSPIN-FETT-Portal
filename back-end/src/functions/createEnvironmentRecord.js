@@ -12,20 +12,23 @@ exports.handler = async (event, context) => {
 
   try {
     await db.makeConnection();
-
+    console.log(body);
     const creator = await db.query(
       `SELECT Id from User WHERE UserName = :UserName`,
       { UserName: body.myUserName }
     );
+
     const creatorId = creator[0].Id;
 
     const data = await db.query(
-      `INSERT INTO User (EmailAddress, Role, UserName, CreatedBy) values (:EmailAddress, :Role, :UserName, :CreatedBy)`,
+      `INSERT INTO Environment (CreatedBy, Configuration, F1EnvironmentId, IpAddress, Region, Status) values (:CreatedBy, :Configuration, :F1EnvironmentId, :IpAddress, :Region, :Status)`,
       {
-        EmailAddress: body.emailAddress,
-        Role: body.role,
-        UserName: body.username,
         CreatedBy: creatorId,
+        Configuration: body.Configuration,
+        F1EnvironmentId: body.F1EnvironmentId,
+        IpAddress: body.IpAddress,
+        Region: body.Region,
+        Status: body.Status,
       }
     );
     return new Response({ items: data }).success();

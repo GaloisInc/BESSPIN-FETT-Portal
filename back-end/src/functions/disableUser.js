@@ -12,7 +12,8 @@ exports.handler = async (event, context) => {
   try {
     await db.makeConnection();
     const data = await db.query(
-      `UPDATE User SET IsActive = false WHERE Id = '${body.Id}'`
+      `UPDATE User SET IsActive = false WHERE Id = :Id`,
+      { Id: body.Id }
     );
     return new Response({ items: data }).success();
   } catch (err) {

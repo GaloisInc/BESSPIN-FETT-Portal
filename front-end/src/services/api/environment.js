@@ -38,19 +38,18 @@ export const createEnvironmentRecord = async configuration =>
     const sesh = await Auth.currentSession();
     const myUserName = sesh.getAccessToken().payload.username;
 
-    fetch(`${BASE_API}/createEnvironment`, {
-      headers: makeHeaders(),
+    fetch(`${BASE_API}/createEnvironmentRecord`, {
+      headers: await makeHeaders(),
       body: JSON.stringify({
-        OS: `${configuration.OS}`,
-        Processor: `${configuration.Processor}`,
-        Type: `${configuration.Type}`,
         myUserName: `${myUserName}`,
+        ...configuration,
       }),
+      method: 'POST',
     })
       .then(handleErrors)
       .then(response => response.json())
       .then(body => resolve(body))
       .catch(response => {
-        reject(response.json());
+        reject(response);
       });
   });
