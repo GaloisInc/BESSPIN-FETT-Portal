@@ -7,6 +7,7 @@ import ManageUsers from './ManageUsers';
 export default function Users() {
   const [users, setUsers] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [filteredUsers, setFilteredUsers] = useState([]);
 
   const fetchUsers = async () => {
     setIsLoading(true);
@@ -14,6 +15,7 @@ export default function Users() {
       const response = await getUsers();
       console.log(users);
       setUsers(response);
+      setFilteredUsers(response);
       setIsLoading(false);
     } catch (error) {
       console.log(`Error fetching configurations${error}`);
@@ -34,7 +36,7 @@ export default function Users() {
       </p>
       <div className="flex flex-row flex-wrap justify-around w-full mt-4">
         <UserForm fetchUsers={fetchUsers} />
-        <ManageUsers fetchUsers={fetchUsers} users={users} />
+        <ManageUsers fetchUsers={fetchUsers} users={users} filteredUsers={filteredUsers} setFilteredUsers={setFilteredUsers} />
       </div>
       {/* {isLoading && <Spinner />} */}
     </div>

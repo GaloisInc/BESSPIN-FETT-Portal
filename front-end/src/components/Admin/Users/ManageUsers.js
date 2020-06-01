@@ -9,11 +9,10 @@ import search from '../../../assets/search.svg';
 import chevronRight from '../../../assets/chevronRight.svg';
 import UserModal from './UserModal';
 
-const ManageUsers = ({ users, fetchUsers }) => {
+const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = React.useState(false);
   const [selectedUser, setSelectedUser] = useState('');
-  const [filteredUsers, setFilteredUsers] = useState([]);
 
   useEffect(() => {
     fetchUsers();
@@ -113,4 +112,6 @@ export default ManageUsers;
 ManageUsers.propTypes = {
   users: PropTypes.array,
   fetchUsers: PropTypes.func,
+  filteredUsers: PropTypes.array,
+  setFilteredUsers: PropTypes.func,
 };

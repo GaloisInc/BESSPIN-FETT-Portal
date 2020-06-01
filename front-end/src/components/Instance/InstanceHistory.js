@@ -1,29 +1,31 @@
 /* eslint-disable */
-import React from 'react';
+import React, {useEffect, useState} from 'react';
 // import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
 import { Paper } from '@material-ui/core';
+import moment from 'moment';
 import rocketDark from '../../assets/rocketDark.svg';
 import settings from '../../assets/settings.svg';
+import {getEnvironments} from '../../services/api/environment';
 
 const InstanceHistory = () => {
-  const dummyInstances = [
-    {
-      instance: 'Baseline | RV64 | FreeBSD',
-      launched: '11:52 am',
-      status: 'Running',
-    },
-    {
-      instance: 'SRI-Cambridge | RV64 | FreeBSD',
-      launched: '9:24 am',
-      status: 'Paused',
-    },
-    {
-      instance: 'Baseline | RV32 | FreeRTOs',
-      launched: '10:23 am',
-      status: 'Provisioning',
-    },
-  ];
+  const [environments, setEnvironments] = useState([])
+
+  const fetchEnvironments = async () => {
+    try {
+      const response = await getEnvironments();
+      console.log(environments);
+      setEnvironments(response);
+    } catch (error) {
+      console.log(`Error fetching configurations${error}`);
+    }
+  };
+
+  useEffect(() => {
+    fetchEnvironments();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <>
       <div className="mb-4 mr-6 bg-blue-600 table-card" style={{ width: '600px', minHeight: '' }}>
@@ -35,9 +37,17 @@ const InstanceHistory = () => {
             Container: props => <Paper {...props} elevation={0} />,
           }}
           columns={[
-            { title: 'F1 Instance', field: 'instance' },
-            { title: 'Launched Time', field: 'launched' },
-            { title: 'Status', field: 'status' },
+            { title: 'F1 Instance', field: 'instance', width: '14em', render: data => (
+              <p>
+                {data.Type} | {data.OS} | {data.Processor}
+              </p>
+            ), },
+            { title: 'Launched Time', field: 'created_at', render: data => (
+                <p>
+                  {moment(data.created_at).format('hh:mm A')}
+                </p> 
+              )},
+            { title: 'Status', field: 'Status' },
             {
               title: '',
               field: 'launch',
@@ -65,7 +75,7 @@ const InstanceHistory = () => {
             toolbar: false,
             sorting: false,
           }}
-          data={dummyInstances}
+          data={environments}
         />
         <p className="pt-4 pl-2 text-gray-200">
           Provisioned instances are limited to (2) and a duration of idle activity (TBD) before automatic instance shutdown.
