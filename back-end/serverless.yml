@@ -208,6 +208,17 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  updateEnvironment:
+    handler: src/functions/updateEnvironment.handler
+    timeout: 60
+    events:
+    - http:
+        path: updateEnvironment
+        method: put
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
   createAnnouncement:
     handler: src/functions/createAnnouncement.handler
     timeout: 60

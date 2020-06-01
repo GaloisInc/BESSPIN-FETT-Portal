@@ -7,6 +7,7 @@ import moment from 'moment';
 import rocketDark from '../../assets/rocketDark.svg';
 import settings from '../../assets/settings.svg';
 import {getEnvironments} from '../../services/api/environment';
+import { ec2StatusUpdate } from '../../services/launcher';
 
 const InstanceHistory = () => {
   const [environments, setEnvironments] = useState([])
@@ -25,6 +26,10 @@ const InstanceHistory = () => {
     fetchEnvironments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const updateStatus = data => {
+    ec2StatusUpdate(data, "paused")
+  }
 
   return (
     <>
@@ -52,7 +57,7 @@ const InstanceHistory = () => {
               title: '',
               field: 'launch',
               render: data => (
-                <button type="button" className="focus:outline-none">
+                <button type="button" className="focus:outline-none" onClick={() => updateStatus(data)}>
                   <img src={settings} alt="" />
                 </button>
               ),
