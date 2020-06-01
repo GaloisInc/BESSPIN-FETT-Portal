@@ -36,6 +36,22 @@ export const getUsers = () =>
       });
   });
 
+export const getTeams = () =>
+  new Promise(async (resolve, reject) => {
+    const headers = await makeHeaders();
+    fetch(`${BASE_API}/getTeams`, {
+      headers,
+    })
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(body => {
+        resolve(body.items);
+      })
+      .catch(response => {
+        reject(response);
+      });
+  });
+
 export const getMyUser = async username =>
   new Promise(async (resolve, reject) => {
     const headers = await makeHeaders();

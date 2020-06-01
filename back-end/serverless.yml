@@ -101,6 +101,28 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getTeams:
+    handler: src/functions/getTeams.handler
+    timeout: 60
+    events:
+    - http:
+        path: getTeams
+        method: get
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getAnnouncements:
+    handler: src/functions/getAnnouncements.handler
+    timeout: 60
+    events:
+    - http:
+        path: getAnnouncements
+        method: get
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
   getEnvironments:
     handler: src/functions/getEnvironments.handler
     timeout: 60
@@ -186,12 +208,53 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  createAnnouncement:
+    handler: src/functions/createAnnouncement.handler
+    timeout: 60
+    events:
+    - http:
+        path: createAnnouncement
+        method: post
+        cors:
+          origin: "*"
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: false
+          cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  disableAnnouncement:
+    handler: src/functions/disableAnnouncement.handler
+    timeout: 60
+    events:
+    - http:
+        path: disableAnnouncement
+        method: put
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}  
+  updateAnnouncement:
+    handler: src/functions/updateAnnouncement.handler
+    timeout: 60
+    events:
+    - http:
+        path: updateAnnouncement
+        method: put
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
 
 resources:
   - ${file(cloudformation/hosting.yml)}
   - ${file(cloudformation/resources.yml)}
   - ${file(cloudformation/aurora.yml)}
   - ${file(cloudformation/outputs.yml)}
-
-
 

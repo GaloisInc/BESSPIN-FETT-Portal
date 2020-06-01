@@ -3,8 +3,6 @@ import { Auth } from 'aws-amplify';
 const BASE_API = process.env.REACT_APP_BASE_API_URI;
 
 const makeHeaders = async () => {
-  console.log('Stage: ', process.env.REACT_APP_STAGE);
-  console.log('Process: ', process.env);
   const sesh = await Auth.currentSession();
   const idToken = await sesh.getIdToken().getJwtToken();
   return {
@@ -29,7 +27,7 @@ export const getEnvironments = () =>
       .then(response => response.json())
       .then(body => resolve(body.items))
       .catch(response => {
-        reject(response);
+        reject(response.json());
       });
   });
 
