@@ -25,13 +25,15 @@ export default function Messages() {
 		}
 	]
 	
-	const messageDisplay = messages.map(mId => {
+	const messageDisplay = messages.map((mId, index) => {
 		return(
-			<div>
-				{mId.team}
-				{mId.date}
-				{mId.time}
-				<p>{mId.message}</p>
+			<div className="p-4 pr-6 text-gray-200" key={index} style={{backgroundColor: index % 2 ? '#1E2B34' : '#26343E'}}>
+				<div className="flex flex-column">
+					<p>{mId.team}</p>
+					<p>{mId.date}</p>
+					<p>{mId.time}</p>
+				</div>
+				<p className="text-sm leading-tight pt-2">{mId.message}</p>
 			</div>
 		)
 	})
