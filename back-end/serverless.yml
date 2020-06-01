@@ -187,27 +187,27 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
-  # createEnvironmentRecord:
-  #   handler: src/functions/createEnvironmentRecord.handler
-  #   timeout: 60
-  #   events:
-  #   - http:
-  #       path: createEnvironmentRecord
-  #       method: post
-  #       cors:
-  #         origin: "*"
-  #         headers:
-  #           - Content-Type
-  #           - X-Amz-Date
-  #           - Authorization
-  #           - X-Api-Key
-  #           - X-Amz-Security-Token
-  #           - X-Amz-User-Agent
-  #         allowCredentials: false
-  #         cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
-  #       authorizer:
-  #         name: authorizer
-  #         arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  createEnvironmentRecord:
+    handler: src/functions/createEnvironmentRecord.handler
+    timeout: 60
+    events:
+    - http:
+        path: createEnvironmentRecord
+        method: post
+        cors:
+          origin: "*"
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: false
+          cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
   createAnnouncement:
     handler: src/functions/createAnnouncement.handler
     timeout: 60
@@ -235,5 +235,4 @@ resources:
   - ${file(cloudformation/resources.yml)}
   - ${file(cloudformation/aurora.yml)}
   - ${file(cloudformation/outputs.yml)}
-
 

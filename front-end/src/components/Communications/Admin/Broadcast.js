@@ -28,8 +28,8 @@ export default function Broadcast() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const teamOptions = Array.isArray(teams)? teams.map(team => {
-    return (<option value={`${team.UserName}`}>{`${team.UserName}`}</option>)
+  const teamOptions = Array.isArray(teams)? teams.map((team, index) => {
+    return (<option key={index} value={`${team.UserName}`}>{`${team.UserName}`}</option>)
   }) : '';
 
   const handleSubmit = event => {

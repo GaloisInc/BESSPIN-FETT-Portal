@@ -14,7 +14,8 @@ exports.handler = async (event, context) => {
     await db.makeConnection();
 
     const data = await db.query(
-      `SELECT * from User WHERE UserName = '${body.username}'`
+      `SELECT * from User WHERE UserName = :UserName`,
+      { UserName: body.username }
     );
     return new Response({ items: data }).success();
   } catch (err) {

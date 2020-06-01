@@ -7,7 +7,7 @@ exports.handler = async (event, context) => {
   try {
     await db.makeConnection();
     const data = await db.query(
-      `SELECT * FROM Announcements WHERE IsActive = true ORDER BY created_at DESC`
+      `SELECT * FROM Announcement WHERE IsActive = true ORDER BY created_at DESC`
     );
     return new Response({ items: data }).success();
   } catch (err) {

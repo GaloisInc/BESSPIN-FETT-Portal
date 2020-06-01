@@ -48,7 +48,7 @@ export const getTeams = () =>
         resolve(body.items);
       })
       .catch(response => {
-        reject(response.json());
+        reject(response);
       });
   });
 
