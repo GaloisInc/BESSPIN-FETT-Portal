@@ -7,6 +7,7 @@ import moment from 'moment';
 import rocketDark from '../../assets/rocketDark.svg';
 import settings from '../../assets/settings.svg';
 import {getEnvironments} from '../../services/api/environment';
+import { ec2StatusUpdate } from '../../services/launcher';
 
 const InstanceHistory = () => {
   const [environments, setEnvironments] = useState([])
@@ -52,7 +53,7 @@ const InstanceHistory = () => {
               title: '',
               field: 'launch',
               render: data => (
-                <button type="button" className="focus:outline-none">
+                <button type="button" className="focus:outline-none" >
                   <img src={settings} alt="" />
                 </button>
               ),

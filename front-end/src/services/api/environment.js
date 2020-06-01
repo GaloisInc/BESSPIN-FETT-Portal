@@ -51,3 +51,18 @@ export const createEnvironmentRecord = async configuration =>
         reject(response);
       });
   });
+
+export const updateEnvironmentStatus = async record =>
+  new Promise(async (resolve, reject) => {
+    fetch(`${BASE_API}/updateEnvironment`, {
+      headers: await makeHeaders(),
+      body: JSON.stringify({ Id: record.Id, Status: record.Status }),
+      method: 'PUT',
+    })
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(body => resolve(body))
+      .catch(response => {
+        reject(response);
+      });
+  });
