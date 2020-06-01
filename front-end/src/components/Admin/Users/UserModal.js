@@ -53,7 +53,9 @@ const UserModal = ({ handleClose, selectedUser, fetchUsers }) => {
         </form>
         <div className="flex flex-row justify-between mt-6">
           <button type="button" onClick={handleResendInvite} disabled={selectedUser.Role !== 'admin'}>
-            <h6 className="text-teal-500 underline uppercase ">resend invite</h6>
+            <h6 className={`${selectedUser.Role !== 'admin' ? 'text-gray-600 cursor-default' : 'text-teal-500'} underline uppercase`}>
+              resend invite
+            </h6>
           </button>
           <button type="button" onClick={handleDelete}>
             <h6 className="text-teal-500 underline uppercase ">delete user</h6>
