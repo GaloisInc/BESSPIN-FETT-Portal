@@ -229,6 +229,28 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  disableAnnouncement:
+    handler: src/functions/disableAnnouncement.handler
+    timeout: 60
+    events:
+    - http:
+        path: disableAnnouncement
+        method: put
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}  
+  updateAnnouncement:
+    handler: src/functions/updateAnnouncement.handler
+    timeout: 60
+    events:
+    - http:
+        path: updateAnnouncement
+        method: put
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
 
 resources:
   - ${file(cloudformation/hosting.yml)}
