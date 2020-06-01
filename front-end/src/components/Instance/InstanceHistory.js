@@ -27,10 +27,6 @@ const InstanceHistory = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const updateStatus = data => {
-    ec2StatusUpdate(data, "paused")
-  }
-
   return (
     <>
       <div className="mb-4 mr-6 bg-blue-600 table-card" style={{ width: '600px', minHeight: '' }}>
@@ -57,7 +53,7 @@ const InstanceHistory = () => {
               title: '',
               field: 'launch',
               render: data => (
-                <button type="button" className="focus:outline-none" onClick={() => updateStatus(data)}>
+                <button type="button" className="focus:outline-none" >
                   <img src={settings} alt="" />
                 </button>
               ),
