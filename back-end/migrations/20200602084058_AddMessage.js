@@ -1,7 +1,10 @@
 exports.up = async function(knex, Promise) {
   await knex.schema.createTable('Message', table => {
     table.increments('Id').primary();
-    table.foreign('ResearcherId').references('User.Id');
+    table
+      .integer('ResearcherId_FK')
+      .references('Id')
+      .inTable('User');
     table.varchar('Payload', 255).notNull();
     table
       .dateTime('Created')
@@ -11,7 +14,6 @@ exports.up = async function(knex, Promise) {
       .boolean('IsActive')
       .notNull()
       .defaultTo(true);
-    table.timestamps(true, true);
   });
 };
 
