@@ -1,12 +1,23 @@
 /* eslint-disable */
-import React from 'react';
+import React, { useState } from 'react';
 // import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
-import { Paper } from '@material-ui/core';
+import { Paper, Modal } from '@material-ui/core';
 import rocketDark from '../../assets/rocketDark.svg';
 import settings from '../../assets/settings.svg';
+import InstanceModal from './InstanceModal';
 
 const InstanceHistory = () => {
+	const [open, setOpen] = React.useState(false);
+	
+	  const handleOpen = () => {
+	    setOpen(true);
+	  };
+	
+	  const handleClose = () => {
+	    setOpen(false);
+	  };	
+	
   const dummyInstances = [
     {
       instance: 'Baseline | RV64 | FreeBSD',
@@ -42,9 +53,9 @@ const InstanceHistory = () => {
               title: '',
               field: 'launch',
               render: data => (
-                <button type="button" className="focus:outline-none">
-                  <img src={settings} alt="" />
-                </button>
+	          <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none">
+                <img src={settings} alt="" />
+              </button>
               ),
             },
           ]}
@@ -70,6 +81,11 @@ const InstanceHistory = () => {
         <p className="pt-4 pl-2 text-gray-200">
           Provisioned instances are limited to (2) and a duration of idle activity (TBD) before automatic instance shutdown.
         </p>
+		
+		<Modal open={open} onClose={handleClose}>
+        	<InstanceModal handleClose={handleClose} />
+      	</Modal>
+		
       </div>
     </>
   );
