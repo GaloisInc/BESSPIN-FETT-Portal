@@ -4,7 +4,8 @@ exports.up = async function(knex, Promise) {
     table
       .integer('ResearcherId_FK')
       .references('Id')
-      .inTable('User');
+      .inTable('User')
+      .notNull();
     table.varchar('Payload', 255).notNull();
     table
       .dateTime('Created')
