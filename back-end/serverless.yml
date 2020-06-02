@@ -134,6 +134,17 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getMessages:
+    handler: src/functions/getMessages.handler
+    timeout: 60
+    events:
+    - http:
+        path: getMessages
+        method: get
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
   getMyUser:
     handler: src/functions/getMyUser.handler
     timeout: 60
@@ -259,6 +270,27 @@ functions:
         path: updateAnnouncement
         method: put
         cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  createMessage:
+    handler: src/functions/createMessage.handler
+    timeout: 60
+    events:
+    - http:
+        path: createMessage
+        method: post
+        cors:
+          origin: "*"
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: false
+          cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
