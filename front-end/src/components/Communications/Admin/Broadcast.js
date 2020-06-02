@@ -2,33 +2,35 @@
 /* eslint-disable jsx-a11y/label-has-for */
 /* eslint-disable */
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createAnnouncement } from '../../../services/api/announcements';
 
 export default function Broadcast() {
-  const [team, setTeam] = useState('');
+  const [selectedTeam, setSelectedTeam] = useState('');
   const [vulnurability, setVulnurability] = useState('');
   const [description, setDescription] = useState('');
 
+
   const handleSubmit = event => {
     event.preventDefault();
-    console.log('submitting vulnurability');
-    // Todo implement ==> search
+    const newAnnouncement = {
+      Team: selectedTeam,
+      Type: vulnurability,
+      Payload: description,
+    }
+    createAnnouncement(newAnnouncement);
   };
   return (
-    <form className="flex flex-col items-center w-auto m-8">
+    <div className="flex flex-col items-center w-auto m-8">
       <label htmlFor="team" className="mt-8 text-gray-200 font-body">
-        Select Team
+        Team
       </label>
-      <select
+      <input
         id="team"
-        value={team}
-        onChange={event => setTeam(event.target.value)}
-        className="block w-full p-1 leading-tight text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded shadow hover:border-gray-300 focus:outline-none focus:shadow-outline"
-      >
-        <option value="Team 1">Team 1</option>
-        <option value="Team 2">Team 2</option>
-        <option value="Team 3">Team 3</option>
-      </select>
+        value={selectedTeam}
+        onChange={event => setSelectedTeam(event.target.value)}
+        className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid"
+      />
       <label htmlFor="vulnurability" className="mt-8 text-gray-200 font-body">
         Vulnerability
       </label>
@@ -55,6 +57,6 @@ export default function Broadcast() {
       >
         Send
       </button>
-    </form>
+    </div>
   );
 }

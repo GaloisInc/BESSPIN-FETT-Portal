@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import MaterialTable from 'material-table';
 import { Paper } from '@material-ui/core';
 import rocketDark from '../../../assets/rocketDark.svg';
-import { getInstanceConfigurations } from '../../../services/api';
-// import { ec2Launcher } from '../../../services/launcher';
+import { getInstanceConfigurations } from '../../../services/api/instanceConfiguration';
+import { ec2Launcher } from '../../../services/launcher';
 
 const LaunchTable = ({ history }) => {
   const [instanceConfigurations, setInstanceConfigurations] = useState([]);
@@ -13,6 +13,7 @@ const LaunchTable = ({ history }) => {
   const fetchConfigurations = async () => {
     try {
       const configurations = await getInstanceConfigurations();
+      console.log(configurations);
       setInstanceConfigurations(configurations);
     } catch (error) {
       console.log(`Error fetching configurations${error}`);
@@ -21,14 +22,15 @@ const LaunchTable = ({ history }) => {
 
   useEffect(() => {
     fetchConfigurations();
-  }, [fetchConfigurations]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleLaunch = async (event, configuration) => {
     event.preventDefault();
-    // const response = await ec2Launcher(configuration);
-    // if (response === 'success') {
-    //   history.push('./bountyportal/dashboard');
-    // }
+    const response = await ec2Launcher(configuration);
+    if (response === 'success') {
+      history.push('./');
+    }
     console.log('launching');
   };
 
@@ -43,7 +45,7 @@ const LaunchTable = ({ history }) => {
             Container: props => <Paper {...props} elevation={0} />,
           }}
           columns={[
-            { title: 'Type', field: 'Type' },
+            { title: 'Type', field: 'Type', cellStyle: { paddingLeft: '2em' }, headerStyle: { paddingLeft: '2em' } },
             { title: 'Processor', field: 'Processor' },
             { title: 'OS', field: 'OS' },
             {
@@ -89,4 +91,4 @@ LaunchTable.propTypes = {
   history: ReactRouterPropTypes.history,
 };
 
-export default LaunchTable;
+export default withRouter(LaunchTable);

@@ -7,7 +7,7 @@ exports.handler = async (event, context) => {
   try {
     await db.makeConnection();
     const data = await db.query(
-      `SELECT * FROM InstanceConfiguration WHERE IsActive = true`
+      `SELECT * FROM User WHERE IsActive = true AND Role = 'researcher'`
     );
     return new Response({ items: data }).success();
   } catch (err) {

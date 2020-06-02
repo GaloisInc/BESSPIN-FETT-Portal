@@ -2,16 +2,21 @@
 /* eslint-disable jsx-a11y/label-has-for */
 
 import React, { useState } from 'react';
-import { createUser, createTeams } from '../../../services/cognito';
+import PropTypes from 'prop-types';
 
-export default function UserForm() {
+import { createAdminUser, createTeams } from '../../../services/cognito';
+
+const UserForm = ({ fetchUsers }) => {
   const [email, setEmail] = useState('');
   const [teamNumber, setTeamNumber] = useState('');
 
-  const handleCreateUser = event => {
+  const handleCreateUser = async event => {
     event.preventDefault();
     try {
-      createUser(email);
+      const resp = await createAdminUser(email);
+      console.log('created', resp);
+      setEmail('');
+      fetchUsers();
     } catch (error) {
       console.log(`failed to create user ${error}`);
     }
@@ -69,4 +74,10 @@ export default function UserForm() {
       </form>
     </div>
   );
-}
+};
+
+export default UserForm;
+
+UserForm.propTypes = {
+  fetchUsers: PropTypes.func,
+};

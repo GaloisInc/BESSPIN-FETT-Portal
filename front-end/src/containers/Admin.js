@@ -7,12 +7,12 @@ import Sidebar from '../components/Layout/Sidebar';
 import Header from '../components/Layout/Header';
 
 const Admin = props => {
-  const { isAdmin, isLoggedIn, handleRoleSwitch } = props;
+  const { isAdmin, isLoggedIn, handleRoleSwitch, name } = props;
   const checkAuth = isLoggedIn && isAdmin;
 
   return (
     <div className="flex-col h-full portal-container">
-      <Header isAdmin={isAdmin} handleRoleSwitch={handleRoleSwitch} />
+      <Header isAdmin={isAdmin} handleRoleSwitch={handleRoleSwitch} name={name} />
       <div style={{ minHeight: 'calc(100vh - 6em)' }} className="flex flex-row">
         <Sidebar isAdmin={isAdmin} />
         <div className="w-full bg-blue-700">
@@ -36,4 +36,5 @@ Admin.propTypes = {
   isAdmin: PropTypes.bool,
   isLoggedIn: PropTypes.bool,
   handleRoleSwitch: PropTypes.func,
+  name: PropTypes.string,
 };

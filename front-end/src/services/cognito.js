@@ -1,33 +1,10 @@
 import { Auth } from 'aws-amplify';
+import { createUser, disableDBUser } from './api/user';
 
 const AWS = require('aws-sdk');
 const generator = require('generate-password');
 
-const disableDbUser = async username => {
-  try {
-    console.log('disableDbUser --> IMPLEMENT');
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-
-const createDbUser = async username => {
-  try {
-    console.log('createDbUser --> IMPLEMENT');
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-
-const updateDbUser = async (username, email) => {
-  try {
-    console.log('updateDbUser --> IMPLEMENT');
-  } catch (error) {
-    throw new Error(error);
-  }
-};
-
-export const createUser = async email =>
+export const createAdminUser = async email =>
   new Promise(async (resolve, reject) => {
     try {
       Auth.currentCredentials().then(async res => {
@@ -51,7 +28,7 @@ export const createUser = async email =>
 
         const params = {
           Username: email,
-          TemporaryPassword: password,
+          TemporaryPassword: `aB@4${password}`,
           DesiredDeliveryMediums: ['EMAIL'],
           UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
           UserAttributes: [
@@ -63,9 +40,13 @@ export const createUser = async email =>
         };
 
         cognito.adminCreateUser(params, function(err, data) {
-          if (err) console.log(err, err.stack);
-          // an error occurred
-          else console.log(data); // successful response
+          if (err) {
+            console.log(err, err.stack);
+          } else {
+            const response = createUser(email, 'admin');
+            resolve(response);
+          }
+          // an error occurred // successful response
         });
       });
     } catch (error) {
@@ -120,14 +101,17 @@ export const disableUser = async user =>
         const cognito = new AWS.CognitoIdentityServiceProvider(auth);
 
         const params = {
-          Username: user,
+          Username: user.UserName,
           UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
         };
 
-        cognito.adminDisableUser(params, function(err, data) {
-          if (err) console.log(err, err.stack);
-          // an error occurred
-          else console.log(data); // successful response
+        cognito.adminDisableUser(params, async function(err, data) {
+          if (err) {
+            console.log(err, err.stack);
+          } else {
+            const response = await disableDBUser(user.Id);
+            if (response) resolve('success');
+          }
         });
       });
     } catch (error) {
@@ -190,7 +174,7 @@ export const resendInvite = email =>
         cognito.adminCreateUser(params, function(err, data) {
           if (err) console.log(err, err.stack);
           // an error occurred
-          else console.log(data); // successful response
+          else resolve(data); // successful response
         });
       });
     } catch (error) {
