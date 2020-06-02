@@ -10,9 +10,7 @@ export default function AdminDash() {
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Id consectetur
         purus ut faucibus pulvinar elementum integer.
       </p>
-      <a href="">
-        <h5 className="mt-4 text-teal-500 underline uppercase">view on AWS</h5>
-      </a>
+      <h5 className="mt-4 text-teal-500 underline uppercase cursor-pointer">view on AWS</h5>
       <div className="flex flex-row flex-wrap justify-around w-full mt-4">
         <InstanceManagement />
         <Comms userType="admin" />

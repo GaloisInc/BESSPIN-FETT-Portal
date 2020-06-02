@@ -46,7 +46,7 @@ const Header = ({ history, handleRoleSwitch, name }) => {
       <img className="h-16 pl-4" src={fettLogo} alt="Fett Logo Arc" />
       <div>
         <button type="button" ref={anchorRef} onClick={handleToggle} className="mr-20 text-lg text-gray-200 uppercase font-body">
-          {name || 'Name'}
+          {name || ''}
         </button>
         <Popper open={open} anchorEl={anchorRef.current} role={undefined} transition disablePortal>
           {({ TransitionProps, placement }) => (

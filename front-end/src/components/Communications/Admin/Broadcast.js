@@ -4,33 +4,12 @@
 
 import React, { useState, useEffect } from 'react';
 import { createAnnouncement } from '../../../services/api/announcements';
-import { getTeams } from '../../../services/api/user';
-
 
 export default function Broadcast() {
   const [selectedTeam, setSelectedTeam] = useState('');
-  const [teams, setTeams] = useState('');
   const [vulnurability, setVulnurability] = useState('');
   const [description, setDescription] = useState('');
 
-  const fetchTeams = async () => {
-    try {
-      const teams = await getTeams();
-      console.log(teams);
-      setTeams(teams);
-    } catch (error) {
-      console.log(`Error fetching configurations${error}`);
-    }
-  };
-
-  useEffect(() => {
-    fetchTeams();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  const teamOptions = Array.isArray(teams)? teams.map((team, index) => {
-    return (<option key={index} value={`${team.UserName}`}>{`${team.UserName}`}</option>)
-  }) : '';
 
   const handleSubmit = event => {
     event.preventDefault();
@@ -44,16 +23,14 @@ export default function Broadcast() {
   return (
     <div className="flex flex-col items-center w-auto m-8">
       <label htmlFor="team" className="mt-8 text-gray-200 font-body">
-        Select Team
+        Team
       </label>
-      <select
+      <input
         id="team"
         value={selectedTeam}
         onChange={event => setSelectedTeam(event.target.value)}
-        className="block w-full p-1 leading-tight text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded shadow hover:border-gray-300 focus:outline-none focus:shadow-outline"
-      >
-        {teamOptions}
-      </select>
+        className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid"
+      />
       <label htmlFor="vulnurability" className="mt-8 text-gray-200 font-body">
         Vulnerability
       </label>
