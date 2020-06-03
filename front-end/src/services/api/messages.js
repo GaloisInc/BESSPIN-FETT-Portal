@@ -32,6 +32,51 @@ export const getMessages = () =>
       });
   });
 
+export const getConversations = () =>
+  new Promise(async (resolve, reject) => {
+    fetch(`${BASE_API}/getConversations`, {
+      headers: await makeHeaders(),
+    })
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(body => resolve(body.items))
+      .catch(response => {
+        reject(response);
+      });
+  });
+
+export const getConversationById = () =>
+  new Promise(async (resolve, reject) => {
+    fetch(`${BASE_API}/getConversationById`, {
+      headers: await makeHeaders(),
+    })
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(body => resolve(body.items))
+      .catch(response => {
+        reject(response);
+      });
+  });
+
+export const getMyMessages = () =>
+  new Promise(async (resolve, reject) => {
+    const sesh = await Auth.currentSession();
+    const ResearcherName = sesh.getAccessToken().payload.username;
+    fetch(`${BASE_API}/getMyMessages`, {
+      headers: await makeHeaders(),
+      body: JSON.stringify({
+        ResearcherName: `${ResearcherName}`,
+      }),
+      method: 'POST',
+    })
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(body => resolve(body.items))
+      .catch(response => {
+        reject(response);
+      });
+  });
+
 export const createMessage = async message =>
   new Promise(async (resolve, reject) => {
     const sesh = await Auth.currentSession();
