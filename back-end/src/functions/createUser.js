@@ -24,7 +24,7 @@ exports.handler = async (event, context) => {
       {
         EmailAddress: body.emailAddress,
         Role: body.role,
-        UserName: body.username,
+        UserName: body.myUserName,
         CreatedBy: creatorId,
       }
     );
