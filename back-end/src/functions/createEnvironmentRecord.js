@@ -21,10 +21,10 @@ exports.handler = async (event, context) => {
     const creatorId = creator[0].Id;
 
     const data = await db.query(
-      `INSERT INTO Environment (CreatedBy, Configuration, F1EnvironmentId, IpAddress, Region, Status) values (:CreatedBy, :Configuration, :F1EnvironmentId, :IpAddress, :Region, :Status)`,
+      `INSERT INTO Environment (CreatedBy_FK, Configuration_FK, F1EnvironmentId, IpAddress, Region, Status) values (:CreatedBy, :Configuration, :F1EnvironmentId, :IpAddress, :Region, :Status)`,
       {
         CreatedBy: creatorId,
-        Configuration: body.Configuration,
+        Configuration: body.Configuration_FK,
         F1EnvironmentId: body.F1EnvironmentId,
         IpAddress: body.IpAddress,
         Region: body.Region,
