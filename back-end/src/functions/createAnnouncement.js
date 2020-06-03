@@ -21,7 +21,7 @@ exports.handler = async (event, context) => {
     const creatorId = creator[0].Id;
 
     const data = await db.query(
-      `INSERT INTO Announcement (CreatedBy, Team, Type, Payload) values (:CreatedBy, :Team, :Type, :Payload)`,
+      `INSERT INTO Announcement (CreatedBy_FK, Team, Type, Payload) values (:CreatedBy, :Team, :Type, :Payload)`,
       {
         CreatedBy: creatorId,
         Team: body.Team,
