@@ -12,21 +12,26 @@ import { ec2StatusUpdate } from '../../services/launcher';
 import InstanceHistoryModal from './InstanceHistoryModal';
 
 const InstanceHistory = () => {
-  const [environments, setEnvironments] = useState([])
-  const [open, setOpen] = React.useState(false);
+  const [modalData, setModalData] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [isModalLoading, setIsModalLoading] = useState(false);
+  const [environments, setEnvironments] = useState([]);
 	
-	  const handleOpen = () => {
-	    setOpen(true);
-	  };
+  const handleOpen = async data => {
+	console.log(data);
+    setIsModalLoading(true);
+    setModalData(data);
+    setOpen(true);
+  };
 	
-	  const handleClose = () => {
-	    setOpen(false);
-	  };
+  const handleClose = () => {
+	setOpen(false);
+	};
   
   const fetchEnvironments = async () => {
     try {
       const response = await getEnvironments();
-      console.log(environments);
+      console.log(`Enviros: ${response}`);
       setEnvironments(response);
     } catch (error) {
       console.log(`Error fetching configurations${error}`);
@@ -95,7 +100,7 @@ const InstanceHistory = () => {
         </p>
 		
 		<Modal open={open} onClose={handleClose}>
-        	<InstanceHistoryModal handleClose={handleClose} />
+        	<InstanceHistoryModal handleClose={handleClose} isModalLoading={isModalLoading} modalData={modalData} fetchEnvironments={fetchEnvironments} />
       	</Modal>
 		
       </div>
