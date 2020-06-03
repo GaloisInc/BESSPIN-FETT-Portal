@@ -42,7 +42,7 @@ useEffect(() => {
 	  console.log(currentContent);
 	  	return(
 		 	<div>
-			 	{currentContent === 'Broadcast' && <AdminBroadcast />}
+			 	{currentContent === 'Broadcast' && <AdminBroadcast update={changeContentHandler}/>}
 			 	{currentContent === 'History' && <AdminHistory />}
 			 	{currentContent === 'Messages' && <AdminMessages />}
 			 	{currentContent === 'Announcements' && <ResearcherAnnouncements />}
@@ -68,10 +68,10 @@ useEffect(() => {
   
   return (
     <div className="bg-blue-600" style={{ width: '500px', minHeight: '630px' }}>
-      <div className="flex flex-row justify-between pl-4 mt-2 items-center mb-4">
-        <h5 className="uppercase text-gray-200 ml-4">{renderedNav}</h5>
+      <div className="flex flex-row items-center justify-between pl-4 mt-2 mb-4">
+        <h5 className="ml-4 text-gray-200 uppercase">{renderedNav}</h5>
       </div>
-      <div className="self-center bg-blue-700 m-8 mt-2" style={{ minHeight: '500px' }}>
+      <div className="self-center m-8 mt-2 bg-blue-700" style={{ minHeight: '500px' }}>
         {renderedContent}
       </div>
     </div>
