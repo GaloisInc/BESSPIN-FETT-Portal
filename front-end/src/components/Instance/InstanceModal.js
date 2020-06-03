@@ -10,7 +10,7 @@ const InstanceModal = ({ handleClose, modalData, fetchEnvironments }) => {
   const username = mappedData[0].UserName;
   return (
     <div
-      className="absolute overflow-y-visible text-4xl text-gray-200 bg-blue-600"
+      className="absolute overflow-y-scroll text-4xl text-gray-200 bg-blue-600"
       style={{ width: '800px', top: '30%', left: '50%', marginLeft: '-400px' }}
     >
       <div className="flex flex-row items-center justify-between p-2">

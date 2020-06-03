@@ -103,7 +103,7 @@ export default function InstanceManagement() {
               width: '14em',
               render: data => (
                 <p>
-                  {data.Type} | {data.OS} | {data.Processor}
+                  {data.Type} | {data.Processor} | {data.OS}
                 </p>
               ),
             },
