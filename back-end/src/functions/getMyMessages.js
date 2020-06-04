@@ -12,21 +12,26 @@ exports.handler = async (event, context) => {
 
   try {
     await db.makeConnection();
-    console.log(body);
-    const creator = await db.query(
+
+    const researcher = await db.query(
       `SELECT Id from User WHERE UserName = :UserName`,
       { UserName: body.myUserName }
     );
 
-    const creatorId = creator[0].Id;
+    const researcherId = researcher[0].Id;
 
     const data = await db.query(
-      `INSERT INTO Message (ResearcherId_Fk, SpeakerId_FK, Payload) values (:ResearcherId_FK, :SpeakerId_FK, :Payload)`,
-      {
-        SpeakerId_FK: creatorId,
-        ResearcherId_FK: body.ResearcherId,
-        Payload: body.Payload,
-      }
+      `SELECT 
+      m.*, r.UserName AS ResearcherName, s.UserName AS SpeakerName
+  FROM
+      Message AS m
+          JOIN
+      User AS r ON r.Id = m.ResearcherId_FK
+          JOIN
+      User AS s ON s.Id = m.SpeakerId_FK
+  WHERE ResearcherId_FK = :ResearcherId
+  ORDER BY Created ASC;`,
+      { ResearcherId: researcherId }
     );
     return new Response({ items: data }).success();
   } catch (err) {

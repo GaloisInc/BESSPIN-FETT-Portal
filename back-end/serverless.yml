@@ -145,6 +145,59 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getConversations:
+    handler: src/functions/getConversations.handler
+    timeout: 60
+    events:
+    - http:
+        path: getConversations
+        method: get
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getConversationById:
+    handler: src/functions/getConversationById.handler
+    timeout: 60
+    events:
+    - http:
+        path: getConversationById
+        method: post
+        cors:
+          origin: "*"
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: false
+          cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getMyMessages:
+    handler: src/functions/getMyMessages.handler
+    timeout: 60
+    events:
+    - http:
+        path: getMyMessages
+        method: post
+        cors:
+          origin: "*"
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: false
+          cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
   getMyUser:
     handler: src/functions/getMyUser.handler
     timeout: 60

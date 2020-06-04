@@ -18,7 +18,6 @@ const InstanceHistory = () => {
   const [environments, setEnvironments] = useState([]);
 	
   const handleOpen = async data => {
-	console.log(data);
     setIsModalLoading(true);
     setModalData(data);
     setOpen(true);
@@ -31,7 +30,6 @@ const InstanceHistory = () => {
   const fetchEnvironments = async () => {
     try {
       const response = await getEnvironments();
-      console.log(`Enviros: ${response}`);
       setEnvironments(response);
     } catch (error) {
       console.log(`Error fetching configurations${error}`);
