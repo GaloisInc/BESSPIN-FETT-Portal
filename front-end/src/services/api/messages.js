@@ -86,7 +86,7 @@ export const createMessage = async (message, researcherId) =>
     const sesh = await Auth.currentSession();
     const myUserName = sesh.getAccessToken().payload.username;
 
-    fetch(`${BASE_API}/createMesssage`, {
+    fetch(`${BASE_API}/createMessage`, {
       headers: await makeHeaders(),
       body: JSON.stringify({
         myUserName: `${myUserName}`,
