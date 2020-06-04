@@ -63,9 +63,9 @@ export default function Messages() {
 	
   return (
 	  <>
-		<div className="relative h-20 bg-blue-800">
+		<div className="relative h-20 bg-blue-900">
 			<input
-				className="p-1 pl-4 mt-6 ml-8 text-gray-200 bg-blue-800 border border-gray-200 border-solid rounded focus:outline-none"
+				className="p-1 pl-4 mt-6 ml-8 text-gray-200 bg-blue-900 border border-gray-200 border-solid rounded focus:outline-none"
 				type="text"
 				value={searchTerm}
 				name="name"
