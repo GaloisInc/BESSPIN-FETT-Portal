@@ -8,6 +8,7 @@ import AdminHistory from './Admin/History';
 import AdminMessages from './Admin/Messages';
 import ResearcherAnnouncements from './Researcher/Announcements';
 import ResearcherMessages from './Researcher/Messages';
+import Spinner from '../Spinner';
 
 const Card = props => {
 	
@@ -41,7 +42,7 @@ useEffect(() => {
   const renderContent = () => {
 	  console.log(currentContent);
 	  	return(
-		 	<div>
+		  	<div>
 			 	{currentContent === 'Broadcast' && <AdminBroadcast />}
 			 	{currentContent === 'History' && <AdminHistory />}
 			 	{currentContent === 'Messages' && <AdminMessages />}
