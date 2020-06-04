@@ -40,6 +40,7 @@ const UserForm = ({ fetchUsers }) => {
         </label>
         <input
           type="number"
+          min={1}
           id="teamNumber"
           value={teamNumber}
           onChange={event => setTeamNumber(event.target.value)}
