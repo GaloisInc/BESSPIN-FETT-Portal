@@ -18,10 +18,9 @@ exports.up = async function(knex, Promise) {
     'ALTER TABLE `User` CHANGE COLUMN `updated_at` `Updated` DATETIME DEFAULT CURRENT_TIMESTAMP'
   );
 
-  await knex.schema.alterTable('Environment', table => {
-    table.renameColumn('CreatedBy', 'CreatedBy_FK');
-    table.renameColumn('Configuration', 'Configuration_FK');
-  });
+  await knex.schema.raw(
+    'ALTER TABLE `Environment` DROP FOREIGN KEY `environment_configuration_foreign`; ALTER TABLE `Environment` CHANGE COLUMN `CreatedBy` `CreatedBy_FK` INT(10) UNSIGNED NOT NULL , CHANGE COLUMN `Configuration` `Configuration_FK` INT(10) UNSIGNED NULL DEFAULT NULL ; ALTER TABLE `Environment` ADD CONSTRAINT `environment_configuration_foreign`FOREIGN KEY (`Configuration_FK`) REFERENCES `InstanceConfiguration` (`Id`);'
+  );
   await knex.schema.raw(
     'ALTER TABLE `Environment` CHANGE COLUMN `created_at` `Created` DATETIME DEFAULT CURRENT_TIMESTAMP'
   );
