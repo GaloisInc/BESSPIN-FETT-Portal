@@ -18,10 +18,6 @@ exports.up = async function(knex, Promise) {
     'ALTER TABLE `User` CHANGE COLUMN `updated_at` `Updated` DATETIME DEFAULT CURRENT_TIMESTAMP'
   );
 
-  await knex.schema.alterTable('Environment', table => {
-    table.renameColumn('CreatedBy', 'CreatedBy_FK');
-    table.renameColumn('Configuration', 'Configuration_FK');
-  });
   await knex.schema.raw(
     'ALTER TABLE `Environment` CHANGE COLUMN `created_at` `Created` DATETIME DEFAULT CURRENT_TIMESTAMP'
   );
@@ -52,12 +48,6 @@ exports.down = async function(knex, Promise) {
   await knex.schema.raw(
     'ALTER TABLE `User` CHANGE COLUMN `Updated` `updated_at` DATETIME DEFAULT CURRENT_TIMESTAMP'
   );
-
-  await knex.schema.alterTable('Environment', table => {
-    table.renameColumn('CreatedBy_FK', 'CreatedBy');
-
-    table.renameColumn('Configuration_FK', 'Configuration');
-  });
 
   await knex.schema.raw(
     'ALTER TABLE `Environment` CHANGE COLUMN `Created` `created_at` DATETIME DEFAULT CURRENT_TIMESTAMP'
