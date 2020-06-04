@@ -7,7 +7,7 @@ import alert from '../../assets/alert.svg';
 const InstanceDetail = ({ environment, index }) => {
   const [open, setOpen] = useState(true);
   const toggleOpen = () => setOpen(prevOpened => !prevOpened);
-  console.log(moment(environment.created_at).format('HH:mm'));
+  console.log(moment(environment.Created).format('HH:mm'));
   return (
     <>
       <div className="flex flex-row items-center justify-between px-4 py-2 bg-blue-900">
@@ -44,7 +44,7 @@ const InstanceDetail = ({ environment, index }) => {
             <div className="w-48 ml-8 mr-8 ">
               <p className="text-base text-teal-500 uppercase">Start of Engagment</p>
             </div>
-            <p className="text-base text-200-gray">{environment.created_at && moment(environment.created_at).format('HH:mm')}</p>
+            <p className="text-base text-200-gray">{environment.Created && moment(environment.Created).format('HH:mm')}</p>
           </div>
           <div className="flex flex-row py-2 bg-blue-600">
             <div className="w-48 ml-8 mr-8">

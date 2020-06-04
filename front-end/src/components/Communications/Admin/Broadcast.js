@@ -4,21 +4,27 @@
 
 import React, { useState, useEffect } from 'react';
 import { createAnnouncement } from '../../../services/api/announcements';
+import PropTypes from 'prop-types'
 
-export default function Broadcast() {
+const Broadcast = ({ update }) => {
   const [selectedTeam, setSelectedTeam] = useState('');
   const [vulnurability, setVulnurability] = useState('');
   const [description, setDescription] = useState('');
 
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault();
     const newAnnouncement = {
       Team: selectedTeam,
       Type: vulnurability,
       Payload: description,
     }
-    createAnnouncement(newAnnouncement);
+    const response = await createAnnouncement(newAnnouncement);
+    console.log(response)
+    if (response && response.serverStatus === 2){
+      update('History')
+    }
+
   };
   return (
     <div className="flex flex-col items-center w-auto m-8">
@@ -59,4 +65,10 @@ export default function Broadcast() {
       </button>
     </div>
   );
+}
+
+export default Broadcast 
+
+Broadcast.propTypes = {
+  update: PropTypes.func,
 }

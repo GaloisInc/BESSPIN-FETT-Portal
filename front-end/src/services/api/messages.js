@@ -19,9 +19,9 @@ function handleErrors(response) {
   return response;
 }
 
-export const getAnnouncements = () =>
+export const getMessages = () =>
   new Promise(async (resolve, reject) => {
-    fetch(`${BASE_API}/getAnnouncements`, {
+    fetch(`${BASE_API}/getMessages`, {
       headers: await makeHeaders(),
     })
       .then(handleErrors)
@@ -32,48 +32,18 @@ export const getAnnouncements = () =>
       });
   });
 
-export const createAnnouncement = async announcement =>
+export const createMessage = async message =>
   new Promise(async (resolve, reject) => {
     const sesh = await Auth.currentSession();
     const myUserName = sesh.getAccessToken().payload.username;
 
-    fetch(`${BASE_API}/createAnnouncement`, {
+    fetch(`${BASE_API}/createMesssage`, {
       headers: await makeHeaders(),
       body: JSON.stringify({
         myUserName: `${myUserName}`,
-        ...announcement,
+        ...message,
       }),
       method: 'POST',
-    })
-      .then(handleErrors)
-      .then(response => response.json())
-      .then(body => resolve(body.items))
-      .catch(response => {
-        reject(response);
-      });
-  });
-
-export const disableAnnouncement = Id =>
-  new Promise(async (resolve, reject) => {
-    fetch(`${BASE_API}/disableAnnouncement`, {
-      headers: await makeHeaders(),
-      method: 'PUT',
-      body: JSON.stringify({ Id: `${Id}` }),
-    })
-      .then(handleErrors)
-      .then(response => response.json())
-      .then(body => resolve(body))
-      .catch(response => {
-        reject(response);
-      });
-  });
-
-export const updateAnnouncement = announcement =>
-  new Promise(async (resolve, reject) => {
-    fetch(`${BASE_API}/updateAnnouncement`, {
-      headers: await makeHeaders(),
-      method: 'PUT',
-      body: JSON.stringify({ ...announcement }),
     })
       .then(handleErrors)
       .then(response => response.json())
