@@ -8,7 +8,6 @@ export default function History() {
 	const fetchAnnouncements = async () => {
     try {
 			const response = await getAnnouncements();
-      console.log(response);
       setAnnouncements(response);
     } catch (error) {
       console.log(`Error fetching announcement: ${error}`);
@@ -21,7 +20,6 @@ export default function History() {
   }, []);
 	
 	const announcementDisplay = announcements.map((aId, index) => {
-		console.log(index);
 		return(
 			<div className="p-4 pr-6 text-teal-500" key={index} style={{backgroundColor: index % 2 ? '#1E2B34' : '#26343E'}}>
 				<div className="flex justify-between flex-column">

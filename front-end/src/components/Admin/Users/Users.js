@@ -13,7 +13,6 @@ export default function Users() {
     setIsLoading(true);
     try {
       const response = await getUsers();
-      console.log(users);
       setUsers(response);
       setFilteredUsers(response);
       setIsLoading(false);

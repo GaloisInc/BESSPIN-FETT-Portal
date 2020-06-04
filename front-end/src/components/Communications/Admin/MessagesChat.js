@@ -8,10 +8,9 @@ const MessagesChat = ({ researcherId }) => {
   const fetchConversation = async () => {
     try {
       const response = await getConversationById(researcherId);
-      console.log(response);
       setMessages(response);
     } catch (error) {
-      console.log(`Error fetching configurations${error}`);
+      console.log(`Error fetching conversation${error}`);
     }
   };
 
@@ -22,20 +21,24 @@ const MessagesChat = ({ researcherId }) => {
 
   const messagesDisplay = messages.map((mId, index) =>
     mId.ResearcherName === mId.SpeakerName ? (
-      <div className="p-4 pr-6 text-gray-200" key={index} style={{ backgroundColor: index % 2 ? '#1E2B34' : '#26343E' }}>
-        <div className="flex flex-row">
-          <p>{mId.ResearcherName}</p>
-          <p>{moment(mId.Created).format('DD/MM/YY')}</p>
-          <p>{moment(mId.Created).format('hh:mm A')}</p>
+      <div className="p-4 pr-20 text-gray-200 " key={index} style={{ backgroundColor: index % 2 ? '#1E2B34' : '#26343E' }}>
+        <div className="flex flex-row justify-between">
+          <p className="uppercase">{mId.SpeakerName}</p>
+          <div className="flex flex-row">
+            <p className="pr-2">{moment(mId.Created).format('DD/MM/YY')}</p>
+            <p>{moment(mId.Created).format('hh:mm A')}</p>
+          </div>
         </div>
         <p className="pt-2 text-sm leading-tight">{mId.Payload}</p>
       </div>
     ) : (
-      <div className="flex flex-col items-end p-4 pr-6 text-gray-200" key={index} style={{ backgroundColor: index % 2 ? '#1E2B34' : '#26343E' }}>
-        <div className="flex flex-row">
-          <p>{mId.ResearcherName}</p>
-          <p>{moment(mId.Created).format('DD/MM/YY')}</p>
-          <p>{moment(mId.Created).format('hh:mm A')}</p>
+      <div className="flex flex-col p-4 pl-20 pr-6 text-gray-200 " key={index} style={{ backgroundColor: index % 2 ? '#1E2B34' : '#26343E' }}>
+        <div className="flex flex-row justify-between">
+          <div className="flex flex-row">
+            <p className="pr-2">{moment(mId.Created).format('DD/MM/YY')}</p>
+            <p>{moment(mId.Created).format('hh:mm A')}</p>
+          </div>
+          <p className="uppercase">{mId.SpeakerName}</p>
         </div>
         <p className="pt-2 text-sm leading-tight">{mId.Payload}</p>
       </div>

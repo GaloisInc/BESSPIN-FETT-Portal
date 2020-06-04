@@ -25,7 +25,6 @@ const UserModal = ({ handleClose, selectedUser, fetchUsers }) => {
     }
   };
 
-  console.log(selectedUser);
   return (
     <div
       className="absolute text-4xl text-gray-200 bg-blue-600"

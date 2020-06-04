@@ -45,10 +45,14 @@ export const getConversations = () =>
       });
   });
 
-export const getConversationById = () =>
+export const getConversationById = id =>
   new Promise(async (resolve, reject) => {
     fetch(`${BASE_API}/getConversationById`, {
       headers: await makeHeaders(),
+      body: JSON.stringify({
+        ResearcherId_FK: `${id}`,
+      }),
+      method: 'POST',
     })
       .then(handleErrors)
       .then(response => response.json())
@@ -61,11 +65,11 @@ export const getConversationById = () =>
 export const getMyMessages = () =>
   new Promise(async (resolve, reject) => {
     const sesh = await Auth.currentSession();
-    const ResearcherName = sesh.getAccessToken().payload.username;
+    const { username } = sesh.getAccessToken().payload;
     fetch(`${BASE_API}/getMyMessages`, {
       headers: await makeHeaders(),
       body: JSON.stringify({
-        ResearcherName: `${ResearcherName}`,
+        myUserName: `${username}`,
       }),
       method: 'POST',
     })
@@ -77,7 +81,7 @@ export const getMyMessages = () =>
       });
   });
 
-export const createMessage = async message =>
+export const createMessage = async (message, researcherId) =>
   new Promise(async (resolve, reject) => {
     const sesh = await Auth.currentSession();
     const myUserName = sesh.getAccessToken().payload.username;
@@ -86,7 +90,8 @@ export const createMessage = async message =>
       headers: await makeHeaders(),
       body: JSON.stringify({
         myUserName: `${myUserName}`,
-        ...message,
+        ResearcherId: researcherId,
+        Payload: message,
       }),
       method: 'POST',
     })

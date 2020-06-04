@@ -13,9 +13,25 @@ exports.handler = async (event, context) => {
   try {
     await db.makeConnection();
 
+    const researcher = await db.query(
+      `SELECT Id from User WHERE UserName = :UserName`,
+      { UserName: body.myUserName }
+    );
+
+    const researcherId = researcher[0].Id;
+
     const data = await db.query(
-      `SELECT * from Message WHERE ResearcherName = :UserName ORDER BY Created ASC`,
-      { UserName: body.ResearcherName }
+      `SELECT 
+      m.*, r.UserName AS ResearcherName, s.UserName AS SpeakerName
+  FROM
+      Message AS m
+          JOIN
+      User AS r ON r.Id = m.ResearcherId_FK
+          JOIN
+      User AS s ON s.Id = m.SpeakerId_FK
+  WHERE ResearcherId_FK = :ResearcherId
+  ORDER BY Created ASC;`,
+      { ResearcherId: researcherId }
     );
     return new Response({ items: data }).success();
   } catch (err) {

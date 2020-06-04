@@ -14,8 +14,17 @@ exports.handler = async (event, context) => {
     await db.makeConnection();
 
     const data = await db.query(
-      `SELECT * from Message WHERE ResearcherId_FK = :ResearcherId_FK ORDER BY Created ASC`,
-      { ResearcherId_FK: body.ReasearcherId_FK }
+      `SELECT 
+      m.*, r.UserName AS ResearcherName, s.UserName AS SpeakerName
+  FROM
+      Message AS m
+          JOIN
+      User AS r ON r.Id = m.ResearcherId_FK
+          JOIN
+      User AS s ON s.Id = m.SpeakerId_FK
+  WHERE ResearcherId_FK = :ResearcherId_FK
+  ORDER BY Created ASC;`,
+      { ResearcherId_FK: body.ResearcherId_FK }
     );
     return new Response({ items: data }).success();
   } catch (err) {

@@ -20,7 +20,6 @@ const Broadcast = ({ update }) => {
       Payload: description,
     }
     const response = await createAnnouncement(newAnnouncement);
-    console.log(response)
     if (response && response.serverStatus === 2){
       update('History')
     }

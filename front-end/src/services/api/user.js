@@ -4,7 +4,6 @@ const BASE_API = process.env.REACT_APP_BASE_API_URI;
 
 const makeHeaders = async () => {
   console.log('Stage: ', process.env.REACT_APP_STAGE);
-  console.log('Process: ', process.env);
   const sesh = await Auth.currentSession();
   const idToken = await sesh.getIdToken().getJwtToken();
   return {
