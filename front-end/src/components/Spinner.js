@@ -1,4 +1,5 @@
 import React from 'react';
+import classes from '../styles/spinner.css';
 
 export default function Spinner() {
   return (

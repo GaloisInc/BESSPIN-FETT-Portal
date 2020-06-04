@@ -1,16 +1,19 @@
 /* eslint-disable */
 
 import React, { useState, useEffect } from 'react';
+import Spinner from  '../../Spinner.js'
 import { getAnnouncements } from '../../../services/api/announcements';
 
 export default function Announcement() {
 
 	const [ announcements, setAnnouncements ] = useState([])
+	const [ isLoading, setIsLoading ] = useState(true);
 	const fetchAnnouncements = async () => {
     try {
-			const response = await getAnnouncements();
+	  const response = await getAnnouncements();
       console.log(response);
       setAnnouncements(response);
+      setIsLoading(false);
     } catch (error) {
       console.log(`Error fetching configurations${error}`);
     }
@@ -36,8 +39,10 @@ export default function Announcement() {
 
 	
   return (
-	  <div>
-	  	{announcementDisplay}
+	  <div className="relative">
+		 
+		 {isLoading ? <Spinner /> : announcementDisplay};
+	  	
 	  </div>
   );
 }
