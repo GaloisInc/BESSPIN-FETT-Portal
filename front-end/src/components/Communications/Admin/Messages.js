@@ -1,6 +1,8 @@
 /* eslint-disable */
 
 import React, { useState, useEffect } from 'react';
+
+import Spinner from  '../../Spinner.js'
 import { getConversations } from '../../../services/api/messages';
 import arrowRight from '../../../assets/arrowRight.svg'
 import search from '../../../assets/search.svg';
@@ -9,9 +11,11 @@ import MessagesChat from './MessagesChat';
 import { getTeams } from '../../../services/api/user';
 
 export default function Messages() {
+
   const [ searchTerm, setSearchTerm ] = useState('');
 	const [ conversations, setConversations ] = useState([])
 	const [filteredTeams, setFilteredTeams] = useState([])
+  const [ isLoading, setIsLoading ] = useState(true);
 	const [ filteredConversations, setFilteredConversations ] = useState([])
 	const [ selectedResearcher, setSelectedResearcher ] = useState(null)
 	const [teams, setTeams] = useState([]);
@@ -21,6 +25,7 @@ export default function Messages() {
 			const response = await getConversations();
 			setConversations(response);
 			setFilteredConversations(response);
+      setIsLoading(false);
 			const researchers = await getTeams();
 			setTeams(researchers);
 			console.log(response)
@@ -96,6 +101,7 @@ export default function Messages() {
 	}) : '';
 
   return (
+
 	  <>
 		<div className="relative h-20 bg-blue-900">
 			{selectedResearcher && (
@@ -118,5 +124,6 @@ export default function Messages() {
 		</div>
 	{selectedResearcher ? <MessagesChat researcherId={selectedResearcher}/> : <>{renderedConversations}{renderedTeams}</>}
 	  </>
+
   );
 }
