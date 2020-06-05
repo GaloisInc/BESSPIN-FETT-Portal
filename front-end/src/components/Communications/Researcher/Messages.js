@@ -1,17 +1,20 @@
 /* eslint-disable */
 
 import React, { useState, useEffect } from 'react';
+import Spinner from  '../../Spinner.js'
 import { getMessages } from '../../../services/api/messages';
 import moment from 'moment';
 
 export default function Messages() {
 	
 	const [ messages, setMessages ] = useState([])
+	const [ isLoading, setIsLoading ] = useState(true);
 	const fetchMessages = async () => {
     try {
 			const response = await getMessages();
       console.log(response);
       setMessages(response);
+      setIsLoading(false);
     } catch (error) {
       console.log(`Error fetching configurations${error}`);
     }
@@ -37,8 +40,8 @@ export default function Messages() {
 
 	
   return (
-	  <div>
-	  	{messageDisplay}
+	  <div className="relative">
+	  	{isLoading ? <Spinner /> : messageDisplay};
 	  </div>
   );
 }
