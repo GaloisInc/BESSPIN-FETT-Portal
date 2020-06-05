@@ -11,10 +11,14 @@ import UserModal from './UserModal';
 
 const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [cardHeight, setCardHeight] = useState(0);
   const [open, setOpen] = React.useState(false);
   const [selectedUser, setSelectedUser] = useState('');
 
   useEffect(() => {
+    const { innerHeight: height } = window;
+    const initCardHeight = height - 340;
+    setCardHeight(initCardHeight);
     fetchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -43,7 +47,7 @@ const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => 
   };
 
   return (
-    <div className="mb-4 bg-blue-600 table-card" style={{ width: '700px', minHeight: '630px' }}>
+    <div className="bg-blue-600 table-card" style={{ width: '700px', minHeight: '630px', maxHeight: cardHeight }}>
       <div className="flex flex-row items-center justify-between pl-8 mt-4 mb-4">
         <h5 className="text-gray-200 uppercase">current teams/ users</h5>
         <div className="flex flex-row items-center mr-4">
@@ -81,11 +85,14 @@ const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => 
         ]}
         options={{
           headerStyle: {
+            position: 'sticky',
+            top: 0,
             backgroundColor: '#1E2B34',
             color: '#46878E',
             fontWeight: 'bold',
             fontSize: '1em',
           },
+          maxBodyHeight: cardHeight,
           rowStyle: rowData => ({
             backgroundColor: rowData.tableData.id % 2 ? '#293A46' : '#26343E',
             color: '#F4F4F4',
@@ -97,6 +104,7 @@ const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => 
           showTitle: false,
           toolbar: false,
           sorting: false,
+          overflowY: false,
         }}
         data={filteredUsers}
       />

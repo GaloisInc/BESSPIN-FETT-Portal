@@ -77,7 +77,7 @@ export const createUser = async (email, role) =>
     fetch(`${BASE_API}/createUser`, {
       headers,
       method: 'POST',
-      body: JSON.stringify({ email: `${email}`, role: `${role}`, myUsername: `${myUsername}` }),
+      body: JSON.stringify({ emailAddress: `${email}`, role: `${role}`, myUserName: `${myUsername}` }),
     })
       .then(handleErrors)
       .then(response => response.json())
