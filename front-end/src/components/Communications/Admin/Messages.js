@@ -106,7 +106,7 @@ export default function Messages() {
 		<div className="relative h-20 bg-blue-900">
 			{selectedResearcher && (
 				<button className="pl-4 mt-8 focus:outline-none" type="button" onClick={() => setSelectedResearcher(null)}>
-					<img className="transform rotate-180" src={arrowRight} alt=""/>
+					<img className="h-4 transform rotate-180" src={arrowRight} alt=""/>
 				</button>)
 			}
 			{!selectedResearcher && (
