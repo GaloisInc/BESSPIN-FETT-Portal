@@ -122,7 +122,8 @@ export default function Messages() {
 				</>
 			)}
 		</div>
-	{selectedResearcher ? <MessagesChat researcherId={selectedResearcher}/> : <>{renderedConversations}{renderedTeams}</>}
+	{!isLoading && selectedResearcher ? <MessagesChat researcherId={selectedResearcher}/> : <>{renderedConversations}{renderedTeams}</>}
+	{isLoading && <Spinner />}
 	  </>
 
   );
