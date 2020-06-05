@@ -9,6 +9,7 @@ const Navigation = ({update, setNav}) => {
 	
 	const NavStyle = 'border-solid border-b-4 border-teal-600'
 	
+	
 	return (
 	  <ul className="flex flex-column justify-start">
 	    <li className={`mr-4 cursor-pointer ${setNav==="Broadcast"? NavStyle : ''}`} onClick={() => update('Broadcast')}>Broadcast</li>
