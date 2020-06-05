@@ -46,7 +46,7 @@ export const createEnvironmentRecord = async configuration =>
     })
       .then(handleErrors)
       .then(response => response.json())
-      .then(body => resolve(body))
+      .then(body => resolve(body.items))
       .catch(response => {
         reject(response);
       });
