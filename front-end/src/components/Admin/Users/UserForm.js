@@ -44,7 +44,7 @@ const UserForm = ({ fetchUsers }) => {
           id="teamNumber"
           value={teamNumber}
           onChange={event => setTeamNumber(event.target.value)}
-          className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
+          className="w-full p-1 pl-4 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
         />
         <button
           type="submit"
@@ -63,7 +63,7 @@ const UserForm = ({ fetchUsers }) => {
           id="email"
           value={email}
           onChange={event => setEmail(event.target.value)}
-          className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
+          className="w-full p-1 pl-4 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
         />
         <button
           className="w-full px-2 py-1 mt-6 font-bold text-blue-700 uppercase bg-gray-200 rounded hover:bg-gray-300 font-body"

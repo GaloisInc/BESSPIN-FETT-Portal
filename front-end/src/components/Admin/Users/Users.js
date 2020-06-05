@@ -33,7 +33,7 @@ export default function Users() {
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Id consectetur
         purus ut faucibus pulvinar elementum integer.
       </p>
-      <div className="flex flex-row content-center w-full mt-4">
+      <div className="flex flex-row content-start w-full mt-4">
         <UserForm fetchUsers={fetchUsers} />
         <ManageUsers fetchUsers={fetchUsers} users={users} filteredUsers={filteredUsers} setFilteredUsers={setFilteredUsers} />
       </div>

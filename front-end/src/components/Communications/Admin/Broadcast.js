@@ -27,7 +27,7 @@ const Broadcast = ({ update }) => {
   };
   return (
     <div className="flex flex-col items-center w-auto m-8">
-      <label htmlFor="team" className="mt-8 text-gray-200 font-body">
+      <label htmlFor="team" className="self-start mt-8 text-gray-200 font-body">
         Team
       </label>
       <input
@@ -36,8 +36,8 @@ const Broadcast = ({ update }) => {
         onChange={event => setSelectedTeam(event.target.value)}
         className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
       />
-      <label htmlFor="vulnurability" className="mt-8 text-gray-200 font-body">
-        Vulnerability
+      <label htmlFor="vulnurability" className="self-start mt-8 text-gray-200 font-body">
+        Subject
       </label>
       <input
         id="vulnurability"
@@ -45,7 +45,7 @@ const Broadcast = ({ update }) => {
         onChange={event => setVulnurability(event.target.value)}
         className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
       />
-      <label htmlFor="description" className="mt-8 text-gray-200 font-body">
+      <label htmlFor="description" className="self-start mt-8 text-gray-200 font-body">
         Description
       </label>
       <textarea

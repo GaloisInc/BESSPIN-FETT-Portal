@@ -9,6 +9,7 @@ import settings from '../../assets/settings.svg';
 import InstanceModal from './InstanceModal';
 import alert from '../../assets/alert.svg';
 import { getEnvironments } from '../../services/api/environment';
+import useWindowDimensions from '../../services/useDimensions';
 
 export default function InstanceManagement() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -17,7 +18,7 @@ export default function InstanceManagement() {
   const [isModalLoading, setIsModalLoading] = useState(false);
   const [environments, setEnvironments] = useState([]);
   const [filteredEnvironments, setFilteredEnvironments] = useState([]);
-  const [cardHeight, setCardHeight] = useState(0);
+  const { height, width } = useWindowDimensions();
 
   const fetchEnvironments = async () => {
     try {
@@ -30,9 +31,6 @@ export default function InstanceManagement() {
   };
 
   useEffect(() => {
-    const { innerHeight: height } = window;
-    const initCardHeight = height - 340;
-    setCardHeight(initCardHeight);
     fetchEnvironments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -68,7 +66,7 @@ export default function InstanceManagement() {
 
   return (
     <>
-      <div className="mr-6 bg-blue-600 table-card" style={{ width: '700px', minHeight: '630px', maxHeight: cardHeight }}>
+      <div className="mr-6 bg-blue-600 table-card" style={{ width: '700px', minHeight: '630px', maxHeight: height - 340 }}>
         <div className="flex flex-row items-center justify-between pl-4 mt-4 mb-2">
           <h5 className="font-medium text-gray-200 uppercase">environment management</h5>
           <div className="flex flex-row items-center mr-4">
@@ -128,10 +126,9 @@ export default function InstanceManagement() {
               top: 0,
               backgroundColor: '#1E2B34',
               color: '#46878E',
-              fontWeight: 'bold',
               fontSize: '1em',
             },
-            maxBodyHeight: cardHeight,
+            maxBodyHeight: height - 340,
             rowStyle: rowData => ({
               backgroundColor: rowData.tableData.id % 2 ? '#293A46' : '#26343E',
               color: '#F4F4F4',
@@ -148,7 +145,7 @@ export default function InstanceManagement() {
       </div>
       <Modal open={open} onClose={handleClose}>
         <InstanceModal
-          cardHeight={cardHeight}
+          cardHeight={height - 340}
           handleClose={handleClose}
           isModalLoading={isModalLoading}
           modalData={modalData}

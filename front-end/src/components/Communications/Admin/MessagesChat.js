@@ -26,8 +26,7 @@ const MessagesChat = ({ researcherId }) => {
   const handleSubmit = async event => {
     event.preventDefault();
     try {
-      const researcher = messages[0].ResearcherId_FK;
-      const response = await createMessage(newMessage, researcher);
+      const response = await createMessage(newMessage, researcherId);
       if (response) {
         fetchConversation();
       }
@@ -72,7 +71,7 @@ const MessagesChat = ({ researcherId }) => {
   return (
     <div className="">
       <div className="overflow-y-scroll" style={{ height: '27em' }}>
-        {messagesDisplay}
+        {messages && messagesDisplay}
         <div className="sticky" />
       </div>
       <div className="relative p-4" style={{ width: '26em' }}>
