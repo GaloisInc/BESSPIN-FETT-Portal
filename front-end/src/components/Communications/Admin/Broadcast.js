@@ -20,7 +20,6 @@ const Broadcast = ({ update }) => {
       Payload: description,
     }
     const response = await createAnnouncement(newAnnouncement);
-    console.log(response)
     if (response && response.serverStatus === 2){
       update('History')
     }
@@ -35,7 +34,7 @@ const Broadcast = ({ update }) => {
         id="team"
         value={selectedTeam}
         onChange={event => setSelectedTeam(event.target.value)}
-        className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid"
+        className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
       />
       <label htmlFor="vulnurability" className="mt-8 text-gray-200 font-body">
         Vulnerability
@@ -44,7 +43,7 @@ const Broadcast = ({ update }) => {
         id="vulnurability"
         value={vulnurability}
         onChange={event => setVulnurability(event.target.value)}
-        className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid"
+        className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
       />
       <label htmlFor="description" className="mt-8 text-gray-200 font-body">
         Description
@@ -54,7 +53,7 @@ const Broadcast = ({ update }) => {
         value={description}
         onChange={event => setDescription(event.target.value)}
         rows="7"
-        className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid"
+        className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
       />
       <button
         className="w-full px-2 py-1 mt-8 font-bold text-blue-700 uppercase bg-gray-200 rounded hover:bg-gray-300"

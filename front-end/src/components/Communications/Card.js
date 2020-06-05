@@ -42,13 +42,13 @@ useEffect(() => {
   const renderContent = () => {
 	  console.log(currentContent);
 	  	return(
-		 	<div>
+		 	<>
 			 	{currentContent === 'Broadcast' && <AdminBroadcast update={changeContentHandler}/>}
 			 	{currentContent === 'History' && <AdminHistory />}
 			 	{currentContent === 'Messages' && <AdminMessages />}
 			 	{currentContent === 'Announcements' && <ResearcherAnnouncements />}
 			 	{currentContent === 'ResMessages' && <ResearcherMessages />}
-			</div>
+			</>
 	  	);
   }
   	

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import Spinner from  '../../Spinner.js'
-import { getMessages } from '../../../services/api/messages';
+import { getMyMessages } from '../../../services/api/messages';
 import moment from 'moment';
 
 export default function Messages() {
@@ -11,7 +11,7 @@ export default function Messages() {
 	const [ isLoading, setIsLoading ] = useState(true);
 	const fetchMessages = async () => {
     try {
-			const response = await getMessages();
+			const response = await getMyMessages();
       console.log(response);
       setMessages(response);
       setIsLoading(false);
@@ -33,7 +33,7 @@ export default function Messages() {
 					<p>{moment(mId.Created).format('DD/MM/YY')}</p>
 					<p>{moment(mId.Created).format('hh:mm A')}</p>
 				</div>
-				<p className="text-sm leading-tight pt-2">{mId.Payload}</p>
+				<p className="pt-2 text-sm leading-tight">{mId.Payload}</p>
 			</div>
 		)
 	})

@@ -11,7 +11,7 @@ export default function AdminDash() {
         purus ut faucibus pulvinar elementum integer.
       </p>
       <h5 className="mt-4 text-teal-500 underline uppercase cursor-pointer">view on AWS</h5>
-      <div className="flex flex-row flex-wrap justify-around w-full mt-4">
+      <div className="flex flex-row w-full mt-4">
         <InstanceManagement />
         <Comms userType="admin" />
       </div>
