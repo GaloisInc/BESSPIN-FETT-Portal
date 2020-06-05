@@ -56,8 +56,8 @@ useEffect(() => {
 	  console.log(currentNav);
 	  	return(
 		 	<div>
-			{currentNav === 'Admin' && <AdminNav update={changeContentHandler} />}
-			{currentNav === 'Researcher' && <ResearcherNav update={changeContentHandler} />}
+			{currentNav === 'Admin' && <AdminNav update={changeContentHandler} setNav={currentContent} />}
+			{currentNav === 'Researcher' && <ResearcherNav update={changeContentHandler} setNav={currentContent} />}
 			</div>
 	  	);
   }

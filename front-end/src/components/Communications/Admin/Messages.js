@@ -1,6 +1,8 @@
 /* eslint-disable */
 
 import React, { useState, useEffect } from 'react';
+
+import Spinner from  '../../Spinner.js'
 import { getConversations } from '../../../services/api/messages';
 import arrowRight from '../../../assets/arrowRight.svg'
 import search from '../../../assets/search.svg';
@@ -8,8 +10,10 @@ import moment from 'moment';
 import MessagesChat from './MessagesChat';
 
 export default function Messages() {
+
   const [ searchTerm, setSearchTerm ] = useState('');
 	const [ conversations, setConversations ] = useState([])
+  const [ isLoading, setIsLoading ] = useState(true);
 	const [ filteredConversations, setFilteredConversations ] = useState([])
 	const [ selectedResearcher, setSelectedResearcher ] = useState(null)
 	const fetchConversation = async () => {
@@ -17,6 +21,8 @@ export default function Messages() {
 			const response = await getConversations();
 			setConversations(response);
 			setFilteredConversations(response);
+      setIsLoading(false);
+
     } catch (error) {
       console.log(`Error fetching configurations${error}`);
     }
@@ -64,6 +70,7 @@ export default function Messages() {
 	})
 	
   return (
+
 	  <>
 		<div className="relative h-20 bg-blue-900">
 			<input
@@ -77,5 +84,6 @@ export default function Messages() {
 		</div>
 	  {selectedResearcher ? <MessagesChat researcherId={selectedResearcher}/> : conversationsDisplay}
 	  </>
+
   );
 }

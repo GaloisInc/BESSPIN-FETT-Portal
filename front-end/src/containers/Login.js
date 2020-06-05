@@ -67,7 +67,7 @@ const Login = props => {
           id="username"
           value={username}
           onChange={event => setUsername(event.target.value)}
-          className="w-full bg-blue-600 border-solid border border-gray-200 text-gray-200 p-1"
+          className="w-full bg-blue-600 border-solid border border-gray-200 text-gray-200 p-1 rounded"
         />
         <label htmlFor="password" className="text-gray-200 font-body mt-8">
           Password
@@ -77,10 +77,10 @@ const Login = props => {
           value={password}
           type="password"
           onChange={event => setPassword(event.target.value)}
-          className="w-full bg-blue-600 border-solid border border-gray-200 text-gray-200 p-1"
+          className="w-full bg-blue-600 border-solid border border-gray-200 text-gray-200 p-1 rounded"
         />
         <button
-          className="bg-gray-200 hover:bg-teal-500 text-blue-700 hover:text-gray-200 font-bold py-1 px-2 rounded uppercase w-full mt-8"
+          className="bg-gray-200 hover:bg-teal-500 text-blue-700 hover:text-gray-200 font-medium py-1 px-2 rounded uppercase w-full mt-8"
           type="submit"
           onClick={event => handleSubmit(event)}
         >

@@ -1,14 +1,17 @@
 /* eslint-disable */
 
 import React, { useState, useEffect } from 'react';
+import Spinner from  '../../Spinner.js'
 import { getAnnouncements } from '../../../services/api/announcements';
 
 export default function History() {
 	const [ announcements, setAnnouncements ] = useState([])
+	const [ isLoading, setIsLoading ] = useState(true);
 	const fetchAnnouncements = async () => {
     try {
 			const response = await getAnnouncements();
       setAnnouncements(response);
+      setIsLoading(false);
     } catch (error) {
       console.log(`Error fetching announcement: ${error}`);
     }
@@ -34,7 +37,7 @@ export default function History() {
 	
   return (
 	  <div>
-	  	{announcementDisplay}
+	  	{isLoading ? <Spinner /> : announcementDisplay};
 	  </div>
   );
 }
