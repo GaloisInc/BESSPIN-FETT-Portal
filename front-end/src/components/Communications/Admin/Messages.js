@@ -10,11 +10,13 @@ import MessagesChat from './MessagesChat';
 export default function Messages() {
   const [ searchTerm, setSearchTerm ] = useState('');
 	const [ conversations, setConversations ] = useState([])
+	const [ filteredConversations, setFilteredConversations ] = useState([])
 	const [ selectedResearcher, setSelectedResearcher ] = useState(null)
 	const fetchConversation = async () => {
     try {
 			const response = await getConversations();
-      setConversations(response);
+			setConversations(response);
+			setFilteredConversations(response);
     } catch (error) {
       console.log(`Error fetching configurations${error}`);
     }
@@ -26,10 +28,10 @@ export default function Messages() {
 	}, []);
 
 	useEffect(() => {
-    // const filteredData = users.filter(
-    //   env => env.UserName.toLowerCase().includes(searchTerm.toLowerCase()) || env.Role.toLowerCase().includes(searchTerm.toLowerCase())
-    // );
-    // setFilteredUsers(filteredData);
+    const filteredData = conversations.filter(
+      conversation => conversation.ResearcherName.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+    setFilteredConversations(filteredData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchTerm]);
 
@@ -39,7 +41,7 @@ export default function Messages() {
     setSearchTerm(value);
   };
 	
-	const conversationsDisplay = conversations.map((mId, index) => {
+	const conversationsDisplay = filteredConversations.map((mId, index) => {
 		return (
 		<div className="h-20 p-4 pr-6 text-gray-200" key={index} style={{backgroundColor: index % 2 ? '#1E2B34' : '#26343E'}}>
 			<div className="flex flex-row justify-between">
@@ -65,13 +67,13 @@ export default function Messages() {
 	  <>
 		<div className="relative h-20 bg-blue-900">
 			<input
-				className="p-1 pl-4 mt-6 ml-8 text-gray-200 bg-blue-900 border border-gray-200 border-solid rounded focus:outline-none"
+				className="pl-4 mt-6 ml-8 text-gray-200 bg-blue-900 border border-gray-200 border-solid rounded focus:outline-none"
 				type="text"
 				value={searchTerm}
 				name="name"
 				onChange={event => handleSearch(event)}
 			/>
-			<img className="absolute top-0 left-0 mt-8 ml-48" src={search} alt="" />
+			<img style={{marginTop: '28px', marginLeft: '215px'}} className="absolute top-0 left-0" src={search} alt="" />
 		</div>
 	  {selectedResearcher ? <MessagesChat researcherId={selectedResearcher}/> : conversationsDisplay}
 	  </>
