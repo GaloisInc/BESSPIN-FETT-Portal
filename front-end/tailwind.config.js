@@ -55,6 +55,7 @@ module.exports = {
     borderColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
     color: ['responsive', 'hover', 'focus', 'active', 'disabled'],
     textColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
+    transform: ['responsive', 'hover', 'focus', 'active', 'disabled'],
   },
   plugins: [],
 };
