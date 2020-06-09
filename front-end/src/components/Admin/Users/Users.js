@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import UserForm from './UserForm';
 import { getUsers } from '../../../services/api/user';
-import Spinner from '../../Spinner';
+import Spinner from '../../Spinner.js';
 import ManageUsers from './ManageUsers';
 
 export default function Users() {
   const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [filteredUsers, setFilteredUsers] = useState([]);
 
   const fetchUsers = async () => {
-    setIsLoading(true);
     try {
       const response = await getUsers();
       setUsers(response);
@@ -35,9 +34,13 @@ export default function Users() {
       </p>
       <div className="flex flex-row content-start w-full mt-4">
         <UserForm fetchUsers={fetchUsers} />
-        <ManageUsers fetchUsers={fetchUsers} users={users} filteredUsers={filteredUsers} setFilteredUsers={setFilteredUsers} />
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <ManageUsers fetchUsers={fetchUsers} users={users} filteredUsers={filteredUsers} setFilteredUsers={setFilteredUsers} />
+        )}
+        ;
       </div>
-      {/* {isLoading && <Spinner />} */}
     </div>
   );
 }

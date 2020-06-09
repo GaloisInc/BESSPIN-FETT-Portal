@@ -10,12 +10,14 @@ import InstanceModal from './InstanceModal';
 import alert from '../../assets/alert.svg';
 import { getEnvironments } from '../../services/api/environment';
 import useWindowDimensions from '../../services/useDimensions';
+import Spinner from '../Spinner.js';
 
 export default function InstanceManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [modalData, setModalData] = useState([]);
   const [open, setOpen] = useState(false);
   const [isModalLoading, setIsModalLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [environments, setEnvironments] = useState([]);
   const [filteredEnvironments, setFilteredEnvironments] = useState([]);
   const { height, width } = useWindowDimensions();
@@ -25,6 +27,7 @@ export default function InstanceManagement() {
       const response = await getEnvironments();
       setEnvironments(response);
       setFilteredEnvironments(response);
+      setIsLoading(false);
     } catch (error) {
       console.log(`Error fetching configurations${error}`);
     }
@@ -66,7 +69,7 @@ export default function InstanceManagement() {
 
   return (
     <>
-      <div className="mr-6 bg-blue-600 table-card" style={{ width: '700px', minHeight: '630px', maxHeight: height - 340 }}>
+      <div className="mr-6 bg-blue-600 table-card relative" style={{ width: '700px', minHeight: '630px', maxHeight: height - 340 }}>
         <div className="flex flex-row items-center justify-between pl-4 mt-4 mb-2">
           <h5 className="font-medium text-gray-200 uppercase">environment management</h5>
           <div className="flex flex-row items-center mr-4">
@@ -86,62 +89,67 @@ export default function InstanceManagement() {
             </button>
           </div>
         </div>
-        <MaterialTable
-          components={{
-            Container: props => <Paper {...props} elevation={0} />,
-          }}
-          columns={[
-            {
-              title: '',
-              field: 'alert',
-              width: '1em',
-              render: data => <div className="w-3">{data.Status !== 'running' && <img src={alert} alt="" />}</div>,
-            },
-            { title: 'TEAM', field: 'UserName', width: '8em' },
-            {
-              title: 'F1 INSTANCE',
-              field: 'f1Instance',
-              width: '16em',
-              render: data => (
-                <p>
-                  {data.Type} | {data.Processor} | {data.OS}
-                </p>
-              ),
-            },
-            { title: 'IDLE TIME', field: 'IdleTime', width: '8em' },
-            { title: 'STATUS', field: 'Status', width: '6em' },
-            {
-              title: '',
-              field: 'detailsView',
-              render: data => (
-                <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none">
-                  <img src={settings} alt="" />
-                </button>
-              ),
-            },
-          ]}
-          options={{
-            headerStyle: {
-              position: 'sticky',
-              top: 0,
-              backgroundColor: '#1E2B34',
-              color: '#46878E',
-              fontSize: '1em',
-            },
-            maxBodyHeight: height - 340,
-            rowStyle: rowData => ({
-              backgroundColor: rowData.tableData.id % 2 ? '#293A46' : '#26343E',
-              color: '#F4F4F4',
-              textTransform: 'uppercase',
-            }),
-            paging: false,
-            search: false,
-            showTitle: false,
-            toolbar: false,
-            sorting: false,
-          }}
-          data={filteredEnvironments}
-        />
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <MaterialTable
+            components={{
+              Container: props => <Paper {...props} elevation={0} />,
+            }}
+            columns={[
+              {
+                title: '',
+                field: 'alert',
+                width: '1em',
+                render: data => <div className="w-3">{data.Status !== 'running' && <img src={alert} alt="" />}</div>,
+              },
+              { title: 'TEAM', field: 'UserName', width: '8em' },
+              {
+                title: 'F1 INSTANCE',
+                field: 'f1Instance',
+                width: '16em',
+                render: data => (
+                  <p>
+                    {data.Type} | {data.Processor} | {data.OS}
+                  </p>
+                ),
+              },
+              { title: 'IDLE TIME', field: 'IdleTime', width: '8em' },
+              { title: 'STATUS', field: 'Status', width: '6em' },
+              {
+                title: '',
+                field: 'detailsView',
+                render: data => (
+                  <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none">
+                    <img src={settings} alt="" />
+                  </button>
+                ),
+              },
+            ]}
+            options={{
+              headerStyle: {
+                position: 'sticky',
+                top: 0,
+                backgroundColor: '#1E2B34',
+                color: '#46878E',
+                fontSize: '1em',
+              },
+              maxBodyHeight: height - 340,
+              rowStyle: rowData => ({
+                backgroundColor: rowData.tableData.id % 2 ? '#293A46' : '#26343E',
+                color: '#F4F4F4',
+                textTransform: 'uppercase',
+              }),
+              paging: false,
+              search: false,
+              showTitle: false,
+              toolbar: false,
+              sorting: false,
+            }}
+            data={filteredEnvironments}
+          />
+        )}
+        ;
       </div>
       <Modal open={open} onClose={handleClose}>
         <InstanceModal
