@@ -36,7 +36,7 @@ export default function History() {
 
 	
   return (
-	  <div>
+	  <div className="relative">
 	  	{isLoading ? <Spinner /> : announcementDisplay};
 	  </div>
   );

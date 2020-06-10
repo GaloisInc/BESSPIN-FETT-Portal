@@ -9,6 +9,7 @@ import search from '../../../assets/search.svg';
 import chevronRight from '../../../assets/chevronRight.svg';
 import UserModal from './UserModal';
 import useWindowDimensions from '../../../services/useDimensions';
+import Spinner from '../../Spinner.js';
 
 const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => {
   const [searchTerm, setSearchTerm] = useState('');

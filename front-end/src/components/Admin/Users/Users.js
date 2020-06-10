@@ -32,7 +32,7 @@ export default function Users() {
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Id consectetur
         purus ut faucibus pulvinar elementum integer.
       </p>
-      <div className="flex flex-row content-start w-full mt-4">
+      <div className="flex flex-row content-start w-full mt-4 relative">
         <UserForm fetchUsers={fetchUsers} />
         {isLoading ? (
           <Spinner />
