@@ -1,18 +1,15 @@
 /* eslint-disable */
 
 import React, {useEffect, useState} from 'react';
-// import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
 import { Paper, Modal } from '@material-ui/core';
 import moment from 'moment';
-import rocketDark from '../../assets/rocketDark.svg';
 import settings from '../../assets/settings.svg';
 import {getEnvironments} from '../../services/api/environment';
-import { ec2StatusUpdate } from '../../services/launcher';
 import InstanceHistoryModal from './InstanceHistoryModal';
 
 const InstanceHistory = () => {
-  const [modalData, setModalData] = useState([]);
+  const [modalData, setModalData] = useState(null);
   const [open, setOpen] = useState(false);
   const [isModalLoading, setIsModalLoading] = useState(false);
   const [environments, setEnvironments] = useState([]);
@@ -27,12 +24,17 @@ const InstanceHistory = () => {
 	setOpen(false);
 	};
   
-  const fetchEnvironments = async () => {
+  const fetchEnvironments = async (id) => {
+    setIsModalLoading(true);
     try {
       const response = await getEnvironments();
       setEnvironments(response);
+      setIsModalLoading(false)
+
     } catch (error) {
-      console.log(`Error fetching configurations${error}`);
+      console.log(`Error fetching Environments: ${error}`);
+      setIsModalLoading(false)
+
     }
   };
 
@@ -40,6 +42,18 @@ const InstanceHistory = () => {
     fetchEnvironments();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    console.log(environments)
+    console.log(modalData)
+    if (environments && environments.length > 0 && modalData && Object.keys(modalData).length > 0 ){
+      const newModalData  = environments.filter(env => 
+        env.F1EnvironmentId === modalData.F1EnvironmentId
+      )
+      console.log(newModalData)
+      setModalData({...newModalData[0]});
+    }
+  }, [environments])
 
 
   return (
@@ -68,9 +82,9 @@ const InstanceHistory = () => {
               title: '',
               field: 'launch',
               render: data => (
-	          <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none">
-                <img src={settings} alt="" />
-              </button>
+                <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none">
+                  <img src={settings} alt="" />
+                </button>
               ),
             },
           ]}
@@ -97,7 +111,7 @@ const InstanceHistory = () => {
           Provisioned instances are limited to (2) and a duration of idle activity (TBD) before automatic instance shutdown.
         </p>
 		
-		<Modal open={open} onClose={handleClose}>
+		    <Modal open={open} onClose={handleClose}>
         	<InstanceHistoryModal handleClose={handleClose} isModalLoading={isModalLoading} modalData={modalData} fetchEnvironments={fetchEnvironments} />
       	</Modal>
 		
