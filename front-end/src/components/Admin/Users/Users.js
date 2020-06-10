@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import UserForm from './UserForm';
 import { getUsers } from '../../../services/api/user';
-import Spinner from '../../Spinner';
+import Spinner from '../../Spinner.js';
 import ManageUsers from './ManageUsers';
 
 export default function Users() {
   const [users, setUsers] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [filteredUsers, setFilteredUsers] = useState([]);
 
   const fetchUsers = async () => {
-    setIsLoading(true);
     try {
       const response = await getUsers();
       setUsers(response);
@@ -33,11 +32,15 @@ export default function Users() {
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Id consectetur
         purus ut faucibus pulvinar elementum integer.
       </p>
-      <div className="flex flex-row content-start w-full mt-4">
+      <div className="flex flex-row content-start w-full mt-4 relative">
         <UserForm fetchUsers={fetchUsers} />
-        <ManageUsers fetchUsers={fetchUsers} users={users} filteredUsers={filteredUsers} setFilteredUsers={setFilteredUsers} />
+        {isLoading ? (
+          <Spinner />
+        ) : (
+          <ManageUsers fetchUsers={fetchUsers} users={users} filteredUsers={filteredUsers} setFilteredUsers={setFilteredUsers} />
+        )}
+        ;
       </div>
-      {/* {isLoading && <Spinner />} */}
     </div>
   );
 }

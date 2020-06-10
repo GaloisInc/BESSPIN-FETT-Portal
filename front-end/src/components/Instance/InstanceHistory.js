@@ -7,11 +7,13 @@ import moment from 'moment';
 import settings from '../../assets/settings.svg';
 import {getEnvironments} from '../../services/api/environment';
 import InstanceHistoryModal from './InstanceHistoryModal';
+import Spinner from '../Spinner.js';
 
 const InstanceHistory = () => {
   const [modalData, setModalData] = useState(null);
   const [open, setOpen] = useState(false);
   const [isModalLoading, setIsModalLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [environments, setEnvironments] = useState([]);
 	
   const handleOpen = async data => {
@@ -27,8 +29,10 @@ const InstanceHistory = () => {
   const fetchEnvironments = async (id) => {
     setIsModalLoading(true);
     try {
+	  setIsLoading(true);
       const response = await getEnvironments();
       setEnvironments(response);
+      setIsLoading(false);
       setIsModalLoading(false)
 
     } catch (error) {
@@ -58,10 +62,13 @@ const InstanceHistory = () => {
 
   return (
     <>
-      <div className="mb-4 mr-6 bg-blue-600 table-card" style={{ width: '600px', minHeight: '' }}>
+      <div className="mb-4 mr-6 bg-blue-600 table-card relative" style={{ width: '600px', minHeight: '' }}>
         <div className="flex flex-row items-center justify-between pl-2 mt-2 mb-2">
           <h5 className="text-gray-200 uppercase">instance history</h5>
         </div>
+        {isLoading ? (
+          <Spinner />
+        ) : (
         <MaterialTable
           components={{
             Container: props => <Paper {...props} elevation={0} />,
@@ -107,6 +114,7 @@ const InstanceHistory = () => {
           }}
           data={environments}
         />
+        )};
         <p className="pt-4 pl-2 text-gray-200">
           Provisioned instances are limited to (2) and a duration of idle activity (TBD) before automatic instance shutdown.
         </p>
