@@ -27,17 +27,8 @@ const Broadcast = ({ update }) => {
   };
   return (
     <div className="flex flex-col items-center w-auto m-8">
-      <label htmlFor="team" className="mt-8 text-gray-200 font-body">
-        Team
-      </label>
-      <input
-        id="team"
-        value={selectedTeam}
-        onChange={event => setSelectedTeam(event.target.value)}
-        className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
-      />
-      <label htmlFor="vulnurability" className="mt-8 text-gray-200 font-body">
-        Vulnerability
+      <label htmlFor="vulnurability" className="self-start mt-8 text-gray-200 font-body">
+        Subject
       </label>
       <input
         id="vulnurability"
@@ -45,7 +36,7 @@ const Broadcast = ({ update }) => {
         onChange={event => setVulnurability(event.target.value)}
         className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
       />
-      <label htmlFor="description" className="mt-8 text-gray-200 font-body">
+      <label htmlFor="description" className="self-start mt-8 text-gray-200 font-body">
         Description
       </label>
       <textarea
@@ -56,7 +47,7 @@ const Broadcast = ({ update }) => {
         className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
       />
       <button
-        className="w-full px-2 py-1 mt-8 font-bold text-blue-700 uppercase bg-gray-200 rounded hover:bg-gray-300"
+        className="w-full px-2 py-1 mt-8 font-bold text-blue-700 uppercase bg-gray-200 rounded hover:bg-teal-500 hover:text-gray-200"
         type="submit"
         onClick={event => handleSubmit(event)}
       >

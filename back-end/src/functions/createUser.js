@@ -20,12 +20,13 @@ exports.handler = async (event, context) => {
     const creatorId = creator[0].Id;
 
     const data = await db.query(
-      `INSERT INTO User (EmailAddress, Role, UserName, CreatedBy_FK) values (:EmailAddress, :Role, :UserName, :CreatedBy)`,
+      `INSERT INTO User (EmailAddress, Role, UserName, CreatedBy_FK, Region) values (:EmailAddress, :Role, :UserName, :CreatedBy, :Region)`,
       {
         EmailAddress: body.emailAddress,
         Role: body.role,
         UserName: body.emailAddress,
         CreatedBy: creatorId,
+        Region: body.region,
       }
     );
     return new Response({ items: data }).success();

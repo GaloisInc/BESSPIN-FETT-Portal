@@ -8,17 +8,16 @@ import refresh from '../../../assets/refresh.svg';
 import search from '../../../assets/search.svg';
 import chevronRight from '../../../assets/chevronRight.svg';
 import UserModal from './UserModal';
+import useWindowDimensions from '../../../services/useDimensions';
+import Spinner from '../../Spinner.js';
 
 const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [cardHeight, setCardHeight] = useState(0);
   const [open, setOpen] = React.useState(false);
   const [selectedUser, setSelectedUser] = useState('');
+  const { height, width } = useWindowDimensions();
 
   useEffect(() => {
-    const { innerHeight: height } = window;
-    const initCardHeight = height - 340;
-    setCardHeight(initCardHeight);
     fetchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
@@ -47,7 +46,7 @@ const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => 
   };
 
   return (
-    <div className="bg-blue-600 table-card" style={{ width: '700px', minHeight: '630px', maxHeight: cardHeight }}>
+    <div className="bg-blue-600 table-card" style={{ width: '700px', minHeight: '630px', maxHeight: height - 340 }}>
       <div className="flex flex-row items-center justify-between pl-8 mt-4 mb-4">
         <h5 className="text-gray-200 uppercase">current teams/ users</h5>
         <div className="flex flex-row items-center mr-4">
@@ -92,7 +91,7 @@ const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => 
             fontWeight: 'bold',
             fontSize: '1em',
           },
-          maxBodyHeight: cardHeight,
+          maxBodyHeight: height - 340,
           rowStyle: rowData => ({
             backgroundColor: rowData.tableData.id % 2 ? '#293A46' : '#26343E',
             color: '#F4F4F4',
