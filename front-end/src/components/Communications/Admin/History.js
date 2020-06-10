@@ -25,9 +25,8 @@ export default function History() {
 	const announcementDisplay = announcements.map((aId, index) => {
 		return(
 			<div className="p-4 pr-6 text-teal-500" key={index} style={{backgroundColor: index % 2 ? '#1E2B34' : '#26343E'}}>
-				<div className="flex justify-between flex-column">
-				<h6 className="uppercase"><span className="font-bold">Team Name:</span> {aId.Team}</h6>
-				<h6 className="uppercase"><span className="font-bold">Type:</span> {aId.Type}</h6>
+				<div className="flex items-end flex-column">
+				<h6 className="uppercase"><span className="font-bold">Subject:</span> {aId.Type}</h6>
 				</div>
 				<p className="pt-2 text-sm leading-tight text-gray-200">{aId.Payload}</p>
 			</div>

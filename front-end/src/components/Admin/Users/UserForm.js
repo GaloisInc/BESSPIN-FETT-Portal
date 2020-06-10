@@ -49,7 +49,7 @@ const UserForm = ({ fetchUsers }) => {
         <button
           type="submit"
           onClick={event => handleCreateTeams(event)}
-          className="w-full px-2 py-1 mt-6 font-bold text-blue-700 uppercase bg-gray-200 rounded hover:bg-gray-300 font-body"
+          className="w-full px-2 py-1 mt-6 font-bold text-blue-700 uppercase bg-gray-200 rounded font-body hover:bg-teal-500 hover:text-gray-200"
         >
           Create Teams
         </button>
@@ -66,7 +66,7 @@ const UserForm = ({ fetchUsers }) => {
           className="w-full p-1 pl-4 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
         />
         <button
-          className="w-full px-2 py-1 mt-6 font-bold text-blue-700 uppercase bg-gray-200 rounded hover:bg-gray-300 font-body"
+          className="w-full px-2 py-1 mt-6 font-bold text-blue-700 uppercase bg-gray-200 rounded hover:bg-teal-500 hover:text-gray-200 font-body"
           type="submit"
           onClick={event => handleCreateUser(event)}
         >
