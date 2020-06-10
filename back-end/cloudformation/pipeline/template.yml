@@ -263,3 +263,8 @@ Resources:
         - arn:aws:iam::aws:policy/AdministratorAccess
         # This is hard to guess at since this pipeline
         # will be running cloudformation on many different projects requiring many different resource permissions.
+
+  RafEC2Queue:
+    Type: "AWS::SQS::Queue"
+    Properties:
+      QueueName: "RafEC2Queue"
