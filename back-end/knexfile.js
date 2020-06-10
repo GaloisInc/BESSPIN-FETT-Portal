@@ -1,12 +1,84 @@
-module.exports = {
-  offline: {
+const aws = require('aws-sdk');
+
+const ssm = new aws.SSM();
+const secrets = new aws.SecretsManager();
+const getSecrets = async stage =>
+  secrets
+    .getSecretValue({
+      SecretId: `fettportal-${stage}-db-password`,
+    })
+    .promise()
+    .then(response => {
+      if (!response) {
+        throw new Error('Could not get DB password');
+      }
+      return response.SecretString;
+    })
+    .catch(err => {
+      throw err;
+    });
+
+const getParameters = async stage =>
+  ssm
+    .getParametersByPath({
+      Path: `/fettportal/${stage}/db-aurora/`,
+    })
+    .promise()
+    .then(response => {
+      if (!response.Parameters || !response.Parameters.length) {
+        throw new Error('Could not locate SSM Parameters');
+      }
+      const params = response.Parameters;
+      const ssmValues = {};
+      params.forEach(param => {
+        ssmValues[param.Name.split('/').pop()] = param.Value;
+      });
+      ['endpoint', 'user', 'schema'].forEach(param => {
+        if (
+          !Object.prototype.hasOwnProperty.call(ssmValues, param) ||
+          !ssmValues[param]
+        ) {
+          throw new Error(`Could not locate ${param}`);
+        }
+      });
+      return ssmValues;
+    })
+    .catch(err => {
+      throw err;
+    });
+
+const fetchConfiguration = async () =>
+  new Promise(async (resolve, reject) => {
+    const env = process.env.CURRENT_STAGE
+      ? process.env.CURRENT_STAGE
+      : process.env.NODE_ENV;
+    if (!env) {
+      throw new Error('CURRENT_STAGE or NODE_ENV must be set');
+    }
+    if (env === 'local') {
+      return resolve({
+        host: '127.0.0.1',
+        user: 'LocalMaster',
+        password: 'HA*S#NFAjsjs*',
+        database: 'FettPortal',
+        port: 3306,
+      });
+    }
+    const config = await getParameters(env).catch(err => console.log(err));
+    const password = await getSecrets(env).catch(err => console.log(err));
+    return resolve({
+      host: config.endpoint,
+      user: config.user,
+      password,
+      database: config.schema,
+    });
+  });
+
+module.exports = async () => {
+  const configuration = await fetchConfiguration();
+  return {
     client: 'mysql',
-    connection: {
-      host: 'localhost',
-      user: 'fettportals',
-      password: 'ive*got*money*balls',
-      database: 'fettportal',
-    },
+    connection: configuration,
     migrations: {
       directory: './migrations',
     },
@@ -15,58 +87,5 @@ module.exports = {
     },
     pool: { min: 2, max: 10 },
     useNullAsDefault: true,
-  },
-  dev: {
-    client: 'mysql',
-    connection: {
-      host: 'DEV_HOST',
-      user: 'DEV_USER',
-      password: 'DEV_PASSWORD',
-      database: 'fettportal_development',
-    },
-    migrations: {
-      directory: './migrations',
-    },
-    seeds: {
-      directory: './seeds',
-    },
-    pool: { min: 2, max: 10 },
-    useNullAsDefault: true,
-  },
-  qa: {
-    client: 'mysql',
-    connection: {
-      host: 'QA_HOST',
-      user: 'QA_USER',
-      password: 'QA_PASSWORD',
-      database: 'fettportal_development',
-      connectTimeout: 90000,
-    },
-    migrations: {
-      directory: './migrations',
-    },
-    seeds: {
-      directory: './seeds',
-    },
-    pool: { min: 2, max: 10 },
-    useNullAsDefault: true,
-  },
-  preprod: {
-    client: 'mysql',
-    connection: {
-      host: 'PREPROD_HOST',
-      user: 'PREPROD_USER',
-      password: 'PREPROD_PASSWORD',
-      database: 'fettportal_development',
-      connectTimeout: 90000,
-    },
-    migrations: {
-      directory: './migrations',
-    },
-    seeds: {
-      directory: './seeds',
-    },
-    pool: { min: 2, max: 10 },
-    useNullAsDefault: true,
-  },
+  };
 };

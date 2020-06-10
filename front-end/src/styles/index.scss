@@ -2,18 +2,18 @@
 @import "./_vars.scss";
 @import "./spinner.scss";
 @import "./modal.scss";
-@import url('https://fonts.googleapis.com/css?family=Proxima+Nova');
+// @import url('https://fonts.googleapis.com/css?family=Proxima+Nova');
 
 .flex {
-  display: flex
+  display: flex;
 }
 
 .flex-row {
-  flex-direction: row
+  flex-direction: row;
 }
 
 .flex-column {
-  flex-direction: column
+  flex-direction: column;
 }
 
 .flex-grow {
@@ -21,11 +21,11 @@
 }
 
 .justify-betweeen {
-  justify-content: space-between
+  justify-content: space-between;
 }
 
 .justify-center {
-  justify-content: center
+  justify-content: center;
 }
 
 .align-center {
@@ -34,23 +34,23 @@
 }
 
 .w-100 {
-  width: 100%
+  width: 100%;
 }
 
 .w-75 {
-  width: 75%
+  width: 75%;
 }
 
 .w-50 {
-  width: 50%
+  width: 50%;
 }
 
 .w-25 {
-  width: 25%
+  width: 25%;
 }
 
 .w-10 {
-  width: 10%
+  width: 10%;
 }
 
 .mb-1 {
@@ -192,7 +192,6 @@ h1 {
 h4 {
   color: $primary-red;
   font-size: 1.35em;
-
 }
 
 body {
@@ -200,42 +199,69 @@ body {
 }
 
 .applogin-banner {
-  font-family: 'proxima-nova', inherit;
+  font-family: "proxima-nova", inherit;
   position: absolute;
   min-width: 300px;
   top: 0;
   left: 0;
   z-index: 99999;
   width: 100%;
+  height: 100vh;
 
   .applogin-background {
-    background-color:#1E272F;
-    opacity: .9;
+    background-color: #1e272f;
+    opacity: 0.9;
     position: absolute;
     top: 0;
     bottom: 0;
     left: 0;
     right: 0;
-    box-shadow: 0 0 2px 1px hsla(0, 0%, 69%, .3);
+    box-shadow: 0 0 2px 1px hsla(0, 0%, 69%, 0.3);
   }
 
   .applogin-container {
     position: relative;
-    min-width: 300px;
-    margin: 0 auto;
+	width: 300px;
+    height: 300px;
+    margin: -200px auto 0;
     padding: 20px 0;
     box-sizing: border-box;
     text-align: center;
-    color: #F4F4F4;
+    color: #f4f4f4;
     font-size: 12px;
+    top: 50%;
 
     h1 {
-      padding-bottom: 8px;
+      padding-bottom: 0;
+      background-image: url('../assets/fett_logo_login.png');
+      width: 266px;
+      height: 85px;
+      margin: 0 auto;
+      
+      span {
+	      display: none;
+      }
     }
 
     p {
-      font-size: 14px;
+      font-size: 15px;
+      font-family: futura;
+      color: #46878E;
+      text-transform: uppercase;
+      margin-top: 0;
     }
+	
+	form {
+		width: 266px; margin: 24px auto;
+		.applogin-formfield {
+			display:block; width: 100%; margin: 5px auto 0;
+				label {display:block; text-align: left; font-family: futura; color: #f4f4f4;}
+				input {width: 100%; border: 1px solid #BCC1CB; background: none; height: 22px; border-radius: 3px; }
+		}
+		button {width: 100%; border: none; background: #f4f4f4; height: 24px; margin: 24px auto; border-radius: 3; 
+			&:hover {background: #46878E; color: #f4f4f4;}
+		}
+	}
   }
 }
 
@@ -245,7 +271,7 @@ body {
   position: relative;
   background-size: cover;
   background-repeat: no-repeat;
-  background-image: url('../assets/landingpage.png');
+
   display: flex;
   flex-direction: row;
   justify-content: center;
@@ -342,7 +368,6 @@ nav {
       }
     }
   }
-
 }
 
 // .btn-link {
@@ -406,10 +431,10 @@ nav {
 
 .btn-link {
   background: none;
-  color: #0645AD;
+  color: #0645ad;
   border: none;
   padding: 0;
-  border-bottom: 1px solid #0645AD;
+  border-bottom: 1px solid #0645ad;
   font: inherit;
   cursor: pointer;
 
@@ -427,7 +452,7 @@ nav {
     color: #000;
     border-bottom: none;
     i {
-    font-size: 1.5em;
+      font-size: 1.5em;
     }
   }
 }
@@ -439,6 +464,14 @@ nav {
 
     &:hover {
       color: $primary-red;
+    }
+  }
+}
+
+.portal-container {
+  .table-container {
+    tbody.MuiTableBody-root > :nth-of-type(2n) {
+      background-color: #293a46;
     }
   }
 }

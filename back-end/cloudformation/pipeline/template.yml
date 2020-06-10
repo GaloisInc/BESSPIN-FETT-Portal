@@ -1,10 +1,24 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: github-codepipeline
 Parameters:
+  GitHubOwner:
+    Type: String
   GitHubRepo:
     Type: String
   GitHubBranch:
     Type: String
+  CICDS3Bucket:
+    Type: String
+    Description: Name of bucket where CICD artifacts will be stored
+  SecurityGroupIds:
+    Type: CommaDelimitedList
+    Description: Comma seperated list of security group ID's for pipeline to run as, will need to be able to connect to RDS
+  Subnets:
+    Type: CommaDelimitedList
+    Description: Comma seperated list of subnets to put pipeline in, will need to be able to connect to RDS
+  VpcId:
+    Type: String
+    Description: ID of VPC to put pipeline in    
 Resources:
   CloudFormationTrustRole:
     Properties:
@@ -108,7 +122,7 @@ Resources:
     Properties:
       ArtifactStore:
         Type: S3
-        Location: rad-cicd
+        Location: !Ref CICDS3Bucket
       RestartExecutionOnUpdate: true
       RoleArn: !GetAtt CodePipelineRole.Arn
       Stages:
@@ -125,7 +139,7 @@ Resources:
               OutputArtifacts:
                 - Name: !Join ['-', [ !Ref 'AWS::StackName', SourceArtifact ] ]
               Configuration:
-                Owner: "{{resolve:secretsmanager:githubPersonalAccess:SecretString:gitHubOwner}}"
+                Owner: !Ref GitHubOwner
                 Repo: !Ref GitHubRepo
                 Branch: !Ref GitHubBranch
                 PollForSourceChanges: false
@@ -173,124 +187,7 @@ Resources:
     Properties:
       PolicyDocument:
         Statement:
-        - Action:
-          - cloudwatch:*
-          - logs:*
-          - codepipeline:*
-          - codebuild:*
-          - s3:*
-          - apigateway:CreateApiKey
-          - apigateway:CreateAuthorizer
-          - apigateway:CreateDeployment
-          - apigateway:CreateResource
-          - apigateway:CreateRestApi
-          - apigateway:CreateUsagePlan
-          - apigateway:CreateUsagePlanKey
-          - apigateway:GetApiKey
-          - apigateway:GetResources
-          - apigateway:GetUsagePlanKey
-          - apigateway:PutIntegration
-          - apigateway:PutIntegrationResponse
-          - apigateway:PutMethod
-          - apigateway:PutMethodResponse
-          - apigateway:POST
-          - apigateway:GET
-          - apigateway:PUT
-          - apigateway:DELETE
-          - apigateway:PATCH
-          - cloudformation:CreateStack
-          - cloudformation:UpdateStack
-          - cloudformation:DescribeStackEvents
-          - cloudformation:DescribeStacks
-          - cloudformation:DescribeStackResource
-          - cloudformation:ValidateTemplate
-          - cloudformation:ListStackResources
-          - cloudfront:CreateCloudFrontOriginAccessIdentity
-          - cloudfront:CreateDistribution
-          - cloudfront:CreateDistributionWithTags
-          - cloudfront:GetCloudFrontOriginAccessIdentity
-          - cloudfront:GetCloudFrontOriginAccessIdentityConfig
-          - cloudfront:GetDistribution
-          - cloudfront:CreateInvalidation
-          - cloudfront:TagResource
-          - cloudfront:UpdateDistribution
-          - cloudfront:DeleteCloudFrontOriginAccessIdentity
-          - cognito-identity:CreateIdentityPool
-          - cognito-identity:SetIdentityPoolRoles
-          - cognito-identity:DeleteIdentityPool
-          - cognito-idp:CreateUserPool
-          - cognito-idp:CreateUserPoolClient
-          - cognito-idp:DeleteUserPool
-          - cognito-idp:DeleteUserPoolClient
-          - dynamodb:CreateTable
-          - dynamodb:DescribeTable
-          - dynamodb:DescribeTimeToLive
-          - dynamodb:ListTagsOfResource
-          - dynamodb:TagResource
-          - dynamodb:UpdateTimeToLive
-          - dynamodb:DeleteTable
-          - ec2:DescribeSubnets
-          - ec2:DescribeVpcs
-          - ec2:CreateNetworkInterface
-          - ec2:DescribeNetworkInterfaces
-          - ec2:DeleteNetworkInterface
-          - ec2:DescribeSecurityGroups
-          - ec2:DescribeDhcpOptions
-          - ec2:CreateNetworkInterfacePermission
-          - ec2:AuthorizeSecurityGroupEgress
-          - ec2:AuthorizeSecurityGroupIngress
-          - ec2:RevokeSecurityGroupEgress
-          - ec2:RevokeSecurityGroupIngress
-          - ec2:UpdateSecurityGroupRuleDescriptionsEgress
-          - ec2:UpdateSecurityGroupRuleDescriptionsIngress
-          - ec2:CreateSecurityGroup
-          - ec2:DeleteSecurityGroup
-          - ec2:createTags
-          - events:DescribeRule
-          - events:PutRule
-          - events:PutTargets
-          - iam:AttachRolePolicy
-          - iam:CreateRole
-          - iam:GetRole
-          - iam:GetRolePolicy
-          - iam:PutRolePolicy
-          - iam:DeleteRolePolicy
-          - iam:TagRole
-          - iam:PassRole
-          - iam:DeleteRole
-          - iam:DetachRolePolicy
-          - identity:DeleteIdentityPool
-          - kms:CreateGrant
-          - kms:Decrypt
-          - kms:DescribeKey
-          - kms:Encrypt
-          - lambda:AddPermission
-          - lambda:CreateEventSourceMapping
-          - lambda:CreateFunction
-          - lambda:GetEventSourceMapping
-          - lambda:GetFunction
-          - lambda:GetFunctionConfiguration
-          - lambda:UpdateFunctionCode
-          - lambda:UpdateFunctionConfiguration
-          - lambda:GetFunction
-          - lambda:ListTags
-          - lambda:TagResource
-          - lambda:UntagResource
-          - monitoring:PutMetricAlarm
-          - sns:CreateTopic
-          - sns:GetTopicAttributes
-          - sns:Subscribe
-          - sns:DeleteTopic
-          - ssm:GetParametersByPath
-          - sqs:CreateQueue
-          - sqs:SetQueueAttributes
-          - sqs:GetQueueAttributes
-          - sqs:TagQueue
-          - sqs:DeleteQueue
-          - states:TagResource
-          - states:CreateStateMachine
-          - states:DeleteStateMachine
-          - sts:GetCallerIdentity
+        - Action: "*"
           Effect: Allow
           Resource: '*'
       PolicyName: !Join
@@ -331,13 +228,9 @@ Resources:
         Type: CODEPIPELINE
         BuildSpec: !Sub 'buildspecs/buildspec.${GitHubBranch}.yml'
       VpcConfig:
-        SecurityGroupIds:
-          - sg-0fd107356a339262f
-        Subnets:
-          - subnet-07a7f68fa2d9e4773
-          - subnet-0aab46458e8bf3172
-          - subnet-0128683bf39bb7b79
-        VpcId: vpc-0de50099ea32d0c69
+        SecurityGroupIds: !Ref SecurityGroupIds
+        Subnets: !Ref Subnets
+        VpcId: !Ref VpcId
 
   # 'GithubWebhook' satisfies two requirements:
   # -- Means that updates are pushed from GitHub, rather than AWS having to poll
@@ -370,3 +263,8 @@ Resources:
         - arn:aws:iam::aws:policy/AdministratorAccess
         # This is hard to guess at since this pipeline
         # will be running cloudformation on many different projects requiring many different resource permissions.
+
+  RafEC2Queue:
+    Type: "AWS::SQS::Queue"
+    Properties:
+      QueueName: "RafEC2Queue"

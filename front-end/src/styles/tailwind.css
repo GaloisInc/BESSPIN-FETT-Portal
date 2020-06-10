@@ -1,4 +1,7 @@
 @tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import "./spinner.css";
 
 html,
 body,
@@ -38,6 +41,7 @@ h5 {
 }
 
 h6 {
+  @apply text-base;
   @apply font-body;
 }
 
@@ -51,5 +55,25 @@ a {
   @apply text-sm;
 }
 
-@tailwind components;
-@tailwind utilities;
+td.MuiTableCell-root {
+  @apply border-b-0;
+  @apply py-2;
+  @apply px-2;
+  @apply font-body;
+  @apply text-base;
+}
+
+th.MuiTableCell-root {
+  @apply border-b-0;
+  @apply py-2;
+  @apply px-2;
+  @apply font-body;
+}
+
+.btn-gray {
+  @apply bg-gray-200;
+  @apply text-blue-700;
+  @apply font-bold;
+  @apply rounded;
+  @apply uppercase;
+}

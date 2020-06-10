@@ -1,0 +1,30 @@
+[
+  {
+    "ParameterKey": "GitHubOwner",
+    "ParameterValue": "DARPA-SSITH-Demonstrators"
+  },
+  {
+    "ParameterKey": "GitHubRepo",
+    "ParameterValue": "SSITH-FETT-Portal"
+  },
+  {
+    "ParameterKey": "GitHubBranch",
+    "ParameterValue": "develop"
+  },
+  {
+    "ParameterKey": "CICDS3Bucket",
+    "ParameterValue": "develop-portal-cicd-atrifacts"
+  },
+  {
+    "ParameterKey": "SecurityGroupIds",
+    "ParameterValue": "sg-0cd0e953fe5ea6a2c"
+  },  
+  {
+    "ParameterKey": "Subnets",
+    "ParameterValue": "subnet-01b25689f5ab6ca04,subnet-0bf8d6b46ba5eccca,subnet-093f391419a68a2e4"
+  },  
+  {
+    "ParameterKey": "VpcId",
+    "ParameterValue": "vpc-0e64e563ad342a2ad"
+  }
+]

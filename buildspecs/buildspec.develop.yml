@@ -1,0 +1,41 @@
+version: 0.2
+env:
+  variables:
+    STACK_NAME: develop-fettportal
+phases:
+  install:
+    runtime-versions:
+        nodejs: 10
+    commands:
+      - parseStackOutput=${CODEBUILD_SRC_DIR}/buildspecs/helpers/parse-stack-outputs.sh
+      - chmod +x $parseStackOutput
+  build:
+    commands:
+      - echo "----- Running Back-End Build ------"
+      - cd ${CODEBUILD_SRC_DIR}/back-end
+      - npm install
+      - npx serverless deploy --stage ${CURRENT_STAGE} --region us-west-2
+      - aws cloudformation describe-stacks --stack-name ${STACK_NAME} > ${CODEBUILD_SRC_DIR}/stack-outputs.json
+      - echo "----- Running Migrations ------"
+      - npm run migrate
+      - echo "----- Running Front-End Build ------"
+      # retrieve nested values from your secrets manager secret after setting variable above in parameter-store
+      # - echo ${TEST} | jq -r '.username'
+      # set react app env variables
+      - export REACT_APP_API_KEY='#####################'
+      - export REACT_APP_STAGE=${CURRENT_STAGE}
+      - export REACT_APP_REDIRECT_URI=`$parseStackOutput CloudFrontOriginURL`/authorizing
+      - export REACT_APP_LOGOUT_REDIRECT_URI=`$parseStackOutput CloudFrontOriginURL`
+      - export REACT_APP_BASE_API_URI=`$parseStackOutput ServiceEndpoint`
+      - export REACT_APP_COGNITO_CLIENT_ID=73h2mt51e5ke2dt0aq5g9n1qq9
+      - export REACT_APP_COGNITO_DOMAIN='https://fettportal-dev.auth.us-west-2.amazoncognito.com'
+      - export REACT_APP_COGNITO_USER_POOL_ID=us-west-2_TZpbYY6KB
+      - export S3_HOSTING_BUCKET=`$parseStackOutput S3WebsiteBucketID`
+      - export CLOUDFRONT_DISTRO=`$parseStackOutput CloudFrontOriginID`
+      - cd ${CODEBUILD_SRC_DIR}/front-end
+      - npm install
+      - npm run build
+  post_build:
+    commands:
+      - aws s3 sync --only-show-errors ${CODEBUILD_SRC_DIR}/front-end/build s3://${S3_HOSTING_BUCKET}
+      - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRO} --paths '/*'
