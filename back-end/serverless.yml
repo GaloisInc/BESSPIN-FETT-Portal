@@ -354,4 +354,3 @@ resources:
   - ${file(cloudformation/resources.yml)}
   - ${file(cloudformation/aurora.yml)}
   - ${file(cloudformation/outputs.yml)}
-
