@@ -32,6 +32,22 @@ export const getAnnouncements = () =>
       });
   });
 
+export const getAnnouncement = async announcementID =>
+  new Promise(async (resolve, reject) => {
+    const headers = await makeHeaders();
+    fetch(`${BASE_API}/getAnnouncement`, {
+      headers,
+      method: 'POST',
+      body: JSON.stringify({ id: `${announcementID}` }),
+    })
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(body => resolve(body.items))
+      .catch(response => {
+        reject(response);
+      });
+  });
+
 export const createAnnouncement = async announcement =>
   new Promise(async (resolve, reject) => {
     const sesh = await Auth.currentSession();
