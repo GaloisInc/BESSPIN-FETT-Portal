@@ -12,7 +12,7 @@ exports.handler = async (event, context) => {
   try {
     await db.makeConnection();
     const data = await db.query(
-      `UPDATE Environment SET Status = :Status WHERE F1EnvironmentId = :Id`,
+      `UPDATE Environment SET Status = :Status WHERE Id = :Id`,
       { Status: body.Status, Id: body.Id }
     );
     return new Response({ items: data }).success();

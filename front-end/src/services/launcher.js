@@ -21,7 +21,7 @@ export const ec2StatusUpdate = async (configuration, newStatus) =>
   new Promise(async (resolve, reject) => {
     // TODO => Implement EC2 SDK status update
     const environmentRecord = {
-      Id: configuration.F1EnvironmentId,
+      Id: configuration.Id,
       Status: newStatus,
     };
     console.log(environmentRecord);
