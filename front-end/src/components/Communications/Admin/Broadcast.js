@@ -6,11 +6,23 @@ import React, { useState, useEffect } from 'react';
 import { createAnnouncement } from '../../../services/api/announcements';
 import PropTypes from 'prop-types'
 
-const Broadcast = ({ update }) => {
+const Broadcast = ({ update, announceID }) => {
   const [selectedTeam, setSelectedTeam] = useState('');
   const [vulnurability, setVulnurability] = useState('');
   const [description, setDescription] = useState('');
+  
+  console.log(`announce id is set ${announceID}`);
 
+  const fetchAnnouncement = async announceID => {
+    try {
+    const response = await getAnnouncement(announceID);
+      setVulnurability(response.vulnerability);
+      setDescription(response.description);
+      
+    } catch (error) {
+      console.log(`Error fetching announcement: ${error}`);
+    }
+  };
 
   const handleSubmit = async event => {
     event.preventDefault();
@@ -25,6 +37,12 @@ const Broadcast = ({ update }) => {
     }
 
   };
+
+  useEffect(() => {
+    fetchAnnouncement(announceID);
+    // eslint-disable-next-line react-hooks/exhaustive-deps 
+  }, []);
+
   return (
     <div className="flex flex-col items-center w-auto m-8">
       <label htmlFor="vulnurability" className="self-start mt-8 text-gray-200 font-body">
