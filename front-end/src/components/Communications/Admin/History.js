@@ -1,7 +1,8 @@
 /* eslint-disable */
 
 import React, { useState, useEffect } from 'react';
-import Spinner from  '../../Spinner.js'
+import Spinner from  '../../Spinner.js';
+import Broadcast from './Broadcast.js';
 import deleteIcon from '../../../assets/delete.svg';
 import editIcon from '../../../assets/edit.svg';
 import { getAnnouncements, disableAnnouncement } from '../../../services/api/announcements';
@@ -9,6 +10,7 @@ import { getAnnouncements, disableAnnouncement } from '../../../services/api/ann
 export default function History() {
 	const [ announcements, setAnnouncements ] = useState([])
 	const [ isLoading, setIsLoading ] = useState(true);
+	const [ isUpdating, setIsUpdating ] = useState(false);
 	
 	const fetchAnnouncements = async () => {
 	    try {
@@ -34,29 +36,35 @@ export default function History() {
   	};
   	
   	const handleUpdate = async (id) => {
-	  	
+		  console.log(`Handling the Update for ${id}`);
+		  setIsUpdating(id);
+		  
   	};
 
   useEffect(() => {
     fetchAnnouncements();
     // eslint-disable-next-line react-hooks/exhaustive-deps 
   }, []);
-	
-	const announcementDisplay = announcements.map((aId, index) => {
-		console.log(aId);
-		return(
-			<div className="p-4 pr-6 text-teal-500" key={index} style={{backgroundColor: index % 2 ? '#1E2B34' : '#26343E'}}>
-				<div className="flex justify-between flex-column">
-				<h6 className="uppercase"><span className="font-bold">Type:</span> {aId.Type}</h6>
-					<ul className="flex justify-between flex-column">
-						<li className="mr-2"><img onClick={() => handleUpdate(aId.Id)} src={editIcon} /></li>
-						<li className="mr-2"><img onClick={() => handleDisable(aId.Id)} src={deleteIcon} /></li>
-					</ul>
+
+  
+
+  const announcementDisplay = isUpdating ? <Broadcast announceID={isUpdating} /> : 
+	announcements.map((aId, index) => {
+			console.log(aId);
+			return(
+				<div className="p-4 pr-6 text-teal-500" key={index} style={{backgroundColor: index % 2 ? '#1E2B34' : '#26343E'}}>
+					<div className="flex justify-between flex-column">
+					<h6 className="uppercase"><span className="font-bold">Type:</span> {aId.Type}</h6>
+						<ul className="flex justify-between flex-column">
+							<li className="mr-2"><img onClick={() => handleUpdate(aId.Id)} src={editIcon} /></li>
+							<li className="mr-2"><img onClick={() => handleDisable(aId.Id)} src={deleteIcon} /></li>
+						</ul>
+					</div>
+					<p className="pt-2 text-sm leading-tight text-gray-200">{aId.Payload}</p>
 				</div>
-				<p className="pt-2 text-sm leading-tight text-gray-200">{aId.Payload}</p>
-			</div>
-		)
-	})
+			)
+		})
+	
 
 	
   return (
