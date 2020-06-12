@@ -4,17 +4,23 @@ import React, { useState, useEffect } from 'react';
 import Spinner from  '../../Spinner.js'
 import { getMyMessages } from '../../../services/api/messages';
 import moment from 'moment';
+import send from '../../../assets/send.svg';
+import { createMessage } from '../../../services/api/messages';
 
 export default function Messages() {
 	
 	const [ messages, setMessages ] = useState([])
+	const [ researcherID, setResearcherId] = useState('');
+	const [newMessage, setNewMessage] = useState('');
 	const [ isLoading, setIsLoading ] = useState(true);
+	
 	const fetchMessages = async () => {
     try {
 			const response = await getMyMessages();
-      console.log(response);
-      setMessages(response);
-      setIsLoading(false);
+      console.log('Get my messages response ' + response);
+	  setMessages(response);
+	  setResearcherId(response[0].ResearcherId_FK);
+	  setIsLoading(false);
     } catch (error) {
       console.log(`Error fetching configurations${error}`);
     }
@@ -24,6 +30,25 @@ export default function Messages() {
     fetchMessages();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleSubmit = async event => {
+    event.preventDefault();
+    try {
+      const response = await createMessage(newMessage, researcherID);
+      if (response) {
+        fetchMessages();
+      }
+      setNewMessage('');
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const handleKeyPress = event => {
+    if (event.key === 'Enter') {
+      handleSubmit(event);
+    }
+  };
 	
 	const messageDisplay = messages.map((mId, index) => {
 		return(
@@ -42,6 +67,22 @@ export default function Messages() {
   return (
 	  <div className="relative">
 	  	{isLoading ? <Spinner /> : messageDisplay};
+
+		<div className="relative p-4" style={{ width: '26em' }}>
+			<input
+			placeholder="type to chat"
+			id="newMessage"
+			value={newMessage}
+			onChange={event => setNewMessage(event.target.value)}
+			className="p-2 pl-4 text-xs text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
+			style={{ width: '33.5em' }}
+			onKeyPress={handleKeyPress}
+			/>
+			<button type="submit" className="absolute top-0 right-0 pl-2 mt-6 mr-1 border-l" onClick={handleSubmit}>
+			<img src={send} alt="" />
+			</button>
+		</div>
+
 	  </div>
   );
 }
