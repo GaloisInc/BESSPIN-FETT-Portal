@@ -2,32 +2,28 @@ const aws = require('aws-sdk');
 const { Response, Database } = require('../helpers');
 
 const db = new Database();
+
 exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false; /* eslint no-param-reassign: 0 */
   let body;
   if (event.body) {
     body = JSON.parse(event.body);
   }
+  console.log(event);
   console.log(body);
-
   try {
     await db.makeConnection();
 
-    const creator = await db.query(
+    const researcher = await db.query(
       `SELECT Id from User WHERE UserName = :UserName`,
       { UserName: body.myUserName }
     );
-    const creatorId = creator[0].Id;
+
+    const researcherId = researcher[0].Id;
 
     const data = await db.query(
-      `INSERT INTO User (EmailAddress, Role, UserName, CreatedBy, Region) values (:EmailAddress, :Role, :UserName, :CreatedBy, :Region)`,
-      {
-        EmailAddress: body.emailAddress,
-        Role: body.role,
-        UserName: body.emailAddress,
-        CreatedBy: creatorId,
-        Region: body.region,
-      }
+      `SELECT e.*, c.Type, c.OS, c.Processor, u.UserName FROM Environment AS e JOIN InstanceConfiguration AS c ON e.Configuration_FK = c.Id JOIN User as u ON u.Id = e.CreatedBy_FK WHERE e.IsActive = TRUE AND u.ID = :Id ORDER BY Created DESC;`,
+      { Id: researcherId }
     );
     return new Response({ items: data }).success();
   } catch (err) {

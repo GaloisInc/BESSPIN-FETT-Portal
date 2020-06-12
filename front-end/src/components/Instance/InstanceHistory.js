@@ -5,7 +5,7 @@ import MaterialTable from 'material-table';
 import { Paper, Modal } from '@material-ui/core';
 import moment from 'moment';
 import settings from '../../assets/settings.svg';
-import {getEnvironments} from '../../services/api/environment';
+import {getMyEnvironments} from '../../services/api/environment';
 import InstanceHistoryModal from './InstanceHistoryModal';
 import Spinner from '../Spinner.js';
 
@@ -30,7 +30,7 @@ const InstanceHistory = () => {
     setIsModalLoading(true);
     try {
 	  setIsLoading(true);
-      const response = await getEnvironments();
+      const response = await getMyEnvironments();
       setEnvironments(response);
       setIsLoading(false);
       setIsModalLoading(false)
@@ -62,7 +62,7 @@ const InstanceHistory = () => {
 
   return (
     <>
-      <div className="mb-4 mr-6 bg-blue-600 table-card relative" style={{ width: '600px', minHeight: '' }}>
+      <div className="relative mb-4 mr-6 bg-blue-600 table-card" style={{ width: '600px', minHeight: '' }}>
         <div className="flex flex-row items-center justify-between pl-2 mt-2 mb-2">
           <h5 className="text-gray-200 uppercase">instance history</h5>
         </div>
