@@ -124,6 +124,17 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getAnnouncement:
+    handler: src/functions/getAnnouncement.handler
+    timeout: 60
+    events:
+    - http:
+        path: getAnnouncement
+        method: get
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
   getEnvironments:
     handler: src/functions/getEnvironments.handler
     timeout: 60
