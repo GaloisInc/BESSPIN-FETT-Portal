@@ -1,0 +1,8 @@
+{
+  "VPC_SECURITY_GROUP_ID": "sg-060e6c02fdff1aea5",
+  "VPC_SUBNET_ID_1": "subnet-078c809a3f128a9f5",
+  "VPC_SUBNET_ID_2": "subnet-0d27028cadfe1e007",
+  "VPC_SUBNET_ID_3": "subnet-002bfc044aa63f21c",
+  "vpcId": "vpc-0f98c6f3e2b2f425b",
+  "deploymentBucket": "master-fettportal-cicd-artifacts"
+}
