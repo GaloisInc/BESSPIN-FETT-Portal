@@ -12,6 +12,7 @@ const makeHeaders = async () => {
 };
 
 function handleErrors(response) {
+  console.log(response);
   if (!response.ok) {
     throw response;
   }
@@ -28,6 +29,46 @@ export const getEnvironments = () =>
       .then(body => resolve(body.items))
       .catch(response => {
         reject(response.json());
+      });
+  });
+
+export const getMyEnvironments = async () =>
+  new Promise(async (resolve, reject) => {
+    const sesh = await Auth.currentSession();
+    const myUserName = sesh.getAccessToken().payload.username;
+
+    fetch(`${BASE_API}/getMyEnvironments`, {
+      headers: await makeHeaders(),
+      body: JSON.stringify({
+        myUserName: `${myUserName}`,
+      }),
+      method: 'POST',
+    })
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(body => resolve(body.items))
+      .catch(response => {
+        reject(response);
+      });
+  });
+
+export const getRunningInstanceCount = async () =>
+  new Promise(async (resolve, reject) => {
+    const sesh = await Auth.currentSession();
+    const myUserName = sesh.getAccessToken().payload.username;
+
+    fetch(`${BASE_API}/getRunningInstanceCount`, {
+      headers: await makeHeaders(),
+      body: JSON.stringify({
+        myUserName: `${myUserName}`,
+      }),
+      method: 'POST',
+    })
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(body => resolve(body.items))
+      .catch(response => {
+        reject(response);
       });
   });
 

@@ -48,24 +48,6 @@ class App extends React.Component {
     this.login();
   }
 
-  handleRoleSwitch = async isAdmin => {
-    const { history } = this.props;
-    try {
-      await this.setState({ isAdmin });
-      const user = await Auth.currentSession();
-      if (user.isValid()) {
-        await this.setState({ isLoggedIn: true, isAuthenticating: false });
-        if (isAdmin) {
-          history.push('/adminportal');
-        } else {
-          history.push('/bountyportal');
-        }
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   login = async () => {
     const { history } = this.props;
     try {
@@ -112,7 +94,6 @@ class App extends React.Component {
               login={this.login}
               logout={this.logout}
               isAdmin={isAdmin}
-              handleRoleSwitch={this.handleRoleSwitch}
               name={name}
             />
           )}

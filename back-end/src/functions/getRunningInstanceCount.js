@@ -13,21 +13,24 @@ exports.handler = async (event, context) => {
   try {
     await db.makeConnection();
 
-    const creator = await db.query(
+    const researcher = await db.query(
       `SELECT Id from User WHERE UserName = :UserName`,
       { UserName: body.myUserName }
     );
-    const creatorId = creator[0].Id;
+
+    const researcherId = researcher[0].Id;
 
     const data = await db.query(
-      `INSERT INTO User (EmailAddress, Role, UserName, CreatedBy, Region) values (:EmailAddress, :Role, :UserName, :CreatedBy, :Region)`,
-      {
-        EmailAddress: body.emailAddress,
-        Role: body.role,
-        UserName: body.emailAddress,
-        CreatedBy: creatorId,
-        Region: body.region,
-      }
+      `SELECT 
+        COUNT(DISTINCT CASE
+          WHEN
+            CreatedBy_FK = :ResearcherId
+          AND (Status = 'running' OR Status = 'terminating' OR Status = 'provisioning')
+          THEN
+            Id
+          END) AS ActiveCount
+      FROM Environment;`,
+      { ResearcherId: researcherId }
     );
     return new Response({ items: data }).success();
   } catch (err) {
