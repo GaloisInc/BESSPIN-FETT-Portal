@@ -74,13 +74,9 @@ export const getRunningInstanceCount = async () =>
 
 export const createEnvironmentRecord = async configuration =>
   new Promise(async (resolve, reject) => {
-    const sesh = await Auth.currentSession();
-    const myUserName = sesh.getAccessToken().payload.username;
-
     fetch(`${BASE_API}/createEnvironmentRecord`, {
       headers: await makeHeaders(),
       body: JSON.stringify({
-        myUserName: `${myUserName}`,
         ...configuration,
       }),
       method: 'POST',

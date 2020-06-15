@@ -28,6 +28,7 @@ const LaunchTable = ({ history }) => {
   const fetchInstanceCount = async () => {
     try {
       const instanceCount = await getRunningInstanceCount();
+      console.log(instanceCount);
       if (Array.isArray(instanceCount) && instanceCount[0].ActiveCount) setCount(instanceCount[0].ActiveCount);
       setIsLoading(false);
     } catch (error) {
@@ -42,6 +43,7 @@ const LaunchTable = ({ history }) => {
   }, []);
 
   const handleLaunch = async (event, configuration) => {
+    console.log('launch');
     setIsLoading(true);
     event.preventDefault();
     const response = await ec2Launcher(configuration);
@@ -54,6 +56,7 @@ const LaunchTable = ({ history }) => {
     console.log('launching');
   };
 
+  console.log(count);
   return (
     <>
       <div className="relative mb-4 bg-blue-600 table-card" style={{ width: '800px', minHeight: '400px' }}>
@@ -82,7 +85,7 @@ const LaunchTable = ({ history }) => {
                     }`}
                     type="button"
                     onClick={event => handleLaunch(event, data)}
-                    disabled={typeof count !== 'number' || count > 1}
+                    disabled={count > 1}
                   >
                     <img src={rocketDark} alt="" className="w-3" />
                     <p className="self-center text-sm font-medium text-blue-900 uppercase">launch</p>

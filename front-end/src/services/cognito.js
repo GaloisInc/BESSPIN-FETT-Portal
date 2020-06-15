@@ -151,7 +151,7 @@ const createTeam = (username, password, region) =>
             console.log(err, err.stack);
           } else {
             const role = 'researcher';
-            const response = createUser(username, role, region);
+            const response = createUser(username, role, region, username, password);
             resolve({ username, password });
           }
           // an error occurred // successful response
@@ -162,7 +162,6 @@ const createTeam = (username, password, region) =>
     }
   });
 
-// Still waiting on how team creation will work
 export const createTeams = async teamNumber => {
   try {
     const teamCreation = [];
