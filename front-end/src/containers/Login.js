@@ -15,8 +15,10 @@ const Login = props => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const handleSubmit = async () => {
+    setIsDisabled(true);
     try {
       setIsLoading(true);
       const user = await Auth.signIn(username, password);
@@ -42,6 +44,7 @@ const Login = props => {
       } else {
         console.log(error.code);
       }
+      setIsDisabled(false);
     }
   };
 
@@ -80,8 +83,11 @@ const Login = props => {
           className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
         />
         <button
-          className="w-full px-2 py-1 mt-8 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded hover:bg-teal-500 hover:text-gray-200"
+          className={`w-full px-2 py-1 mt-8 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded hover:bg-teal-500 hover:text-gray-200 ${
+            isDisabled ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
           type="submit"
+          disabled={isDisabled}
           onClick={event => handleSubmit(event)}
         >
           {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Login'}

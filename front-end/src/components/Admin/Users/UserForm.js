@@ -74,7 +74,9 @@ const UserForm = ({ fetchUsers }) => {
           type="submit"
           onClick={event => handleCreateTeams(event)}
           disabled={isLoading}
-          className="w-full px-2 py-1 mt-6 font-bold text-blue-700 uppercase bg-gray-200 rounded font-body hover:bg-teal-500 hover:text-gray-200"
+          className={`w-full px-2 py-1 mt-6 font-bold text-blue-700 uppercase bg-gray-200 rounded hover:bg-teal-500 hover:text-gray-200 font-body ${
+            isLoading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
         >
           {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Created Team'}
         </button>
@@ -91,7 +93,9 @@ const UserForm = ({ fetchUsers }) => {
           className="w-full p-1 pl-4 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
         />
         <button
-          className="w-full px-2 py-1 mt-6 font-bold text-blue-700 uppercase bg-gray-200 rounded hover:bg-teal-500 hover:text-gray-200 font-body"
+          className={`w-full px-2 py-1 mt-6 font-bold text-blue-700 uppercase bg-gray-200 rounded hover:bg-teal-500 hover:text-gray-200 font-body ${
+            isLoading ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
           type="submit"
           disable={isLoading}
           onClick={event => handleCreateUser(event)}
