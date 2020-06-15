@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React, { useState, useEffect } from 'react';
 import { Redirect, withRouter } from 'react-router-dom';
 import ReactRouterPropTypes from 'react-router-prop-types';
@@ -96,8 +97,9 @@ const LaunchTable = ({ history }) => {
               headerStyle: {
                 backgroundColor: '#1E2B34',
                 color: '#46878E',
-                fontWeight: 'bold',
+                fontWeight: '500',
                 fontSize: '1em',
+                textTransform: 'uppercase',
               },
               rowStyle: rowData => ({
                 backgroundColor: rowData.tableData.id % 2 ? '#26343E' : '#293A46',

@@ -44,7 +44,7 @@ const InstanceDetail = ({ environment, index }) => {
             <div className="w-48 ml-8 mr-8 ">
               <p className="text-base text-teal-500 uppercase">Start of Engagment</p>
             </div>
-            <p className="text-base text-200-gray">{environment.Created && moment(environment.Created).format('HH:mm')}</p>
+            <p className="text-base text-200-gray">{environment.Created && moment(environment.Created).format('MM/DD/YY hh:mm A')}</p>
           </div>
           <div className="flex flex-row py-2 bg-blue-600">
             <div className="w-48 ml-8 mr-8">
