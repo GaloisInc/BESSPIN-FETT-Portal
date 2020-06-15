@@ -1,15 +1,18 @@
 /* eslint-disable */
 
 import React, {useEffect, useState} from 'react';
+import { withRouter } from 'react-router-dom';
 import MaterialTable from 'material-table';
 import { Paper, Modal } from '@material-ui/core';
 import moment from 'moment';
 import settings from '../../assets/settings.svg';
+import rocketDark from '../../assets/rocketDark.svg';
 import {getMyEnvironments} from '../../services/api/environment';
 import InstanceHistoryModal from './InstanceHistoryModal';
 import Spinner from '../Spinner.js';
 
-const InstanceHistory = () => {
+
+const InstanceHistory = (params) => {
   const [modalData, setModalData] = useState(null);
   const [open, setOpen] = useState(false);
   const [isModalLoading, setIsModalLoading] = useState(false);
@@ -26,6 +29,12 @@ const InstanceHistory = () => {
 	setOpen(false);
 	};
   
+  const handleLaunch = (event) => {
+    console.log(params);
+    event.preventDefault();
+    params.history.push("/bountyportal/launch");
+  }
+
   const fetchEnvironments = async (id) => {
     setIsModalLoading(true);
     try {
@@ -65,6 +74,12 @@ const InstanceHistory = () => {
       <div className="relative mb-4 mr-6 bg-blue-600 table-card" style={{ width: '600px', minHeight: '' }}>
         <div className="flex flex-row items-center justify-between pl-2 mt-2 mb-2">
           <h5 className="text-gray-200 uppercase">instance history</h5>
+          <button className="flex flex-row items-center justify-around w-auto pr-4 pl-4 selected:outline-none btn-gray hover:bg-teal-500 hover:text-gray-200"
+                  type="button"
+                  onClick={event => handleLaunch(event)}>
+                    <img src={rocketDark} alt="" className="pr-2" />
+                    <p className="self-center text-sm font-medium text-blue-900 uppercase">launch instance</p>
+                  </button>
         </div>
         {isLoading ? (
           <Spinner />
@@ -99,8 +114,9 @@ const InstanceHistory = () => {
             headerStyle: {
               backgroundColor: '#1E2B34',
               color: '#46878E',
-              fontWeight: 'bold',
+              fontWeight: '500',
               fontSize: '1em',
+              textTransform: 'uppercase'
             },
             rowStyle: rowData => ({
               backgroundColor: rowData.tableData.id % 2 ? '#26343E' : '#293A46',
@@ -130,4 +146,4 @@ const InstanceHistory = () => {
 
 // DashTable.propTypes = {};
 
-export default InstanceHistory;
+export default withRouter(InstanceHistory);

@@ -22,10 +22,11 @@ export default function Messages() {
 
 	const fetchConversation = async () => {
     try {
+			setIsLoading(true);	
 			const response = await getConversations();
 			setConversations(response);
 			setFilteredConversations(response);
-      setIsLoading(false);
+      		setIsLoading(false);
 			const researchers = await getTeams();
 			setTeams(researchers);
 			console.log(response)
@@ -118,7 +119,7 @@ export default function Messages() {
 						name="name"
 						onChange={event => handleSearch(event)}
 					/>
-					<img style={{marginTop: '28px', marginLeft: '215px'}} className="absolute top-0 left-0" src={search} alt="" />
+					<img style={{marginTop: '28px', marginLeft: '200px'}} className="absolute top-0 left-0" src={search} alt="" />
 				</>
 			)}
 		</div>
