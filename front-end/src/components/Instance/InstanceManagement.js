@@ -133,6 +133,8 @@ export default function InstanceManagement() {
                 backgroundColor: '#1E2B34',
                 color: '#46878E',
                 fontSize: '1em',
+                fontWeight: '500',
+                textTransform: 'uppercase',
               },
               maxBodyHeight: height - 340,
               rowStyle: rowData => ({

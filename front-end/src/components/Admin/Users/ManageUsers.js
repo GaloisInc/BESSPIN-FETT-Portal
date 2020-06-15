@@ -88,8 +88,9 @@ const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => 
             top: 0,
             backgroundColor: '#1E2B34',
             color: '#46878E',
-            fontWeight: 'bold',
+            fontWeight: '500',
             fontSize: '1em',
+            textTransform: 'uppercase',
           },
           maxBodyHeight: height - 340,
           rowStyle: rowData => ({

@@ -3,16 +3,21 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
+import Spinner from '../../Spinner.js';
 import send from '../../../assets/send.svg';
 import { getConversationById, createMessage } from '../../../services/api/messages';
 
 const MessagesChat = ({ researcherId }) => {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
+  const [isLoading, setIsLoading] = useState(true);
+
   const fetchConversation = async () => {
     try {
+      setIsLoading(true);
       const response = await getConversationById(researcherId);
       setMessages(response);
+      setIsLoading(false);
     } catch (error) {
       console.log(`Error fetching conversation${error}`);
     }
@@ -70,8 +75,9 @@ const MessagesChat = ({ researcherId }) => {
 
   return (
     <div className="">
-      <div className="overflow-y-scroll" style={{ height: '27em' }}>
-        {messages && messagesDisplay}
+      <div className="relative overflow-y-scroll" style={{ height: '27em' }}>
+        {isLoading ? <Spinner /> : messagesDisplay}
+
         <div className="sticky" />
       </div>
       <div className="relative p-4" style={{ width: '26em' }}>

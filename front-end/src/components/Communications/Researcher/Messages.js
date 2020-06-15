@@ -6,6 +6,7 @@ import { getMyMessages } from '../../../services/api/messages';
 import moment from 'moment';
 import send from '../../../assets/send.svg';
 import { createMessage } from '../../../services/api/messages';
+import useWindowDimensions from '../../../services/useDimensions'
 
 export default function Messages() {
 	
@@ -13,6 +14,7 @@ export default function Messages() {
 	const [ researcherID, setResearcherId] = useState('');
 	const [newMessage, setNewMessage] = useState('');
 	const [ isLoading, setIsLoading ] = useState(true);
+	const { height } = useWindowDimensions();
 	
 	const fetchMessages = async () => {
     try {
@@ -53,10 +55,9 @@ export default function Messages() {
 	const messageDisplay = messages.map((mId, index) => {
 		return(
 			<div className="p-4 pr-6 text-gray-200" key={index} style={{backgroundColor: index % 2 ? '#1E2B34' : '#26343E'}}>
-				<div className="flex flex-column">
+				<div className="flex flex-column justify-between">
 					<p>{mId.ResearcherName}</p>
-					<p>{moment(mId.Created).format('DD/MM/YY')}</p>
-					<p>{moment(mId.Created).format('hh:mm A')}</p>
+					<p>{moment(mId.Created).format('MM/DD/YY hh:mm A')}</p>
 				</div>
 				<p className="pt-2 text-sm leading-tight">{mId.Payload}</p>
 			</div>
@@ -65,10 +66,10 @@ export default function Messages() {
 
 	
   return (
-	  <div className="relative">
-	  	{isLoading ? <Spinner /> : messageDisplay};
+	  <div className="relative overflow-y-scroll" style={{ minHeight: '630px', maxHeight: height - 340 }}>
+	  	{isLoading ? <Spinner /> : messageDisplay}
 
-		<div className="relative p-4" style={{ width: '26em' }}>
+		<div className="p-4 sticky bottom-0 bg-blue-700" style={{ width: '26em' }}>
 			<input
 			placeholder="type to chat"
 			id="newMessage"
