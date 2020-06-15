@@ -79,9 +79,9 @@ const InstanceHistory = () => {
                 {data.Type} | {data.OS} | {data.Processor}
               </p>
             ), },
-            { title: 'Launched Time', field: 'Created', render: data => (
+            { title: 'Launched', field: 'Created', render: data => (
                 <p>
-                  {moment(data.Created).format('hh:mm A')}
+                  {moment(data.Created).format('MM/DD/YY hh:mm A')}
                 </p> 
               )},
             { title: 'Status', field: 'Status' },
