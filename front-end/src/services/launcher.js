@@ -4,11 +4,13 @@ import { createEnvironmentRecord, updateEnvironmentStatus } from './api/environm
 export const ec2Launcher = async configuration =>
   new Promise(async (resolve, reject) => {
     // TODO => Implement Launcher
+    console.log(configuration);
     try {
-      const dummyEC2Response = { F1EnvironmentId: uuidv4(), IpAddress: '198.162.0.0', Region: 'us-west-2', Status: 'running' };
       const environmentRecord = {
         Configuration: configuration.Id,
-        ...dummyEC2Response,
+        Type: configuration.Type,
+        Processor: configuration.Processor,
+        OS: configuration.OS,
       };
       const response = await createEnvironmentRecord(environmentRecord);
       resolve(response);
