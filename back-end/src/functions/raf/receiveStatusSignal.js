@@ -23,6 +23,12 @@ const updateDBForStarted = async (instanceId, instanceIp, fpgaIp) => {
     { instanceId, instanceIp, fpgaIp }
   );
 };
+const getInstanceConfig = async (instanceId, instanceIp, fpgaIp) => {
+  await db.query(
+    `UPDATE Environment set IpAddress = :instanceIp, FPGAIp = :fpgaIp Status = "Started" WHERE Id = :instanceId`,
+    { instanceId, instanceIp, fpgaIp }
+  );
+};
 exports.handler = async event => {
   for (const msg of event.Records) {
     const message = JSON.parse(msg.body);
@@ -36,6 +42,10 @@ exports.handler = async event => {
       const instanceIp = message.instance['instance-ip'];
       const fpgaIp = message.instance['fpga-ip'];
       await updateDBForStarted(instanceId, instanceIp, fpgaIp);
+    } else if (signal === 'deployment' && message.job.status === 'failure') {
+      // tear down instance and start over
+      await stopInstance(message.instance.id);
+      await getInstanceConfig(message.instance.id);
     }
   }
 };

@@ -59,7 +59,9 @@ const getUserData = f1Config => {
   pushd SSITH-FETT-Binaries
   git lfs pull
   popd
-  nix-shell --command "ci/fett-ci.py runDevPR -ep AWS -job 12312321312321 -i 0
+  nix-shell --command "ci/fett.py -ep awsProd -job <IDENTIFIER> -cjson ${JSON.stringify(
+    f1Config
+  )}"
   EOF
   `;
 
@@ -119,6 +121,10 @@ const startInstance = f1Config => {
   };
   return ec2.runInstances(params).promise();
 };
+const hashPassword = pw => {
+  console.low(pw);
+  return pw;
+};
 /**
  * Incoming payload
  * 
@@ -139,9 +145,13 @@ exports.handler = async event => {
     const message = JSON.parse(msg.body);
     let f1Config = {
       region: message.Region,
-      os: message.OS,
+      osImage: message.OS,
       processor: message.Processor,
-      type: message.Type,
+      binarySource: message.Type,
+      useCustomCredentials: 'yes',
+      rootUserAccess: 'no',
+      username: message.username,
+      password: hashPassword(message.password),
     };
     if (f1Config.region === 'us-west-2') {
       try {

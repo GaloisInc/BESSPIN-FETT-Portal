@@ -9,9 +9,13 @@ Resources:
     Type: AWS::SQS::Queue
     Properties:
       FifoQueue: true 
+      VisibilityTimeout: 60
   InstanceStatusQueue:
     Type: AWS::SQS::Queue
+    Properties:
+      VisibilityTimeout: 60
   PortalToInstanceTerminationQueue:
     Type: AWS::SQS::Queue
     Properties:
       FifoQueue: true
+      VisibilityTimeout: 60

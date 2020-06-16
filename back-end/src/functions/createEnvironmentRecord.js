@@ -76,6 +76,9 @@ exports.handler = async (event, context) => {
       await sendMessage(params);
       return new Response({ items: data }).success();
     }
+    return new Response({
+      message: 'Too many instances currently running',
+    }).fail();
   } catch (err) {
     console.log(err);
     return new Response({ error: 'Could not retreive data' }).fail();

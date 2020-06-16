@@ -31,7 +31,7 @@ exports.handler = async event => {
 
     const dbData = await updateStatusToDB(payload.Id);
     console.log(dbData);
-    // await sendMessage(instanceId);
+    await sendMessage(dbData.instanceId);
     new Response({ message: 'success' }).success();
   } catch (e) {
     new Response({ message: 'Invalid payload' }).success();
