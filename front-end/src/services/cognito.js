@@ -35,7 +35,7 @@ export const createAdminUser = async email =>
 
         const params = {
           Username: email,
-          TemporaryPassword: `aB@4${password}`,
+          TemporaryPassword: password,
           DesiredDeliveryMediums: ['EMAIL'],
           UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
           UserAttributes: [
@@ -178,14 +178,15 @@ export const createTeams = async teamNumber => {
         excludeSimilarCharacters: true,
       });
       const region = i % 2 === 0 ? 'us-west-2' : 'us-east-1';
-      const username = generate({ words: 2, alliterative: true }).dashed;
+      let username;
+      while (!username || username.length > 14) {
+        username = generate({ words: 2, alliterative: true }).dashed;
+        console.log(username);
+      }
       const teamPromise = createTeam(username, password, region);
       teamCreation.push(teamPromise);
     }
     const teams = await Promise.all(teamCreation).then(response => response);
-    // const responses = await Promise.all(teamCreation);
-    // console.log(teamCreation);
-    // return teamCreation;
     return teams;
   } catch (error) {
     throw new Error(error);

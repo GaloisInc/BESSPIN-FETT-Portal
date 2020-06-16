@@ -2,6 +2,18 @@ const aws = require('aws-sdk');
 const jwt = require('jsonwebtoken');
 const { Response, Database, SsmHelper } = require('../helpers');
 
+const sqs = new aws.SQS();
+
+const addToInitializationQueue = async initializationPayload => {
+  const params = {
+    MessageBody: JSON.stringify(initializationPayload),
+    QueueUrl: process.env.RESEARCHER_INITIALIZATION_QUEUE_URL,
+    MessageDeDuplicationId: initializationPayload.creatorId,
+    MessageGroupId: initializationPayload.Id,
+  };
+  return sqs.sendMessage(params).promise();
+};
+
 const db = new Database();
 exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false; /* eslint no-param-reassign: 0 */
@@ -58,9 +70,11 @@ exports.handler = async (event, context) => {
         Processor: body.Processor,
         Region: region,
         username,
-        password,
+        creatorId,
       };
 
+      const queueResponse = await addToInitializationQueue(params);
+      console.log(queueResponse);
       // launchEC2(params); BRIAN YOU CAN TIE IN HERE
 
       return new Response({ items: data }).success();
