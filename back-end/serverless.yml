@@ -74,11 +74,10 @@ provider:
 
 custom:
   vpcId: ${file(config/config.${self:provider.stage}.json):vpcId}
-  webpackIncludeModules: true
   webpack:
     webpackConfig: ./webpack.config.js
     packager: 'npm'
-    webpackIncludeModules:
+    includeModules:
       forceInclude:
         - mysql   
       forceExclude:
