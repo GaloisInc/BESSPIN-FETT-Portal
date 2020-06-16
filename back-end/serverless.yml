@@ -78,6 +78,14 @@ custom:
   webpack:
     webpackConfig: ./webpack.config.js
     packager: 'npm'
+    webpackIncludeModules:
+      forceInclude:
+        - mysql   
+      forceExclude:
+        - mssql
+        - pg
+        - mysql2
+        - sqlite3
   lambdaArnBase: "arn:aws:lambda:${self:provider.region}:#{AWS::AccountId}:function:${self:service.name}-${self:provider.stage}"
   authorizerPool:
     develop: arn:aws:cognito-idp:us-west-2:363527286999:userpool/us-west-2_TZpbYY6KB
