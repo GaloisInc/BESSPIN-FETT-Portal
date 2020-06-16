@@ -93,7 +93,7 @@ export const updateEnvironmentStatus = async record =>
   new Promise(async (resolve, reject) => {
     fetch(`${BASE_API}/updateEnvironment`, {
       headers: await makeHeaders(),
-      body: JSON.stringify({ Id: record.Id, Status: record.Status }),
+      body: JSON.stringify({ Id: record.Id, Status: record.Status, InstanceId: record.F1EnvironmentId }),
       method: 'PUT',
     })
       .then(handleErrors)

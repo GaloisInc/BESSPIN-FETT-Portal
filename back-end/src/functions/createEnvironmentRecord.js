@@ -69,6 +69,7 @@ exports.handler = async (event, context) => {
         Region: region,
         username,
         password,
+        creatorId,
       };
       await sendMessage(params);
       return new Response({ items: data }).success();

@@ -27,7 +27,7 @@ exports.handler = async (event, context) => {
       `INSERT INTO Message (ResearcherId_Fk, SpeakerId_FK, Payload) values (:ResearcherId_FK, :SpeakerId_FK, :Payload)`,
       {
         SpeakerId_FK: creatorId,
-        ResearcherId_FK: body.ResearcherId,
+        ResearcherId_FK: body.ResearcherId || creatorId, // uses creatorId if initiated by the researcher
         Payload: body.Payload,
       }
     );
