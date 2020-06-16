@@ -28,10 +28,7 @@ export default function Users() {
   return (
     <div className="pt-6 pl-12 ">
       <h3 className="text-gray-200 uppercase">manage users</h3>
-      <p className="pt-4 text-gray-200">
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Id consectetur
-        purus ut faucibus pulvinar elementum integer.
-      </p>
+      <p className="pt-4 text-gray-200">This interface may be used to generate new researcher and admin logins and to modify existing logins.</p>
       <div className="flex flex-row content-start w-full mt-4 relative">
         <UserForm fetchUsers={fetchUsers} />
         {isLoading ? (
