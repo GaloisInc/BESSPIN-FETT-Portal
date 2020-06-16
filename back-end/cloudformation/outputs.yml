@@ -15,8 +15,6 @@ Outputs:
     Value: !GetAtt ResearcherInitializationQueue.Arn
   ResearcherInitializationQueueUrl:
     Value: !Ref ResearcherInitializationQueue    
-  InstanceStatusQueueArn:
-    Value: !GetAtt InstanceToPortalStartupQueue.Arn
   PortalToInstanceTerminationQueueArn:    
     Value: !GetAtt PortalToInstanceTerminationQueue.Arn
   PortalToInstanceTerminationQueueUrl:    
