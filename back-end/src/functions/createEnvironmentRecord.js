@@ -2,7 +2,17 @@ const aws = require('aws-sdk');
 const jwt = require('jsonwebtoken');
 const { Response, Database, SsmHelper } = require('../helpers');
 
+const sqs = new aws.SQS();
 const db = new Database();
+
+const sendMessage = async message => {
+  const params = {
+    QueueUrl: process.env.RESEARCHER_INITIALIZATION_QUEUE_URL,
+    MessageBody: JSON.stringify(message),
+  };
+  return sqs.sendMessage(params).promise();
+};
+
 exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false; /* eslint no-param-reassign: 0 */
   const decoded = jwt.decode(event.headers.Authorization);
@@ -60,9 +70,7 @@ exports.handler = async (event, context) => {
         username,
         password,
       };
-
-      // launchEC2(params); BRIAN YOU CAN TIE IN HERE
-
+      await sendMessage(params);
       return new Response({ items: data }).success();
     }
   } catch (err) {

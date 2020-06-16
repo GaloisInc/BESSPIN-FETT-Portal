@@ -335,17 +335,7 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
-  updateEnvironment:
-    handler: src/functions/updateEnvironment.handler
-    timeout: 60
-    events:
-    - http:
-        path: updateEnvironment
-        method: put
-        cors: true
-        authorizer:
-          name: authorizer
-          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+
   createAnnouncement:
     handler: src/functions/createAnnouncement.handler
     timeout: 60
@@ -426,21 +416,22 @@ functions:
     timeout: 60
     events:
       - sqs:  ${file(cloudformation/outputs.yml):Outputs.ResearcherInitializationQueue.Value}
-  recieveStartedSignal:
-    handler: src/functions/raf/recieveStartedSignal.handler
+  receiveStatusSignal:
+    handler: src/functions/raf/receiveStatusSignal.handler
     timeout: 60
     events:
-      - sqs:  ${file(cloudformation/outputs.yml):Outputs.InstanceToPortalStartupQueue.Value}      
-  receiveInstanceSignal:
-    handler: src/functions/raf/receiveInstanceSignal.handler
-    timeout: 60
-    events:
-      - sqs:  ${file(cloudformation/outputs.yml):Outputs.PortalToInstanceTerminationQueue.Value}
+      - sqs:  ${file(cloudformation/outputs.yml):Outputs.InstanceStatusQueueArn.Value}      
   sendTerminationSignal:
     handler: src/functions/raf/sendTerminationSignal.handler
     timeout: 60
-
-    
+    events:
+      - http:
+          path: updateEnvironment
+          method: put
+          cors: true
+          authorizer:
+            name: authorizer
+            arn: ${self:custom.authorizerPool.${self:provider.stage}}    
 
 resources:
   - ${file(cloudformation/hosting.yml)}

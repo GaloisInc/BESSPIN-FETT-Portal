@@ -5,3 +5,15 @@ Resources:
       Subscription:
       - Endpoint: 'kurt.hopfer@fivetalent.com'
         Protocol: email
+  ResearcherInitializationQueue:
+    Type: AWS::SQS:Queue
+    Properties:
+      FifoQueue: true 
+  InstanceStatusQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: false 
+  PortalToInstanceTerminationQueue:
+    Type: AWS::SQS::Queue
+    Properties:
+      FifoQueue: true
