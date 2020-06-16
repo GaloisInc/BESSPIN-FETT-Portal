@@ -11,8 +11,6 @@ Resources:
       FifoQueue: true 
   InstanceStatusQueue:
     Type: AWS::SQS::Queue
-    Properties:
-      FifoQueue: false 
   PortalToInstanceTerminationQueue:
     Type: AWS::SQS::Queue
     Properties:
