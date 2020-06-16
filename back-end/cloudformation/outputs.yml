@@ -19,5 +19,5 @@ Outputs:
     Value: !GetAtt PortalToInstanceTerminationQueue.Arn
   PortalToInstanceTerminationQueueUrl:    
     Value: !Ref PortalToInstanceTerminationQueue    
-
-   
+  InstanceStatusQueueArn:
+    Value: InstanceStatusQueue.Arn
