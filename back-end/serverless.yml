@@ -45,6 +45,10 @@ provider:
         - "sns:Publish"
       Resource:
         - ${file(cloudformation/outputs.yml):Outputs.AlarmTopicArn.Value}
+    - Effect: "Allow"        
+      Action:
+        - "ec2:*"
+      Resource: "*"
   vpc:
     securityGroupIds:
       - ${file(config/config.${self:provider.stage}.json):VPC_SECURITY_GROUP_ID}
@@ -56,6 +60,11 @@ provider:
     region: ${self:provider.region}
     CURRENT_STAGE: ${self:provider.stage}
     alarmTopicArn: ${file(cloudformation/outputs.yml):Outputs.AlarmTopicArn.Value}
+    RESEARCHER_INITIALIZATION_QUEUE_ARN: ${file(cloudformation/outputs.yml):Outputs.ResearcherInitializationQueueArn.Value}
+    RESEARCHER_INITIALIZATION_QUEUE_URL: ${file(cloudformation/outputs.yml):Outputs.ResearcherInitializationQueueUrl.Value}
+    PORTAL_TO_INSTANCE_TERMINATION_QUEUE_URL: ${file(cloudformation/outputs.yml):Outputs.PortalToInstanceTerminationQueueUrl.Value}
+    PORTAL_TO_INSTANCE_TERMINATION_QUEUE_ARN: ${file(cloudformation/outputs.yml):Outputs.PortalToInstanceTerminationQueueArn.Value}
+
 
 custom:
   vpcId: ${file(config/config.${self:provider.stage}.json):vpcId}
@@ -134,6 +143,31 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
+
+#####################
+### RAF FUNCTIONS ###
+#####################
+
+  createResearcherInstance:
+    handler: src/functions/raf/createResearcherInstance.handler
+    timeout: 60
+    events:
+      - sqs:  ${file(cloudformation/outputs.yml):Outputs.ResearcherInitializationQueue.Value}
+  recieveStartedSignal:
+    handler: src/functions/raf/recieveStartedSignal.handler
+    timeout: 60
+    events:
+      - sqs:  ${file(cloudformation/outputs.yml):Outputs.InstanceToPortalStartupQueue.Value}      
+  receiveInstanceSignal:
+    handler: src/functions/raf/receiveInstanceSignal.handler
+    timeout: 60
+    events:
+      - sqs:  ${file(cloudformation/outputs.yml):Outputs.PortalToInstanceTerminationQueue.Value}
+  sendTerminationSignal:
+    handler: src/functions/raf/sendTerminationSignal.handler
+    timeout: 60
+
+    
 
 resources:
   - ${file(cloudformation/hosting.yml)}
