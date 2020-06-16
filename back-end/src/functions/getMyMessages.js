@@ -1,9 +1,13 @@
 const aws = require('aws-sdk');
+const jwt = require('jsonwebtoken');
+
 const { Response, Database } = require('../helpers');
 
 const db = new Database();
 exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false; /* eslint no-param-reassign: 0 */
+  const decoded = jwt.decode(event.headers.Authorization);
+  const username = decoded['cognito:username'];
   let body;
   if (event.body) {
     body = JSON.parse(event.body);
@@ -15,7 +19,7 @@ exports.handler = async (event, context) => {
 
     const researcher = await db.query(
       `SELECT Id from User WHERE UserName = :UserName`,
-      { UserName: body.myUserName }
+      { UserName: username }
     );
 
     const researcherId = researcher[0].Id;

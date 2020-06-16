@@ -83,13 +83,9 @@ export const getMyMessages = () =>
 
 export const createMessage = async (message, researcherId) =>
   new Promise(async (resolve, reject) => {
-    const sesh = await Auth.currentSession();
-    const myUserName = sesh.getAccessToken().payload.username;
-
     fetch(`${BASE_API}/createMessage`, {
       headers: await makeHeaders(),
       body: JSON.stringify({
-        myUserName: `${myUserName}`,
         ResearcherId: researcherId,
         Payload: message,
       }),

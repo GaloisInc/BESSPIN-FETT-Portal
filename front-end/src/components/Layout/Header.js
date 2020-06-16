@@ -7,7 +7,7 @@ import ReactRouterPropTypes from 'react-router-prop-types';
 
 import fettLogo from '../../assets/fettLogo.png';
 
-const Header = ({ history, handleRoleSwitch, name }) => {
+const Header = ({ history, name }) => {
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
 
@@ -15,7 +15,7 @@ const Header = ({ history, handleRoleSwitch, name }) => {
     setOpen(prevOpened => !prevOpened);
   };
 
-  const handleClose = (event, isLoggingOut, role) => {
+  const handleClose = (event, isLoggingOut) => {
     console.log(isLoggingOut);
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
@@ -24,11 +24,6 @@ const Header = ({ history, handleRoleSwitch, name }) => {
       history.push('/logout');
     }
     setOpen(false);
-    if (role && role === 'admin') {
-      handleRoleSwitch(true);
-    } else if (role && role === 'researcher') {
-      handleRoleSwitch(false);
-    }
   };
 
   // return focus to the button when we transitioned from !open -> open
@@ -55,8 +50,6 @@ const Header = ({ history, handleRoleSwitch, name }) => {
                 <ClickAwayListener onClickAway={event => handleClose(event, false)}>
                   <MenuList autoFocusItem={open} id="menu-list-grow">
                     <MenuItem onClick={event => handleClose(event, true)}>Logout</MenuItem>
-                    <MenuItem onClick={event => handleClose(event, false, 'admin')}>Admin User</MenuItem>
-                    <MenuItem onClick={event => handleClose(event, false, 'researcher')}>Researcher</MenuItem>
                   </MenuList>
                 </ClickAwayListener>
               </Paper>
@@ -72,6 +65,5 @@ export default withRouter(Header);
 
 Header.propTypes = {
   history: ReactRouterPropTypes.history,
-  handleRoleSwitch: PropTypes.func,
   name: PropTypes.string,
 };

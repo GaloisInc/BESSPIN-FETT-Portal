@@ -50,13 +50,9 @@ export const getAnnouncement = async announcementID =>
 
 export const createAnnouncement = async announcement =>
   new Promise(async (resolve, reject) => {
-    const sesh = await Auth.currentSession();
-    const myUserName = sesh.getAccessToken().payload.username;
-
     fetch(`${BASE_API}/createAnnouncement`, {
       headers: await makeHeaders(),
       body: JSON.stringify({
-        myUserName: `${myUserName}`,
         ...announcement,
       }),
       method: 'POST',

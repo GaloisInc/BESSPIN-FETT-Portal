@@ -68,16 +68,20 @@ export const getMyUser = async username =>
       });
   });
 
-export const createUser = async (email, role, region) =>
+export const createUser = async (email, role, region, username, password) =>
   new Promise(async (resolve, reject) => {
-    const sesh = await Auth.currentSession();
-    const myUsername = sesh.getAccessToken().payload.username;
     const headers = await makeHeaders();
 
     fetch(`${BASE_API}/createUser`, {
       headers,
       method: 'POST',
-      body: JSON.stringify({ emailAddress: `${email}`, role: `${role}`, myUserName: `${myUsername}`, region: `${region}` }),
+      body: JSON.stringify({
+        emailAddress: `${email}`,
+        role: `${role}`,
+        region: `${region}`,
+        username: `${username || ''}`,
+        password: `${password || ''}`,
+      }),
     })
       .then(handleErrors)
       .then(response => response.json())

@@ -1,3 +1,4 @@
+/* eslint-disable */
 import React from 'react';
 // import PropTypes from 'prop-types';
 import MaterialTable from 'material-table';
@@ -18,6 +19,14 @@ const DashTable = () => {
       <div className="mb-4 mr-6 bg-blue-600 table-card" style={{ width: '600px', minHeight: '400px' }}>
         <div className="flex flex-row items-center justify-between pl-8 mt-2 mb-2">
           <h5 className="text-gray-200 uppercase">instance history</h5>
+          <button
+            className="flex flex-row items-center justify-around w-24 pr-4 selected:outline-none btn-gray hover:bg-teal-500 hover:text-gray-200"
+            type="button"
+            onClick={event => handleLaunch(event, data)}
+          >
+            <img src={rocketDark} alt="" className="w-3" />
+            <p className="self-center text-sm font-medium text-blue-900 uppercase">launch instance</p>
+          </button>
         </div>
         <MaterialTable
           components={{
@@ -41,7 +50,7 @@ const DashTable = () => {
             headerStyle: {
               backgroundColor: '#1E2B34',
               color: '#46878E',
-              fontWeight: 'bold',
+              fontWeight: 'medium',
               fontSize: '1em',
             },
             rowStyle: rowData => ({
