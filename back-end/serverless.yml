@@ -421,12 +421,14 @@ functions:
     handler: src/functions/raf/createResearcherInstance.handler
     timeout: 60
     events:
-      - sqs: ${file(cloudformation/outputs.yml):Outputs.ResearcherInitializationQueueArn.Value}
+      - sqs: 
+          arn: ${file(cloudformation/outputs.yml):Outputs.ResearcherInitializationQueueArn.Value}
   receiveStatusSignal:
     handler: src/functions/raf/receiveStatusSignal.handler
     timeout: 60
     events:
-      - sqs: ${file(cloudformation/outputs.yml):Outputs.InstanceStatusQueueArn.Value}      
+      - sqs:
+          arn: ${file(cloudformation/outputs.yml):Outputs.InstanceStatusQueueArn.Value}      
   sendTerminationSignal:
     handler: src/functions/raf/sendTerminationSignal.handler
     timeout: 60
