@@ -60,7 +60,7 @@ exports.handler = async (event, context) => {
       // });
       const dash = await cw.putDashboard(params).promise();
       console.log(dash);
-    } else if (parsedBody === 'terminated') {
+    } else if (parsedBody.Status === 'terminated') {
       await db.makeConnection();
       const data = await db.query(
         `UPDATE Environment SET Status = "terminated" WHERE F1EnvironmentId = :InstanceId`,
@@ -68,6 +68,11 @@ exports.handler = async (event, context) => {
           InstanceId: `${parsedBody.InstanceId}`,
         }
       );
+      const params = {
+        DashboardNames: [`FettPortal${parsedBody.InstanceId}`],
+      };
+      const dash = await cw.putDashboard(params).promise();
+      console.log(dash);
     } else {
       console.log('Error incorrect status in message');
     }

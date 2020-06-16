@@ -49,6 +49,12 @@ provider:
       Action:
         - "ec2:*"
       Resource: "*"
+    - Effect: "Allow"
+      Action:
+        - "CloudWatch:PutDashboard"
+        - "CloudWatch:DeleteDashboards"
+      Resource:
+        - "*"
   vpc:
     securityGroupIds:
       - ${file(config/config.${self:provider.stage}.json):VPC_SECURITY_GROUP_ID}
@@ -438,4 +444,3 @@ resources:
   - ${file(cloudformation/resources.yml)}
   - ${file(cloudformation/aurora.yml)}
   - ${file(cloudformation/outputs.yml)}
-
