@@ -11,8 +11,10 @@ Outputs:
     Value: !Ref AlarmTopic
   RDSSecretsArn:
     Value: !Ref Secret
-  ResearcherInitializationQueue:
+  ResearcherInitializationQueueArn:
     Value: !GetAtt ResearcherInitializationQueue.Arn
+  ResearcherInitializationQueueUrl:
+    Value: !Ref ResearcherInitializationQueue    
   InstanceStatusQueueArn:
     Value: !GetAtt InstanceToPortalStartupQueue.Arn
   PortalToInstanceTerminationQueueArn:    
