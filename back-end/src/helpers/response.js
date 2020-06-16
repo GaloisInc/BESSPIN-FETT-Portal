@@ -9,6 +9,7 @@ class Response {
         statusCode: 200,
         headers: {
           'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Method': '*',
           'Access-Control-Allow-Credentials': true,
           'Content-Type': 'application/json',
         },
@@ -25,6 +26,7 @@ class Response {
       statusCode: 500,
       headers: {
         'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Method': '*',
         'Access-Control-Allow-Credentials': true,
         'Content-Type': 'application/json',
       },

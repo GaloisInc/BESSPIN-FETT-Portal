@@ -8,12 +8,12 @@ import Sidebar from '../components/Layout/Sidebar';
 import Header from '../components/Layout/Header';
 
 const Bounty = props => {
-  const { isLoggedIn, handleRoleSwitch } = props;
+  const { isLoggedIn, name } = props;
   const checkAuth = isLoggedIn;
 
   return (
     <div className="flex-col h-full portal-container">
-      <Header handleRoleSwitch={handleRoleSwitch} />
+      <Header name={name} />
       <div style={{ minHeight: 'calc(100vh - 6em)' }} className="flex flex-row">
         <Sidebar />
         <div className="w-full bg-blue-700">
@@ -37,5 +37,5 @@ export default Bounty;
 
 Bounty.propTypes = {
   isLoggedIn: PropTypes.bool,
-  handleRoleSwitch: PropTypes.func,
+  name: PropTypes.string,
 };

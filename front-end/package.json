@@ -15,9 +15,12 @@
     "generate-password": "^1.5.1",
     "jwt-decode": "^2.2.0",
     "material-table": "^1.57.2",
+    "moment": "^2.26.0",
+    "project-name-generator": "^2.1.7",
     "prop-types": "^15.7.2",
     "react": "^16.8.6",
     "react-app-rewire-hot-loader": "^2.0.1",
+    "react-csv": "^2.0.3",
     "react-dom": "^16.8.6",
     "react-hot-loader": "^4.9.0",
     "react-motion": "^0.5.2",
@@ -25,7 +28,8 @@
     "react-router-prop-types": "^1.0.4",
     "react-scripts": "^3.4.1",
     "react-swipe-to-delete-ios": "^1.0.2",
-    "react-virtualized": "^9.21.1"
+    "react-virtualized": "^9.21.1",
+    "uuid": "^8.1.0"
   },
   "scripts": {
     "start": "npm run build:css && react-app-rewired start",

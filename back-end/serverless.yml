@@ -75,6 +75,7 @@ custom:
   lambdaArnBase: "arn:aws:lambda:${self:provider.region}:#{AWS::AccountId}:function:${self:service.name}-${self:provider.stage}"
   authorizerPool:
     develop: arn:aws:cognito-idp:us-west-2:363527286999:userpool/us-west-2_TZpbYY6KB
+    master: arn:aws:cognito-idp:us-west-2:065510690417:userpool/us-west-2_XA2P3XNm4
 
 functions:
   getFromDatabase:
@@ -110,6 +111,39 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getTeams:
+    handler: src/functions/getTeams.handler
+    timeout: 60
+    events:
+    - http:
+        path: getTeams
+        method: get
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getAnnouncements:
+    handler: src/functions/getAnnouncements.handler
+    timeout: 60
+    events:
+    - http:
+        path: getAnnouncements
+        method: get
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getAnnouncement:
+    handler: src/functions/getAnnouncement.handler
+    timeout: 60
+    events:
+    - http:
+        path: getAnnouncement
+        method: get
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
   getEnvironments:
     handler: src/functions/getEnvironments.handler
     timeout: 60
@@ -121,14 +155,151 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getMessages:
+    handler: src/functions/getMessages.handler
+    timeout: 60
+    events:
+    - http:
+        path: getMessages
+        method: get
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getConversations:
+    handler: src/functions/getConversations.handler
+    timeout: 60
+    events:
+    - http:
+        path: getConversations
+        method: get
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getConversationById:
+    handler: src/functions/getConversationById.handler
+    timeout: 60
+    events:
+    - http:
+        path: getConversationById
+        method: post
+        cors:
+          origin: "*"
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: false
+          cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getMyMessages:
+    handler: src/functions/getMyMessages.handler
+    timeout: 60
+    events:
+    - http:
+        path: getMyMessages
+        method: post
+        cors:
+          origin: "*"
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: false
+          cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getMyEnvironments:
+    handler: src/functions/getMyEnvironments.handler
+    timeout: 60
+    events:
+    - http:
+        path: getMyEnvironments
+        method: post
+        cors:
+          origin: "*"
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: false
+          cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getRunningInstanceCount:
+    handler: src/functions/getRunningInstanceCount.handler
+    timeout: 60
+    events:
+    - http:
+        path: getRunningInstanceCount
+        method: post
+        cors:
+          origin: "*"
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: false
+          cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  getMyUser:
+    handler: src/functions/getMyUser.handler
+    timeout: 60
+    events:
+    - http:
+        path: getMyUser
+        method: post
+        cors:
+          origin: "*"
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: false
+          cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
   createUser:
     handler: src/functions/createUser.handler
     timeout: 60
     events:
     - http:
         path: createUser
-        method: get
-        cors: true
+        method: post
+        cors:
+          origin: "*"
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: false
+          cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
@@ -137,12 +308,114 @@ functions:
     timeout: 60
     events:
     - http:
-        path: createUser
-        method: get
+        path: disableUser
+        method: put
         cors: true
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  createEnvironmentRecord:
+    handler: src/functions/createEnvironmentRecord.handler
+    timeout: 60
+    events:
+    - http:
+        path: createEnvironmentRecord
+        method: post
+        cors:
+          origin: "*"
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: false
+          cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  updateEnvironment:
+    handler: src/functions/updateEnvironment.handler
+    timeout: 60
+    events:
+    - http:
+        path: updateEnvironment
+        method: put
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  createAnnouncement:
+    handler: src/functions/createAnnouncement.handler
+    timeout: 60
+    events:
+    - http:
+        path: createAnnouncement
+        method: post
+        cors:
+          origin: "*"
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: false
+          cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  disableAnnouncement:
+    handler: src/functions/disableAnnouncement.handler
+    timeout: 60
+    events:
+    - http:
+        path: disableAnnouncement
+        method: put
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}  
+  updateAnnouncement:
+    handler: src/functions/updateAnnouncement.handler
+    timeout: 60
+    events:
+    - http:
+        path: updateAnnouncement
+        method: put
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  createMessage:
+    handler: src/functions/createMessage.handler
+    timeout: 60
+    events:
+    - http:
+        path: createMessage
+        method: post
+        cors:
+          origin: "*"
+          headers:
+            - Content-Type
+            - X-Amz-Date
+            - Authorization
+            - X-Api-Key
+            - X-Amz-Security-Token
+            - X-Amz-User-Agent
+          allowCredentials: false
+          cacheControl: "max-age=600, s-maxage=600, proxy-revalidate"
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  handleQueue:
+    handler: src/functions/handleQueue.handler
+    timeout: 30
+    events:
+      - sqs:
+          arn: arn:aws:sqs:us-west-2:#{AWS::AccountId}:RafEC2Queue
 
 #####################
 ### RAF FUNCTIONS ###
@@ -174,6 +447,4 @@ resources:
   - ${file(cloudformation/resources.yml)}
   - ${file(cloudformation/aurora.yml)}
   - ${file(cloudformation/outputs.yml)}
-
-
 

@@ -1,6 +1,6 @@
 import React from 'react';
 import InstanceManagement from '../Instance/InstanceManagement';
-import Broadcast from '../Communications/Admin/Broadcast';
+import Comms from '../Communications/Card';
 
 export default function AdminDash() {
   return (
@@ -10,12 +10,10 @@ export default function AdminDash() {
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Id consectetur
         purus ut faucibus pulvinar elementum integer.
       </p>
-      <a href="">
-        <h5 className="mt-4 text-teal-500 underline uppercase">view on AWS</h5>
-      </a>
-      <div className="flex flex-row flex-wrap justify-around w-full mt-4">
+      <h5 className="mt-4 text-teal-500 underline uppercase cursor-pointer">view on AWS</h5>
+      <div className="flex flex-row w-full mt-4">
         <InstanceManagement />
-        <Broadcast />
+        <Comms userType="admin" />
       </div>
     </div>
   );

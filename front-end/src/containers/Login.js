@@ -15,8 +15,10 @@ const Login = props => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const handleSubmit = async () => {
+    setIsDisabled(true);
     try {
       setIsLoading(true);
       const user = await Auth.signIn(username, password);
@@ -42,34 +44,35 @@ const Login = props => {
       } else {
         console.log(error.code);
       }
+      setIsDisabled(false);
     }
   };
 
   return (
     <div
-      className="bg-blue-700 min-h-screen flex justify-center"
+      className="flex justify-center min-h-screen bg-blue-700"
       style={{
         backgroundImage: `url(${backgroundCity}), url(${backgroundPlanet})`,
         backgroundRepeat: 'no-repeat, no-repeat',
         backgroundPosition: 'bottom center, 90% 5%',
       }}
     >
-      <div className="w-64 flex-col self-center">
+      <div className="flex-col self-center w-64">
         <h1 className="bg-no-repeat" style={{ backgroundImage: `url(${backgroundLogo})`, height: '90px', width: '266px' }}>
           <span className="hidden">FETT Portal</span>
         </h1>
-        <p className="text-teal-500 uppercase text-center mb-8">Sign in to access FETT Portal</p>
+        <p className="mb-8 text-center text-teal-500 uppercase">Sign in to access FETT Portal</p>
 
-        <label htmlFor="username" className="text-gray-200 font-body mt-8">
+        <label htmlFor="username" className="mt-8 text-gray-200 font-body">
           Username
         </label>
         <input
           id="username"
           value={username}
           onChange={event => setUsername(event.target.value)}
-          className="w-full bg-blue-600 border-solid border border-gray-200 text-gray-200 p-1"
+          className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
         />
-        <label htmlFor="password" className="text-gray-200 font-body mt-8">
+        <label htmlFor="password" className="mt-8 text-gray-200 font-body">
           Password
         </label>
         <input
@@ -77,11 +80,14 @@ const Login = props => {
           value={password}
           type="password"
           onChange={event => setPassword(event.target.value)}
-          className="w-full bg-blue-600 border-solid border border-gray-200 text-gray-200 p-1"
+          className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
         />
         <button
-          className="bg-gray-200 hover:bg-teal-500 text-blue-700 hover:text-gray-200 font-bold py-1 px-2 rounded uppercase w-full mt-8"
+          className={`w-full px-2 py-1 mt-8 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded hover:bg-teal-500 hover:text-gray-200 ${
+            isDisabled ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
           type="submit"
+          disabled={isDisabled}
           onClick={event => handleSubmit(event)}
         >
           {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Login'}
