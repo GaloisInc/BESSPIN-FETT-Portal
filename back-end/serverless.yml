@@ -45,6 +45,10 @@ provider:
         - "sns:Publish"
       Resource:
         - ${file(cloudformation/outputs.yml):Outputs.AlarmTopicArn.Value}
+    - Effect: "Allow"        
+      Action:
+        - "ec2:*"
+      Resource: "*"
   vpc:
     securityGroupIds:
       - ${file(config/config.${self:provider.stage}.json):VPC_SECURITY_GROUP_ID}
@@ -56,6 +60,11 @@ provider:
     region: ${self:provider.region}
     CURRENT_STAGE: ${self:provider.stage}
     alarmTopicArn: ${file(cloudformation/outputs.yml):Outputs.AlarmTopicArn.Value}
+    RESEARCHER_INITIALIZATION_QUEUE_ARN: ${file(cloudformation/outputs.yml):Outputs.ResearcherInitializationQueueArn.Value}
+    RESEARCHER_INITIALIZATION_QUEUE_URL: ${file(cloudformation/outputs.yml):Outputs.ResearcherInitializationQueueUrl.Value}
+    PORTAL_TO_INSTANCE_TERMINATION_QUEUE_URL: ${file(cloudformation/outputs.yml):Outputs.PortalToInstanceTerminationQueueUrl.Value}
+    PORTAL_TO_INSTANCE_TERMINATION_QUEUE_ARN: ${file(cloudformation/outputs.yml):Outputs.PortalToInstanceTerminationQueueArn.Value}
+
 
 custom:
   vpcId: ${file(config/config.${self:provider.stage}.json):vpcId}
@@ -326,17 +335,7 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
-  updateEnvironment:
-    handler: src/functions/updateEnvironment.handler
-    timeout: 60
-    events:
-    - http:
-        path: updateEnvironment
-        method: put
-        cors: true
-        authorizer:
-          name: authorizer
-          arn: ${self:custom.authorizerPool.${self:provider.stage}}
+
   createAnnouncement:
     handler: src/functions/createAnnouncement.handler
     timeout: 60
@@ -407,6 +406,32 @@ functions:
     events:
       - sqs:
           arn: arn:aws:sqs:us-west-2:#{AWS::AccountId}:RafEC2Queue
+
+#####################
+### RAF FUNCTIONS ###
+#####################
+
+  createResearcherInstance:
+    handler: src/functions/raf/createResearcherInstance.handler
+    timeout: 60
+    events:
+      - sqs:  ${file(cloudformation/outputs.yml):Outputs.ResearcherInitializationQueue.Value}
+  receiveStatusSignal:
+    handler: src/functions/raf/receiveStatusSignal.handler
+    timeout: 60
+    events:
+      - sqs:  ${file(cloudformation/outputs.yml):Outputs.InstanceStatusQueueArn.Value}      
+  sendTerminationSignal:
+    handler: src/functions/raf/sendTerminationSignal.handler
+    timeout: 60
+    events:
+      - http:
+          path: updateEnvironment
+          method: put
+          cors: true
+          authorizer:
+            name: authorizer
+            arn: ${self:custom.authorizerPool.${self:provider.stage}}    
 
 resources:
   - ${file(cloudformation/hosting.yml)}
