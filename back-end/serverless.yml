@@ -45,6 +45,12 @@ provider:
         - "sns:Publish"
       Resource:
         - ${file(cloudformation/outputs.yml):Outputs.AlarmTopicArn.Value}
+    - Effect: "Allow"
+      Action:
+        - "CloudWatch:PutDashboard"
+        - "CloudWatch:DeleteDashboards"
+      Resource:
+        - "*"
   vpc:
     securityGroupIds:
       - ${file(config/config.${self:provider.stage}.json):VPC_SECURITY_GROUP_ID}
