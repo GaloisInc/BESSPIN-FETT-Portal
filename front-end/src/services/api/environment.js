@@ -91,10 +91,10 @@ export const createEnvironmentRecord = async configuration =>
 
 export const updateEnvironmentStatus = async record =>
   new Promise(async (resolve, reject) => {
-    fetch(`${BASE_API}/updateEnvironment`, {
+    fetch(`${BASE_API}/forceTermination`, {
       headers: await makeHeaders(),
       body: JSON.stringify({ Id: record.Id, Status: record.Status, InstanceId: record.F1EnvironmentId }),
-      method: 'PUT',
+      method: 'POST',
     })
       .then(handleErrors)
       .then(response => response.json())
