@@ -52,22 +52,36 @@ export default function Messages() {
     }
   };
 	
-	const messageDisplay = messages.map((mId, index) => {
-		return(
-			<div className="p-4 pr-6 text-gray-200" key={index} style={{backgroundColor: index % 2 ? '#1E2B34' : '#26343E'}}>
-				<div className="flex flex-column justify-between">
-					<p>{mId.ResearcherName}</p>
-					<p>{moment(mId.Created).format('MM/DD/YY hh:mm A')}</p>
-				</div>
-				<p className="pt-2 text-sm leading-tight">{mId.Payload}</p>
-			</div>
-		)
-	})
+  const messagesDisplay = messages.map((mId, index) =>
+  mId.ResearcherName === mId.SpeakerName ? (
+	<div className="p-4 pr-20 text-gray-200 " key={index} style={{ backgroundColor: index % 2 ? '#1E2B34' : '#26343E' }}>
+	  <div className="flex flex-row justify-between">
+		<p className="uppercase">{mId.SpeakerName}</p>
+		<div className="flex flex-row">
+		  <p className="pr-2">{moment(mId.Created).format('DD/MM/YY')}</p>
+		  <p>{moment(mId.Created).format('hh:mm A')}</p>
+		</div>
+	  </div>
+	  <p className="pt-2 leading-tight">{mId.Payload}</p>
+	</div>
+  ) : (
+	<div className="flex flex-col p-4 pl-20 pr-6 text-gray-200 " key={index} style={{ backgroundColor: index % 2 ? '#1E2B34' : '#26343E' }}>
+	  <div className="flex flex-row justify-between">
+		<div className="flex flex-row">
+		  <p className="pr-2">{moment(mId.Created).format('DD/MM/YY')}</p>
+		  <p>{moment(mId.Created).format('hh:mm A')}</p>
+		</div>
+		<p className="uppercase">{mId.SpeakerName}</p>
+	  </div>
+	  <p className="pt-2 leading-tight">{mId.Payload}</p>
+	</div>
+  )
+);
 
 	
   return (
 	  <div className="relative overflow-y-scroll" style={{ minHeight: '630px', maxHeight: height - 340 }}>
-	  	{isLoading ? <Spinner /> : messageDisplay}
+	  	{isLoading ? <Spinner /> : messagesDisplay}
 
 		<div className="p-4 sticky bottom-0 bg-blue-700" style={{ width: '26em' }}>
 			<input
