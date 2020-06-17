@@ -78,7 +78,7 @@ const UserForm = ({ fetchUsers }) => {
             isLoading ? 'opacity-50 cursor-not-allowed' : ''
           }`}
         >
-          {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Created Team'}
+          {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Create Teams'}
         </button>
       </form>
       <h5 className="pt-12 pl-12 text-gray-200 uppercase">New Admin</h5>
