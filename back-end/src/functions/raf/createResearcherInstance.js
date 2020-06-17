@@ -1,4 +1,5 @@
 const aws = require('aws-sdk');
+const { sha512crypt } = require('sha512crypt-node');
 const { Response, Database } = require('../../helpers');
 
 const db = new Database();
@@ -59,9 +60,9 @@ const getUserData = f1Config => {
   pushd SSITH-FETT-Binaries
   git lfs pull
   popd
-  nix-shell --command "ci/fett.py -ep awsProd -job <IDENTIFIER> -cjson ${JSON.stringify(
-    f1Config
-  )}"
+  nix-shell --command "ci/fett.py -ep awsProd -job ${
+    f1Config.jobId
+  } -cjson ${JSON.stringify(f1Config)}"
   EOF
   `;
 
@@ -105,7 +106,7 @@ const startInstance = f1Config => {
       Tenancy: 'dedicated',
     },
     SecurityGroupIds: [f1Config.securityGroupId],
-    SubnetId: f1Config.subnetIds[Math.round(Math.random(1))],
+    SubnetId: f1Config.subnetIds[f1Config.subnetChoice],
     TagSpecifications: [
       {
         ResourceType: 'instance',
@@ -121,10 +122,7 @@ const startInstance = f1Config => {
   };
   return ec2.runInstances(params).promise();
 };
-const hashPassword = pw => {
-  console.low(pw);
-  return pw;
-};
+const hashPassword = pw => sha512crypt(pw, 'xcnc07LxM26Xq');
 /**
  * Incoming payload
  * 
@@ -136,12 +134,14 @@ const hashPassword = pw => {
       Processor: body.Processor,
       Region: region,
       username,
+      password,
       creatorId,
     };
  */
 exports.handler = async event => {
   await db.makeConnection();
   for (const msg of event.Records) {
+    console.log(msg);
     const message = JSON.parse(msg.body);
     let f1Config = {
       region: message.Region,
@@ -152,6 +152,7 @@ exports.handler = async event => {
       rootUserAccess: 'no',
       username: message.username,
       password: hashPassword(message.password),
+      jobId: `${message.creatorId}-${message.insertId}`,
     };
     if (f1Config.region === 'us-west-2') {
       try {
@@ -160,6 +161,7 @@ exports.handler = async event => {
         if (f1Count.filter(ele => ele.State.Name === 'running') > 45) {
           // getting close to limit for region, manually switching to east
           // 45 leaves room for error and some randoms in the state of stopping, terminating, provisioning, etc...
+          console.log('Changing region to us-east-1');
           f1Config.region = 'us-east-1';
         }
       } catch (e) {
@@ -171,6 +173,7 @@ exports.handler = async event => {
         `/fetttarget/environment/config/${f1Config.region}`
       );
       f1Config = { ...f1Config, ...JSON.parse(config) };
+      f1Config.subnetChoice = Math.round(Math.random(1));
     } catch (e) {
       console.log(e);
       throw e;
@@ -179,6 +182,13 @@ exports.handler = async event => {
     try {
       ec2Return = await startInstance(f1Config);
       console.log(ec2Return);
+      if (
+        Object.prototype.hasOwnProperty.call(ec2Return, 'errorType') &&
+        ec2Return.errorType === 'InsufficientInstanceCapacity'
+      ) {
+        f1Config.subnetChoice = f1Config.subnetChoice === 1 ? 0 : 1;
+        ec2Return = await startInstance(f1Config);
+      }
     } catch (e) {
       // handle retry? let lambda just auto-retry?
       throw e;

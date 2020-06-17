@@ -30,6 +30,7 @@ const getInstanceConfig = async (instanceId, instanceIp, fpgaIp) => {
   );
 };
 exports.handler = async event => {
+  await db.makeConnection();
   for (const msg of event.Records) {
     const message = JSON.parse(msg.body);
     const signal = message.job.reason.split('-').pop();
