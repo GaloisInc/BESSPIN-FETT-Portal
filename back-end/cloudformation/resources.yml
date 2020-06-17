@@ -6,14 +6,16 @@ Resources:
       - Endpoint: 'kurt.hopfer@fivetalent.com'
         Protocol: email
   ResearcherInitializationQueue:
-    Type: AWS::SQS:Queue
+    Type: AWS::SQS::Queue
     Properties:
       FifoQueue: true 
+      VisibilityTimeout: 60
   InstanceStatusQueue:
     Type: AWS::SQS::Queue
     Properties:
-      FifoQueue: false 
+      FifoQueue: true
+      VisibilityTimeout: 60
   PortalToInstanceTerminationQueue:
     Type: AWS::SQS::Queue
     Properties:
-      FifoQueue: true
+      VisibilityTimeout: 60

@@ -9,8 +9,8 @@ const sendMessage = async message => {
   const params = {
     QueueUrl: process.env.RESEARCHER_INITIALIZATION_QUEUE_URL,
     MessageBody: JSON.stringify(message),
-    MessageDeDuplicationId: message.creatorId,
-    MessageGroupId: message.Id,
+    MessageDeduplicationId: String(message.creatorId),
+    MessageGroupId: String(message.Id),
   };
   return sqs.sendMessage(params).promise();
 };
@@ -51,7 +51,7 @@ exports.handler = async (event, context) => {
     );
 
     const count = instanceCount[0].ActiveCount;
-    if (count < 2) {
+    if (count < 1) {
       const data = await db.query(
         `INSERT INTO Environment (CreatedBy_FK, Configuration_FK, Region, Status) values (:CreatedBy, :Configuration, :Region, 'provisioning')`,
         {
@@ -76,6 +76,9 @@ exports.handler = async (event, context) => {
       await sendMessage(params);
       return new Response({ items: data }).success();
     }
+    return new Response({
+      message: 'Too many instances currently running',
+    }).fail();
   } catch (err) {
     console.log(err);
     return new Response({ error: 'Could not retreive data' }).fail();

@@ -5,7 +5,6 @@ plugins:
   - serverless-webpack
   - serverless-offline
 package:
-  individually: true
   exclude:
     - front-end/**
 provider:
@@ -25,6 +24,11 @@ provider:
     - Effect: 'Allow'
       Action:
         - 'lambda:InvokeFunction'
+        - "ec2:*"
+        - "sqs:*"
+        - "iam:*"
+        - "CloudWatch:PutDashboard"
+        - "CloudWatch:DeleteDashboards"
       Resource: '*'
     - Effect: "Allow"
       Action:
@@ -35,6 +39,7 @@ provider:
       Resource:
         - "arn:aws:ssm:us-west-2:#{AWS::AccountId}:parameter/fettportal/*"
         - "arn:aws:ssm:us-west-2:#{AWS::AccountId}:parameter/fettportal/*"
+        - "arn:aws:ssm:us-west-2:#{AWS::AccountId}:parameter/fetttarget/*"
     - Effect: "Allow"
       Action:
         - "secretsmanager:GetSecretValue"
@@ -45,16 +50,6 @@ provider:
         - "sns:Publish"
       Resource:
         - ${file(cloudformation/outputs.yml):Outputs.AlarmTopicArn.Value}
-    - Effect: "Allow"        
-      Action:
-        - "ec2:*"
-      Resource: "*"
-    - Effect: "Allow"
-      Action:
-        - "CloudWatch:PutDashboard"
-        - "CloudWatch:DeleteDashboards"
-      Resource:
-        - "*"
   vpc:
     securityGroupIds:
       - ${file(config/config.${self:provider.stage}.json):VPC_SECURITY_GROUP_ID}
@@ -70,12 +65,21 @@ provider:
     RESEARCHER_INITIALIZATION_QUEUE_URL: ${file(cloudformation/outputs.yml):Outputs.ResearcherInitializationQueueUrl.Value}
     PORTAL_TO_INSTANCE_TERMINATION_QUEUE_URL: ${file(cloudformation/outputs.yml):Outputs.PortalToInstanceTerminationQueueUrl.Value}
     PORTAL_TO_INSTANCE_TERMINATION_QUEUE_ARN: ${file(cloudformation/outputs.yml):Outputs.PortalToInstanceTerminationQueueArn.Value}
+    INSTANCE_STATUS_QUEUE_URL: ${file(cloudformation/outputs.yml):Outputs.InstanceStatusQueueUrl.Value}
 
 
 custom:
   vpcId: ${file(config/config.${self:provider.stage}.json):vpcId}
-  webpackIncludeModules: true
   webpack:
+    includeModules:
+      foreInclude:
+        - knex
+        - mysql
+      forceExclude:
+        - mssql
+        - pg
+        - sqlite3
+        - aws-sdk
     webpackConfig: ./webpack.config.js
     packager: 'npm'
   lambdaArnBase: "arn:aws:lambda:${self:provider.region}:#{AWS::AccountId}:function:${self:service.name}-${self:provider.stage}"
@@ -421,12 +425,14 @@ functions:
     handler: src/functions/raf/createResearcherInstance.handler
     timeout: 60
     events:
-      - sqs: ${file(cloudformation/outputs.yml):Outputs.ResearcherInitializationQueueArn.Value}
+      - sqs: 
+          arn: ${file(cloudformation/outputs.yml):Outputs.ResearcherInitializationQueueArn.Value}
   receiveStatusSignal:
     handler: src/functions/raf/receiveStatusSignal.handler
     timeout: 60
     events:
-      - sqs: ${file(cloudformation/outputs.yml):Outputs.InstanceStatusQueueArn.Value}      
+      - sqs:
+          arn: ${file(cloudformation/outputs.yml):Outputs.InstanceStatusQueueArn.Value}      
   sendTerminationSignal:
     handler: src/functions/raf/sendTerminationSignal.handler
     timeout: 60
@@ -438,6 +444,17 @@ functions:
           authorizer:
             name: authorizer
             arn: ${self:custom.authorizerPool.${self:provider.stage}}    
+  forceTermination:
+    handler: src/functions/raf/forceTermination.handler
+    timeout: 60
+    events:
+      - http:
+          path: forceTermination
+          method: post
+          cors: true
+          authorizer:
+            name: authorizer
+            arn: ${self:custom.authorizerPool.${self:provider.stage}}                
 
 resources:
   - ${file(cloudformation/hosting.yml)}
