@@ -10,7 +10,7 @@ const sendMessage = async instanceId => {
     MessageBody: 'terminate',
     MessageAttributes: {
       DataType: 'String',
-      StringValue: instanceId,
+      StringValue: String(instanceId),
     },
   };
   return sqs.sendMessage(params).promise();
@@ -28,7 +28,6 @@ exports.handler = async event => {
   }
   try {
     const payload = JSON.parse(event.body);
-
     const dbData = await updateStatusToDB(payload.Id);
     console.log(dbData);
     await sendMessage(dbData.instanceId);
