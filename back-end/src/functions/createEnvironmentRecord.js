@@ -9,8 +9,8 @@ const sendMessage = async message => {
   const params = {
     QueueUrl: process.env.RESEARCHER_INITIALIZATION_QUEUE_URL,
     MessageBody: JSON.stringify(message),
-    MessageDeDuplicationId: message.creatorId,
-    MessageGroupId: message.Id,
+    MessageDeduplicationId: message.creatorId,
+    MessageGroupId: String(message.Id),
   };
   return sqs.sendMessage(params).promise();
 };
