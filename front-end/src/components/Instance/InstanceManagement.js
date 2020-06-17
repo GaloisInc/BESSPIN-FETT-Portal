@@ -84,9 +84,6 @@ export default function InstanceManagement() {
               />
               <img className="absolute top-0 right-0 mt-1 mr-2" src={search} alt="" />
             </form>
-            <button className="ml-4 cursor-pointer focus:outline-none" type="button" onClick={fetchEnvironments}>
-              <img className="h-4" src={refresh} alt="" />
-            </button>
           </div>
         </div>
         {isLoading ? (

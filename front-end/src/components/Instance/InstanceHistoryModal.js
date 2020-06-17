@@ -13,9 +13,6 @@ const InstanceHistoryModal = ({ handleClose, modalData, fetchEnvironments }) => 
           {modalData.Type} | {modalData.Processor} | {modalData.OS}
         </h5>
         <div className="flex flex-row items-center mr-4">
-          <button type="button" className="mr-4 focus:outline-none" onClick={fetchEnvironments}>
-            <img src={refresh} alt="" />
-          </button>
           <button type="button" onClick={handleClose} className="focus:outline-none">
             <img src={close} alt="" />
           </button>
