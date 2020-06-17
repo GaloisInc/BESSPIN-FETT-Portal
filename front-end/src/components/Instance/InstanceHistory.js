@@ -74,7 +74,7 @@ const InstanceHistory = (params) => {
       <div className="relative mb-4 mr-6 bg-blue-600 table-card" style={{ width: '600px', minHeight: '' }}>
         <div className="flex flex-row items-center justify-between pl-2 mt-2 mb-2">
           <h5 className="text-gray-200 uppercase">instance history</h5>
-          <button className="flex flex-row items-center justify-around w-auto pr-4 pl-4 selected:outline-none btn-gray hover:bg-teal-500 hover:text-gray-200"
+          <button className="flex flex-row items-center justify-around w-auto pl-4 pr-4 selected:outline-none btn-gray hover:bg-teal-500 hover:text-gray-200"
                   type="button"
                   onClick={event => handleLaunch(event)}>
                     <img src={rocketDark} alt="" className="pr-2" />
@@ -132,7 +132,7 @@ const InstanceHistory = (params) => {
         />
         )};
         <p className="pt-4 pl-2 text-gray-200">
-          Provisioned instances are limited to (2) and a duration of idle activity (TBD) before automatic instance shutdown.
+          Provisioned instances are limited to (1) and a duration of idle activity (TBD) before automatic instance shutdown.
         </p>
 		
 		    <Modal open={open} onClose={handleClose}>
