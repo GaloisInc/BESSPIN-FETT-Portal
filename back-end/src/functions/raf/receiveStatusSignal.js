@@ -14,12 +14,12 @@ const stopInstance = async instanceId => {
 };
 const updateDBForTermination = async instanceId =>
   db.query(
-    `UPDATE Environment set Status = "Stopped" WHERE F1EnvironmentId = :instanceId`,
+    `UPDATE Environment set Status = "terminated" WHERE F1EnvironmentId = :instanceId`,
     { instanceId }
   );
 const updateDBForStarted = async (instanceId, instanceIp, fpgaIp) => {
   await db.query(
-    `UPDATE Environment set IpAddress = :instanceIp, FPGAIp = :fpgaIp Status = "Started" WHERE Id = :instanceId`,
+    `UPDATE Environment set IpAddress = :instanceIp, FPGAIp = :fpgaIp Status = "running" WHERE Id = :instanceId`,
     { instanceId, instanceIp, fpgaIp }
   );
 };
