@@ -16,6 +16,7 @@ const Login = props => {
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleSubmit = async () => {
     setIsDisabled(true);
@@ -31,15 +32,16 @@ const Login = props => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
+      console.log(error);
       setPassword('');
       if (error.code === 'PasswordResetRequiredException') {
         // The error happens when the password is reset in the Cognito console
-        console.log(error.code);
-      } else if (error.code === 'NotAuthorizedException') {
+        setError(error.code);
+      } else if (error.code === 'NotAuthorizedException' || username === '') {
         // The error happens when the incorrect password is provided
-        console.log(error.code);
+        setError('NotAuthorizedException');
       } else if (error.code === 'UserNotFoundException') {
-        console.log(error.code);
+        setError(error.code);
         // The error happens when the supplied username/email does not exist in the Cognito user pool
       } else {
         console.log(error.code);
@@ -47,7 +49,7 @@ const Login = props => {
       setIsDisabled(false);
     }
   };
-
+  console.log(error);
   return (
     <div
       className="flex justify-center min-h-screen bg-blue-700"
@@ -80,8 +82,11 @@ const Login = props => {
           value={password}
           type="password"
           onChange={event => setPassword(event.target.value)}
-          className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
+          className={`w-full p-1 text-gray-200 bg-blue-600 border ${
+            error && error === 'NotAuthorizedException' ? 'border-red-500' : 'border-gray-200'
+          } border-solid rounded`}
         />
+        {error && error === 'NotAuthorizedException' && <p className="text-sm text-red-500">Incorrect username or password</p>}
         <button
           className={`w-full px-2 py-1 mt-8 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded hover:bg-teal-500 hover:text-gray-200 ${
             isDisabled ? 'opacity-50 cursor-not-allowed' : ''
