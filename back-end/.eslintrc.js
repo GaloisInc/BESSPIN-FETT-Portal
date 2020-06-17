@@ -6,7 +6,7 @@ module.exports = {
   },
   plugins: ['json'],
   env: { jest: true, browser: true, node: true },
-  rules: { 'no-console': 'off', 'max-len': 120 },
+  rules: { 'no-console': 'off', 'max-len': 'off' },
   settings: {
     'import/resolver': {
       node: {
