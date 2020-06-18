@@ -1,3 +1,5 @@
+/* eslint-disable no-unused-vars */
+
 import { Auth } from 'aws-amplify';
 
 // import Generator from 'unique-names-generator';
@@ -24,7 +26,7 @@ export const createAdminUser = async email =>
           strict: true,
           length: 10,
           numbers: true,
-          symbols: false,
+          symbols: true,
           uppercase: true,
           lowercase: true,
           exclude: `"',=`,
@@ -146,13 +148,15 @@ const createTeam = (username, password, region) =>
           UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
         };
 
-        cognito.adminCreateUser(params, function(err, data) {
+        cognito.adminCreateUser(params, async function(err, data) {
           if (err) {
             console.log(err, err.stack);
           } else {
             const role = 'researcher';
-            const response = createUser(username, role, region, username, password);
-            resolve({ username, password });
+            const response = await createUser(username, role, region, username, password);
+            if (response) {
+              resolve({ username, password });
+            }
           }
           // an error occurred // successful response
         });

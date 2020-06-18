@@ -3,7 +3,6 @@
 import React, { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
 import { Modal, Paper } from '@material-ui/core';
-import refresh from '../../assets/refresh.svg';
 import search from '../../assets/search.svg';
 import settings from '../../assets/settings.svg';
 import InstanceModal from './InstanceModal';
@@ -20,7 +19,7 @@ export default function InstanceManagement() {
   const [isLoading, setIsLoading] = useState(true);
   const [environments, setEnvironments] = useState([]);
   const [filteredEnvironments, setFilteredEnvironments] = useState([]);
-  const { height, width } = useWindowDimensions();
+  const { height } = useWindowDimensions();
 
   const fetchEnvironments = async () => {
     try {
@@ -69,7 +68,10 @@ export default function InstanceManagement() {
 
   return (
     <>
-      <div className="mr-6 bg-blue-600 table-card relative" style={{ width: '700px', minHeight: '630px', maxHeight: height - 340 }}>
+      <div
+        className="relative mr-6 bg-blue-600 table-card"
+        style={{ width: '700px', minHeight: '630px', maxHeight: height - 340 }}
+      >
         <div className="flex flex-row items-center justify-between pl-4 mt-4 mb-2">
           <h5 className="font-medium text-gray-200 uppercase">environment management</h5>
           <div className="flex flex-row items-center mr-4">
@@ -84,9 +86,6 @@ export default function InstanceManagement() {
               />
               <img className="absolute top-0 right-0 mt-1 mr-2" src={search} alt="" />
             </form>
-            <button className="ml-4 cursor-pointer focus:outline-none" type="button" onClick={fetchEnvironments}>
-              <img className="h-4" src={refresh} alt="" />
-            </button>
           </div>
         </div>
         {isLoading ? (
@@ -114,7 +113,7 @@ export default function InstanceManagement() {
                   </p>
                 ),
               },
-              { title: 'IDLE TIME', field: 'IdleTime', width: '8em' },
+              { title: 'IDLE TIME', field: 'IdleTime', width: '6em' },
               { title: 'STATUS', field: 'Status', width: '6em' },
               {
                 title: '',

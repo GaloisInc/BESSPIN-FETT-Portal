@@ -1,5 +1,5 @@
 const aws = require('aws-sdk');
-const { Response, Database } = require('../../helpers');
+const { CloudWatch, Database } = require('../../helpers');
 
 const ec2 = new aws.EC2();
 const db = new Database();
@@ -14,12 +14,12 @@ const stopInstance = async instanceId => {
 };
 const updateDBForTermination = async instanceId =>
   db.query(
-    `UPDATE Environment set Status = "Stopped" WHERE F1EnvironmentId = :instanceId`,
+    `UPDATE Environment set Status = "terminated" WHERE F1EnvironmentId = :instanceId`,
     { instanceId }
   );
 const updateDBForStarted = async (instanceId, instanceIp, fpgaIp) => {
   await db.query(
-    `UPDATE Environment set IpAddress = :instanceIp, FPGAIp = :fpgaIp Status = "Started" WHERE Id = :instanceId`,
+    `UPDATE Environment set IpAddress = :instanceIp, FPGAIp = :fpgaIp Status = "running" WHERE Id = :instanceId`,
     { instanceId, instanceIp, fpgaIp }
   );
 };
@@ -37,16 +37,19 @@ exports.handler = async event => {
     if (signal === 'termination') {
       await stopInstance(message.instance.id);
       await updateDBForTermination(message.instance.id);
+      await CloudWatch.deleteDashboards(message.instance.id);
     }
     if (signal === 'deployment' && message.job.status === 'success') {
       const instanceId = message.instance.id;
       const instanceIp = message.instance['instance-ip'];
       const fpgaIp = message.instance['fpga-ip'];
       await updateDBForStarted(instanceId, instanceIp, fpgaIp);
+      await CloudWatch.putDashboard(instanceId);
     } else if (signal === 'deployment' && message.job.status === 'failure') {
       // tear down instance and start over
       await stopInstance(message.instance.id);
       await getInstanceConfig(message.instance.id);
+      await CloudWatch.deleteDashboards(message.instance.id);
     }
   }
 };

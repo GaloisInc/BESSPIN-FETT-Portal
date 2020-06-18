@@ -36,8 +36,7 @@ const getParams = async name =>
     });
 
 const getUserData = f1Config => {
-  const userdata = `
-  #cloud-boothook
+  const userdata = `#cloud-boothook
   #!/bin/bash -xe
   exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
   sudo yum install -y jq git-lfs
@@ -51,10 +50,8 @@ const getUserData = f1Config => {
   chmod 400 /home/centos/.ssh/id_rsa
   ssh-keyscan -H github.com >> ~/.ssh/known_hosts
   git clone git@github.com:DARPA-SSITH-Demonstrators/SSITH-FETT-Target.git
-  pushd SSITH-FETT-Target/
-  echo "checking out"
-  echo "+commit_sha+" 
-  git checkout "+commit_sha+" 
+  pushd SSITH-FETT-Target/ 
+  git checkout master
   git submodule init
   git submodule update --init --recursive
   pushd SSITH-FETT-Binaries
@@ -63,8 +60,7 @@ const getUserData = f1Config => {
   nix-shell --command "ci/fett.py -ep awsProd -job ${
     f1Config.jobId
   } -cjson ${JSON.stringify(f1Config)}"
-  EOF
-  `;
+  EOF`;
 
   return Buffer.from(userdata).toString('base64');
 };
