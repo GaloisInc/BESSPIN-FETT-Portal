@@ -37,14 +37,14 @@ const getParams = async name =>
 
 const getUserData = f1Config => {
   const userdata = `#cloud-boothook
-  #!/bin/bash -xe
-  exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-  sudo yum install -y jq git-lfs
-  sudo -i -u centos bash << EOF
-  cd /home/centos
-  source .bashrc
-  source .bash_profile
-  aws secretsmanager get-secret-value --secret-id githubAccess --region ${
+#!/bin/bash -xe
+exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+sudo yum install -y jq git-lfs
+sudo -i -u centos bash << EOF
+cd /home/centos
+source .bashrc
+source .bash_profile
+aws secretsmanager get-secret-value --secret-id githubAccess --region ${
     f1Config.region
   } | jq '.SecretString | fromjson' | jq '.gitHubSSHKey' -r | base64 -d > /home/centos/.ssh/id_rsa
 chmod 400 /home/centos/.ssh/id_rsa
@@ -184,21 +184,22 @@ exports.handler = async event => {
         `/fetttarget/environment/config/${f1Config.region}`
       );
       f1Config = { ...f1Config, ...JSON.parse(config) };
-      f1Config.subnetChoice = Math.round(Math.random(1));
+      f1Config.subnetChoice = Math.round(Math.random(1)); // random 0 or 1
     } catch (e) {
       console.log(e);
       throw e;
     }
     let ec2Return = {};
     try {
-      ec2Return = await startInstance(f1Config);
+      const instanceName = `${message.creatorId}-${message.Id}`;
+      ec2Return = await startInstance(f1Config, instanceName);
       console.log(ec2Return);
       if (
         Object.prototype.hasOwnProperty.call(ec2Return, 'errorType') &&
         ec2Return.errorType === 'InsufficientInstanceCapacity'
       ) {
         f1Config.subnetChoice = f1Config.subnetChoice === 1 ? 0 : 1;
-        ec2Return = await startInstance(f1Config);
+        ec2Return = await startInstance(f1Config, instanceName);
       }
     } catch (e) {
       // handle retry? let lambda just auto-retry?
