@@ -17,13 +17,13 @@ exports.handler = async event => {
       reason: 'fett-target-production-termination',
     },
     instance: {
-      id: body.instanceId,
+      id: body.InstanceId,
     },
   };
   const params = {
     QueueUrl: process.env.INSTANCE_STATUS_QUEUE_URL,
     MessageBody: JSON.stringify(msg),
-    MessageDeduplicationId: String(body.instanceId),
+    MessageDeduplicationId: String(body.InstanceId),
     MessageGroupId: String(Math.floor(Math.random(1) * 100)),
   };
   await sqs.sendMessage(params).promise();

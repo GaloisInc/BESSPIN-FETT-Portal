@@ -1,9 +1,7 @@
-import { v4 as uuidv4 } from 'uuid';
-import { createEnvironmentRecord, updateEnvironmentStatus } from './api/environment';
+import { createEnvironmentRecord, terminateEnvironment, forceTerminateEnvironment } from './api/environment';
 
 export const ec2Launcher = async configuration =>
   new Promise(async (resolve, reject) => {
-    // TODO => Implement Launcher
     console.log(configuration);
     try {
       const environmentRecord = {
@@ -21,7 +19,6 @@ export const ec2Launcher = async configuration =>
 
 export const ec2StatusUpdate = async (configuration, newStatus) =>
   new Promise(async (resolve, reject) => {
-    // TODO => Implement EC2 SDK status update
     const environmentRecord = {
       Id: configuration.Id,
       Status: newStatus,
@@ -29,8 +26,13 @@ export const ec2StatusUpdate = async (configuration, newStatus) =>
     };
     console.log(environmentRecord);
     try {
-      const response = await updateEnvironmentStatus(environmentRecord);
-      resolve(response);
+      if (newStatus === 'forcing') {
+        const response = await forceTerminateEnvironment(environmentRecord);
+        resolve(response);
+      } else if (newStatus === 'terminating') {
+        const response = await terminateEnvironment(environmentRecord);
+        resolve(response);
+      }
     } catch (error) {
       reject(error);
     }
