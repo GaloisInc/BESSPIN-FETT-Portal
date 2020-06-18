@@ -80,8 +80,6 @@ const startInstance = (f1Config, instanceName) => {
     .filter(key => configOptions.indexOf(key) >= 0)
     .reduce((obj2, key) => Object.assign(obj2, { [key]: f1Config[key] }), {});
 
-  console.log(subset);
-
   const params = {
     MaxCount: '1',
     MinCount: '1',
@@ -131,7 +129,7 @@ const startInstance = (f1Config, instanceName) => {
         ],
       },
     ],
-    UserData: getUserData(f1Config),
+    UserData: getUserData(subset),
   };
   return ec2.runInstances(params).promise();
 };
