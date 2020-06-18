@@ -3,6 +3,7 @@ Resources:
     Type: AWS::S3::Bucket
     Properties:
       BucketName: ${opt:stage}-ssith-fett-target-researcher-artifacts
+      DeletionPolicy: Retain
   AlarmTopic:
     Type: AWS::SNS::Topic
     Properties:
