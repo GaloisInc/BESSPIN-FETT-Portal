@@ -35,7 +35,20 @@ const getParams = async name =>
       console.error(err);
     });
 
-const getUserData = f1Config => {
+const getUserData = (f1Config, iName) => {
+  const configOptions = [
+    'username',
+    'osImage',
+    'binarySource',
+    'rootUserAccess',
+    'useCustomCredentials',
+    'userPasswordHash',
+    'processor',
+  ];
+  const subset = Object.keys(f1Config)
+    .filter(key => configOptions.indexOf(key) >= 0)
+    .reduce((obj2, key) => Object.assign(obj2, { [key]: f1Config[key] }), {});
+  // eslint-disable-next-line
   const userdata = `#cloud-boothook
 #!/bin/bash -xe
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
@@ -57,14 +70,20 @@ git submodule update --init --recursive
 pushd SSITH-FETT-Binaries
 git lfs pull
 popd
-nix-shell --command "fett.py -ep awsProd -job ${
-    f1Config.jobId
-  } -cjson ${JSON.stringify(f1Config)}"
+nix-shell --command "python fett.py -ep awsProd -job ${iName} -cjson '${JSON.stringify(
+    subset
+  )
+    .replace(/\//g, '\\/')
+    .replace(/"/g, '\\"')
+    .replace(/\$/g, '\\$')}'"
 EOF`;
-
+  console.log(userdata);
   return Buffer.from(userdata).toString('base64');
 };
 const startInstance = (f1Config, instanceName) => {
+  const iName = `${f1Config.processor}-${f1Config.osImage}-${
+    f1Config.binarySource
+  }-${instanceName}`;
   const params = {
     MaxCount: '1',
     MinCount: '1',
@@ -109,12 +128,12 @@ const startInstance = (f1Config, instanceName) => {
         Tags: [
           {
             Key: 'Name',
-            Value: instanceName,
+            Value: iName,
           },
         ],
       },
     ],
-    UserData: getUserData(f1Config),
+    UserData: getUserData(f1Config, iName),
   };
   return ec2.runInstances(params).promise();
 };
@@ -147,7 +166,7 @@ exports.handler = async event => {
       useCustomCredentials: 'yes',
       rootUserAccess: 'no',
       username: message.username,
-      password: hashPassword(message.password),
+      userPasswordHash: hashPassword(message.password),
       jobId: `${message.creatorId}-${message.insertId}`,
     };
     if (f1Config.region === 'us-west-2') {
