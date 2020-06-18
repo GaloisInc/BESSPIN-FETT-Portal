@@ -18,8 +18,9 @@ const updateDBForTermination = async instanceId =>
     { instanceId }
   );
 const updateDBForStarted = async (instanceId, instanceIp, fpgaIp) => {
+  console.log('updating for started');
   await db.query(
-    `UPDATE Environment set IpAddress = :instanceIp, FPGAIp = :fpgaIp Status = "running" WHERE Id = :instanceId`,
+    `UPDATE Environment set IpAddress = :instanceIp, FPGAIp = :fpgaIp, Status = "running" WHERE Id = :instanceId`,
     { instanceId, instanceIp, fpgaIp }
   );
 };
@@ -32,6 +33,7 @@ const getInstanceConfig = async (instanceId, instanceIp, fpgaIp) => {
 exports.handler = async event => {
   await db.makeConnection();
   for (const msg of event.Records) {
+    console.log(msg);
     const message = JSON.parse(msg.body);
     const signal = message.job.reason.split('-').pop();
     if (signal === 'termination') {
