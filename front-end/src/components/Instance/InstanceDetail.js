@@ -2,12 +2,30 @@ import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import DetailsIcon from '@material-ui/icons/Details';
+import { CircularProgress } from '@material-ui/core';
 import alert from '../../assets/alert.svg';
+import { ec2StatusUpdate } from '../../services/launcher';
 
-const InstanceDetail = ({ environment, index }) => {
+const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
   const [open, setOpen] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
+
+  const updateInstanceStatus = async (event, newStatus) => {
+    event.preventDefault();
+    setIsLoading(true);
+    setIsDisabled(true);
+    try {
+      await ec2StatusUpdate(environment, newStatus);
+      fetchEnvironments();
+      setIsLoading(false);
+    } catch (error) {
+      console.log(`Error updating instance${error}`);
+      setIsLoading(false);
+    }
+  };
   const toggleOpen = () => setOpen(prevOpened => !prevOpened);
-  console.log(moment(environment.Created).format('HH:mm'));
+
   return (
     <>
       <div className="flex flex-row items-center justify-between px-4 py-2 bg-blue-900">
@@ -32,12 +50,18 @@ const InstanceDetail = ({ environment, index }) => {
         </div>
         <div className="flex items-center">
           <button
-            disabled={environment.Status === 'provisioning'}
-            className={`px-4 ${environment.Status === 'provisioning' ? 'bg-gray-600' : 'bg-gray-200'} rounded`}
+            disabled={environment.Status === 'provisioning' || environment.Status === 'terminated'}
+            className={`px-4 ${
+              environment.Status === 'provisioning' || environment.Status === 'terminated'
+                ? 'bg-gray-600 cursor-default'
+                : 'bg-gray-200'
+            } rounded`}
             type="button"
           >
             <p className="text-sm text-blue-900 uppercase">
-              {environment.Status !== 'provisioning' ? (
+              {environment.Status === 'provisioning' || environment.Status === 'terminated' ? (
+                'View On AWS'
+              ) : (
                 <a
                   href={`https://us-west-2.console.aws.amazon.com/cloudwatch/home?region=us-west-2#dashboards:name=FettPortal${
                     environment.F1EnvironmentId
@@ -47,8 +71,6 @@ const InstanceDetail = ({ environment, index }) => {
                 >
                   View On AWS
                 </a>
-              ) : (
-                'View On AWS'
               )}
             </p>
           </button>
@@ -99,11 +121,23 @@ const InstanceDetail = ({ environment, index }) => {
             </div>
             <p className="text-base text-200-gray">{environment.IpAddress}</p>
           </div>
-          <div className="flex flex-row py-2 bg-blue-600">
-            <div className="w-48 ml-8 mr-8">
-              <p className="text-base text-teal-500 uppercase">private key</p>
-            </div>
-            <p className="text-base underline uppercase text-200-gray">{environment.PrivateKeyStore}</p>
+          <div className="flex flex-row justify-center">
+            <button
+              className={` px-2 mr-10 mt-4 mb-4 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded w-56 ${
+                isLoading ? 'opacity-50 cursor-not-allowed' : ''
+              } ${
+                isDisabled || environment.Status === 'terminated' || environment.Status === 'terminating'
+                  ? 'bg-gray-600 cursor-default'
+                  : 'bg-gray-200 hover:bg-teal-500 hover:text-gray-200'
+              }`}
+              type="submit"
+              onClick={event => updateInstanceStatus(event, 'forcing')}
+              disabled={
+                isLoading || isDisabled || environment.Status === 'terminated' || environment.Status === 'forcing'
+              }
+            >
+              {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Force Terminate Instance'}
+            </button>
           </div>
         </>
       )}
@@ -116,4 +150,5 @@ export default InstanceDetail;
 InstanceDetail.propTypes = {
   environment: PropTypes.object,
   index: PropTypes.number,
+  fetchEnvironments: PropTypes.func,
 };

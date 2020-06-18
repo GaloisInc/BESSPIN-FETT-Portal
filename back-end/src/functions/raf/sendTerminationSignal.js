@@ -17,7 +17,7 @@ const sendMessage = async instanceId => {
 };
 const updateStatusToDB = async dbId => {
   await db.query(
-    `UPDATE Environment set status = "Stopping" WHERE id = :dbId`,
+    `UPDATE Environment set Status = "terminating" WHERE id = :dbId`,
     { dbId }
   );
 };
@@ -30,7 +30,7 @@ exports.handler = async event => {
     const payload = JSON.parse(event.body);
     const dbData = await updateStatusToDB(payload.Id);
     console.log(dbData);
-    await sendMessage(dbData.instanceId);
+    await sendMessage(dbData.InstanceId);
     new Response({ message: 'success' }).success();
   } catch (e) {
     new Response({ message: 'Invalid payload' }).success();

@@ -3,9 +3,11 @@ import PropTypes from 'prop-types';
 import close from '../../assets/close.svg';
 import InstanceDetail from './InstanceDetail';
 
-const InstanceModal = ({ handleClose, modalData, cardHeight }) => {
+const InstanceModal = ({ handleClose, modalData, cardHeight, fetchEnvironments }) => {
   console.log(modalData);
-  const mappedData = modalData.map((env, index) => <InstanceDetail key={index} environment={env} index={index} />);
+  const mappedData = modalData.map((env, index) => (
+    <InstanceDetail key={index} environment={env} index={index} fetchEnvironments={fetchEnvironments} />
+  ));
   const username = mappedData[0].UserName;
   return (
     <div
@@ -31,4 +33,5 @@ InstanceModal.propTypes = {
   handleClose: PropTypes.func,
   modalData: PropTypes.array,
   cardHeight: PropTypes.number,
+  fetchEnvironments: PropTypes.func,
 };
