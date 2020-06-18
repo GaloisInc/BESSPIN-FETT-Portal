@@ -5,7 +5,7 @@ import { CircularProgress } from '@material-ui/core';
 import alert from '../../assets/alert.svg';
 import { ec2StatusUpdate } from '../../services/launcher';
 
-const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
+const InstanceDetail = ({ environment, fetchEnvironments }) => {
   const [isLoading, setIsLoading] = useState(false);
   const updateInstanceStatus = async (event, newStatus) => {
     event.preventDefault();
@@ -25,13 +25,15 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
         <div className="w-48 ml-8 mr-8 ">
           <p className="text-base text-teal-500 uppercase">Launched Date</p>
         </div>
-        <p className="text-base text-200-gray">{environment.created_at && moment(environment.created_at).format('MM/DD/YY')}</p>
+        <p className="text-base text-200-gray">
+          {environment.Created && moment(environment.Created).format('MM/DD/YY')}
+        </p>
       </div>
       <div className="flex flex-row py-2 bg-blue-700">
         <div className="w-48 ml-8 mr-8 ">
           <p className="text-base text-teal-500 uppercase">Launched Time</p>
         </div>
-        <p className="text-base text-200-gray">{environment.created_at && moment(environment.created_at).format('HH:mm')}</p>
+        <p className="text-base text-200-gray">{environment.Created && moment(environment.Created).format('HH:mm')}</p>
       </div>
       <div className="flex flex-row py-2 bg-blue-600">
         <div className="w-48 ml-8 mr-8">
@@ -44,7 +46,9 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
         <div className="w-48 ml-8 mr-8">
           <p className="text-base text-teal-500 uppercase">Idle Time</p>
         </div>
-        <p className="text-base text-200-gray">{environment.IdleTime && moment(environment.IdleTime).format('HH:mm')}</p>
+        <p className="text-base text-200-gray">
+          {environment.IdleTime && moment(environment.IdleTime).format('HH:mm')}
+        </p>
       </div>
       <div className="flex flex-row py-2 bg-blue-600">
         <div className="w-48 ml-8 mr-8">
@@ -100,6 +104,5 @@ export default InstanceDetail;
 
 InstanceDetail.propTypes = {
   environment: PropTypes.object,
-  index: PropTypes.number,
   fetchEnvironments: PropTypes.func,
 };
