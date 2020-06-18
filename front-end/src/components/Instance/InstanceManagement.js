@@ -19,7 +19,7 @@ export default function InstanceManagement() {
   const [isLoading, setIsLoading] = useState(true);
   const [environments, setEnvironments] = useState([]);
   const [filteredEnvironments, setFilteredEnvironments] = useState([]);
-  const { height, width } = useWindowDimensions();
+  const { height } = useWindowDimensions();
 
   const fetchEnvironments = async () => {
     try {
@@ -113,7 +113,7 @@ export default function InstanceManagement() {
                   </p>
                 ),
               },
-              { title: 'IDLE TIME', field: 'IdleTime', width: '8em' },
+              { title: 'IDLE TIME', field: 'IdleTime', width: '6em' },
               { title: 'STATUS', field: 'Status', width: '6em' },
               {
                 title: '',
