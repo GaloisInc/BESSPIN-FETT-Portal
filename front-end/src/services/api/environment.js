@@ -89,7 +89,22 @@ export const createEnvironmentRecord = async configuration =>
       });
   });
 
-export const updateEnvironmentStatus = async record =>
+export const terminateEnvironment = async record =>
+  new Promise(async (resolve, reject) => {
+    fetch(`${BASE_API}/updateEnvironment`, {
+      headers: await makeHeaders(),
+      body: JSON.stringify({ Id: record.Id, Status: record.Status, InstanceId: record.F1EnvironmentId }),
+      method: 'PUT',
+    })
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(body => resolve(body))
+      .catch(response => {
+        reject(response);
+      });
+  });
+
+export const forceTerminateEnvironment = async record =>
   new Promise(async (resolve, reject) => {
     fetch(`${BASE_API}/forceTermination`, {
       headers: await makeHeaders(),
