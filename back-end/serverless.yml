@@ -85,7 +85,7 @@ custom:
   lambdaArnBase: "arn:aws:lambda:${self:provider.region}:#{AWS::AccountId}:function:${self:service.name}-${self:provider.stage}"
   authorizerPool:
     develop: arn:aws:cognito-idp:us-west-2:363527286999:userpool/us-west-2_TZpbYY6KB
-    master: arn:aws:cognito-idp:us-west-2:065510690417:userpool/us-west-2_XA2P3XNm4
+    master: arn:aws:cognito-idp:us-west-2:065510690417:userpool/us-west-2_lbLI2FsNd
 
 functions:
   getFromDatabase:
