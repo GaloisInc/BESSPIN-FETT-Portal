@@ -50,7 +50,7 @@ const getUserData = (f1Config, iName) => {
     .reduce((obj2, key) => Object.assign(obj2, { [key]: f1Config[key] }), {});
   // eslint-disable-next-line
   const userdata = `#cloud-boothook
-#!/bin/bash -xe
+#!/bin/bash
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 sudo yum install -y jq git-lfs
 sudo -i -u centos bash << EOF
