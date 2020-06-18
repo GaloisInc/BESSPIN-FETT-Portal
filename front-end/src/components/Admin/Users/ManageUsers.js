@@ -4,18 +4,16 @@ import React, { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
 import { Paper, Modal } from '@material-ui/core';
 import PropTypes from 'prop-types';
-import refresh from '../../../assets/refresh.svg';
 import search from '../../../assets/search.svg';
 import chevronRight from '../../../assets/chevronRight.svg';
 import UserModal from './UserModal';
 import useWindowDimensions from '../../../services/useDimensions';
-import Spinner from '../../Spinner.js';
 
 const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = React.useState(false);
   const [selectedUser, setSelectedUser] = useState('');
-  const { height, width } = useWindowDimensions();
+  const { height } = useWindowDimensions();
 
   useEffect(() => {
     fetchUsers();
@@ -24,7 +22,9 @@ const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => 
 
   useEffect(() => {
     const filteredData = users.filter(
-      env => env.UserName.toLowerCase().includes(searchTerm.toLowerCase()) || env.Role.toLowerCase().includes(searchTerm.toLowerCase())
+      env =>
+        env.UserName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        env.Role.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredUsers(filteredData);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -67,7 +67,13 @@ const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => 
           Container: props => <Paper {...props} elevation={0} />,
         }}
         columns={[
-          { title: 'USER NAME', field: 'UserName', width: '18em', cellStyle: { paddingLeft: '2em' }, headerStyle: { paddingLeft: '2em' } },
+          {
+            title: 'USER NAME',
+            field: 'UserName',
+            width: '18em',
+            cellStyle: { paddingLeft: '2em' },
+            headerStyle: { paddingLeft: '2em' },
+          },
           { title: 'ROLE', field: 'Role' },
           {
             title: '',

@@ -19,7 +19,7 @@ const UserForm = ({ fetchUsers }) => {
     event.preventDefault();
     setIsLoading(true);
     try {
-      const resp = await createAdminUser(email);
+      await createAdminUser(email);
       setEmail('');
       fetchUsers();
       setIsLoading(false);
@@ -69,6 +69,8 @@ const UserForm = ({ fetchUsers }) => {
           value={teamNumber}
           onChange={event => setTeamNumber(event.target.value)}
           className="w-full p-1 pl-4 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
+          autoComplete="off"
+          auto
         />
         <button
           type="submit"
@@ -91,6 +93,7 @@ const UserForm = ({ fetchUsers }) => {
           value={email}
           onChange={event => setEmail(event.target.value)}
           className="w-full p-1 pl-4 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
+          autoComplete="off"
         />
         <button
           className={`w-full px-2 py-1 mt-6 font-bold text-blue-700 uppercase bg-gray-200 rounded hover:bg-teal-500 hover:text-gray-200 font-body ${

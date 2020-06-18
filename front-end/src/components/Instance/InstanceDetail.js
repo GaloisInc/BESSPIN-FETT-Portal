@@ -12,9 +12,13 @@ const InstanceDetail = ({ environment, index }) => {
     <>
       <div className="flex flex-row items-center justify-between px-4 py-2 bg-blue-900">
         <div className="flex flex-row">
-          <button type="button" onClick={toggleOpen} className="flex flex-row items-center text-teal-500 focus:outline-none">
+          <button
+            type="button"
+            onClick={toggleOpen}
+            className="flex flex-row items-center text-teal-500 focus:outline-none"
+          >
             <p className="text-base text-teal-500 uppercase">Environment {index + 1}</p>
-            <div className="flex items-center w-1 text-base">
+            <div className={`flex items-center w-1 text-base ${!open && 'transform -rotate-90 ml-2 mt-2'}`}>
               <DetailsIcon fontSize="inherit" color="inherit" />
             </div>
           </button>
@@ -27,8 +31,26 @@ const InstanceDetail = ({ environment, index }) => {
           </div>
         </div>
         <div className="flex items-center">
-          <button className="px-4 bg-gray-200" type="button">
-            <p className="text-sm text-blue-900 uppercase">view on aws</p>
+          <button
+            disabled={environment.Status === 'provisioning'}
+            className={`px-4 ${environment.Status === 'provisioning' ? 'bg-gray-600' : 'bg-gray-200'} rounded`}
+            type="button"
+          >
+            <p className="text-sm text-blue-900 uppercase">
+              {environment.Status !== 'provisioning' ? (
+                <a
+                  href={`https://us-west-2.console.aws.amazon.com/cloudwatch/home?region=us-west-2#dashboards:name=FettPortal${
+                    environment.F1EnvironmentId
+                  }`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  View On AWS
+                </a>
+              ) : (
+                'View On AWS'
+              )}
+            </p>
           </button>
         </div>
       </div>
@@ -44,19 +66,25 @@ const InstanceDetail = ({ environment, index }) => {
             <div className="w-48 ml-8 mr-8 ">
               <p className="text-base text-teal-500 uppercase">Start of Engagment</p>
             </div>
-            <p className="text-base text-200-gray">{environment.Created && moment(environment.Created).format('MM/DD/YY hh:mm A')}</p>
+            <p className="text-base text-200-gray">
+              {environment.Created && moment(environment.Created).format('MM/DD/YY hh:mm A')}
+            </p>
           </div>
           <div className="flex flex-row py-2 bg-blue-600">
             <div className="w-48 ml-8 mr-8">
               <p className="text-base text-teal-500 uppercase">Idle Time</p>
             </div>
-            <p className="text-base text-200-gray">{environment.IdleTime && moment(environment.IdleTime).format('HH:mm')}</p>
+            <p className="text-base text-200-gray">
+              {environment.IdleTime && moment(environment.IdleTime).format('HH:mm')}
+            </p>
           </div>
           <div className="flex flex-row py-2 bg-blue-700">
             <div className="w-48 ml-8 mr-8">
               <p className="text-base text-teal-500 uppercase">Total Compute Time</p>
             </div>
-            <p className="text-base text-200-gray">{environment.IdleTime && moment(environment.IdleTime).format('HH:mm')}</p>
+            <p className="text-base text-200-gray">
+              {environment.IdleTime && moment(environment.IdleTime).format('HH:mm')}
+            </p>
           </div>
           <div className="flex flex-row py-2 bg-blue-600">
             <div className="w-48 ml-8 mr-8">
