@@ -1,8 +1,8 @@
 Resources:
   ResearcherArtifactsBucket:
-    Type: AWS::S3:Bucket
+    Type: AWS::S3::Bucket
     Properties:
-      Name: ${opt:stage}-SSITH-FETT-Target-Researcher-Artifacts
+      BucketName: ${opt:stage}-ssith-fett-target-researcher-artifacts
   AlarmTopic:
     Type: AWS::SNS::Topic
     Properties:
