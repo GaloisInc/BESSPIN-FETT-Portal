@@ -32,7 +32,6 @@ const Login = props => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      console.log(error);
       setPassword('');
       if (error.code === 'PasswordResetRequiredException') {
         // The error happens when the password is reset in the Cognito console
@@ -49,7 +48,6 @@ const Login = props => {
       setIsDisabled(false);
     }
   };
-  console.log(error);
   return (
     <div
       className="flex justify-center min-h-screen bg-blue-700"
@@ -60,7 +58,10 @@ const Login = props => {
       }}
     >
       <div className="flex-col self-center w-64">
-        <h1 className="bg-no-repeat" style={{ backgroundImage: `url(${backgroundLogo})`, height: '90px', width: '266px' }}>
+        <h1
+          className="bg-no-repeat"
+          style={{ backgroundImage: `url(${backgroundLogo})`, height: '90px', width: '266px' }}
+        >
           <span className="hidden">FETT Portal</span>
         </h1>
         <p className="mb-8 text-center text-teal-500 uppercase">Sign in to access FETT Portal</p>
@@ -86,7 +87,9 @@ const Login = props => {
             error && error === 'NotAuthorizedException' ? 'border-red-500' : 'border-gray-200'
           } border-solid rounded`}
         />
-        {error && error === 'NotAuthorizedException' && <p className="text-sm text-red-500">Incorrect username or password</p>}
+        {error && error === 'NotAuthorizedException' && (
+          <p className="text-sm text-red-500">Incorrect username or password</p>
+        )}
         <button
           className={`w-full px-2 py-1 mt-8 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded hover:bg-teal-500 hover:text-gray-200 ${
             isDisabled ? 'opacity-50 cursor-not-allowed' : ''

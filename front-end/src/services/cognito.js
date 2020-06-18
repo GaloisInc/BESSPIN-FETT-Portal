@@ -33,8 +33,6 @@ export const createAdminUser = async email =>
           excludeSimilarCharacters: true,
         });
 
-        console.log('pass', password);
-
         const params = {
           Username: email,
           TemporaryPassword: password,
@@ -185,7 +183,6 @@ export const createTeams = async teamNumber => {
       let username;
       while (!username || username.length > 14) {
         username = generate({ words: 2, alliterative: true }).dashed;
-        console.log(username);
       }
       const teamPromise = createTeam(username, password, region);
       teamCreation.push(teamPromise);
@@ -216,13 +213,13 @@ export const resendInvite = email =>
           symbols: true,
           uppercase: true,
           lowercase: true,
+          exclude: `"',=`,
+          excludeSimilarCharacters: true,
         });
-
-        console.log('pass', password);
 
         const params = {
           Username: email,
-          TemporaryPassword: `${password}1aA!`,
+          TemporaryPassword: password,
           MessageAction: 'RESEND',
           DesiredDeliveryMediums: ['EMAIL'],
           UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
@@ -234,11 +231,21 @@ export const resendInvite = email =>
           ],
         };
 
-        cognito.adminCreateUser(params, function(err, data) {
-          if (err) console.log(err, err.stack);
-          // an error occurred
-          else resolve(data); // successful response
-        });
+        const cognitoResponse = await cognito
+          .adminSetUserPassword({
+            UserPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
+            Username: email,
+            Password: password,
+            Permanent: false,
+          })
+          .promise();
+        if (cognitoResponse) {
+          cognito.adminCreateUser(params, function(err, data) {
+            if (err) console.log(err, err.stack);
+            // an error occurred
+            else resolve(data); // successful response
+          });
+        }
       });
     } catch (error) {
       reject(error);
