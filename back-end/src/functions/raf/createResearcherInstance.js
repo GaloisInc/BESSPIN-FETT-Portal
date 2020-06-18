@@ -57,14 +57,29 @@ git submodule update --init --recursive
 pushd SSITH-FETT-Binaries
 git lfs pull
 popd
-nix-shell --command "fett.py -ep awsProd -job ${
+nix-shell --command "python fett.py -ep awsProd -job ${
     f1Config.jobId
-  } -cjson ${JSON.stringify(f1Config)}"
+  } -cjson ${JSON.stringify(f1Config)
+    .replace('"', '\\"')
+    .replace('$', '\\$')}"
 EOF`;
 
   return Buffer.from(userdata).toString('base64');
 };
 const startInstance = (f1Config, instanceName) => {
+  const configOptions = [
+    'username',
+    'osImage',
+    'binarySource',
+    'rootUserAccess',
+    'useCustomCredentials',
+    'userPasswordHash',
+    'processor',
+  ];
+  const subset = Object.keys(f1Config)
+    .filter(key => configOptions.indexOf(key) >= 0)
+    .reduce((obj2, key) => Object.assign(obj2, { [key]: f1Config[key] }), {});
+
   const params = {
     MaxCount: '1',
     MinCount: '1',
@@ -114,7 +129,7 @@ const startInstance = (f1Config, instanceName) => {
         ],
       },
     ],
-    UserData: getUserData(f1Config),
+    UserData: getUserData(subset),
   };
   return ec2.runInstances(params).promise();
 };
@@ -147,7 +162,7 @@ exports.handler = async event => {
       useCustomCredentials: 'yes',
       rootUserAccess: 'no',
       username: message.username,
-      password: hashPassword(message.password),
+      userPasswordHash: hashPassword(message.password),
       jobId: `${message.creatorId}-${message.insertId}`,
     };
     if (f1Config.region === 'us-west-2') {
