@@ -20,7 +20,7 @@ const updateDBForTermination = async instanceId =>
 const updateDBForStarted = async (instanceId, instanceIp, fpgaIp) => {
   console.log('updating for started');
   await db.query(
-    `UPDATE Environment set IpAddress = :instanceIp, FPGAIp = :fpgaIp, Status = "running" WHERE Id = :instanceId`,
+    `UPDATE Environment set IpAddress = :instanceIp, FPGAIp = :fpgaIp, Status = "running" WHERE F1EnvironmentId = :instanceId`,
     { instanceId, instanceIp, fpgaIp }
   );
 };
