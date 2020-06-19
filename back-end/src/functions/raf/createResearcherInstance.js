@@ -64,7 +64,7 @@ chmod 400 /home/centos/.ssh/id_rsa
 ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 git clone git@github.com:DARPA-SSITH-Demonstrators/SSITH-FETT-Target.git
 pushd SSITH-FETT-Target/ 
-git checkout develop
+git checkout base64_decode_password_hash
 git submodule init
 git submodule update --init --recursive
 pushd SSITH-FETT-Binaries
@@ -74,8 +74,7 @@ nix-shell --command "python fett.py -ep awsProd -job ${iName} -cjson '${JSON.str
     subset
   )
     .replace(/\//g, '\\/')
-    .replace(/"/g, '\\"')
-    .replace(/\$/g, '\\$')}'"
+    .replace(/"/g, '\\"')}'"
 EOF`;
   console.log(userdata);
   return Buffer.from(userdata).toString('base64');
@@ -137,7 +136,8 @@ const startInstance = (f1Config, instanceName) => {
   };
   return ec2.runInstances(params).promise();
 };
-const hashPassword = pw => sha512crypt(pw, 'xcnc07LxM26Xq');
+const hashPassword = pw =>
+  Buffer.from(sha512crypt(pw, 'xcnc07LxM26Xq')).toString('base64');
 /**
  * Incoming payload
  * 
