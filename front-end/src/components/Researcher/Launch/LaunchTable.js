@@ -1,16 +1,18 @@
-/* eslint-disable */
+/* eslint-disable react/display-name */
+
 import React, { useState, useEffect } from 'react';
-import { Redirect, withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import MaterialTable from 'material-table';
 import { Paper } from '@material-ui/core';
+import PropTypes from 'prop-types';
 import rocketDark from '../../../assets/rocketDark.svg';
 import { getInstanceConfigurations } from '../../../services/api/instanceConfiguration';
 import { ec2Launcher } from '../../../services/launcher';
 import Spinner from '../../Spinner.js';
 import { getRunningInstanceCount } from '../../../services/api/environment';
 
-const LaunchTable = ({ history }) => {
+const LaunchTable = ({ history, handleOpen }) => {
   const [instanceConfigurations, setInstanceConfigurations] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [count, setCount] = useState('');
@@ -43,20 +45,18 @@ const LaunchTable = ({ history }) => {
   }, []);
 
   const handleLaunch = async (event, configuration) => {
-    console.log('launch');
     setIsLoading(true);
     event.preventDefault();
     const response = await ec2Launcher(configuration);
     console.log(response);
     if (response && response.serverStatus === 2) {
       console.log('success');
+      handleOpen();
       history.push('./');
       setIsLoading(false);
     }
-    console.log('launching');
   };
 
-  console.log(count);
   return (
     <>
       <div className="relative mb-4 bg-blue-600 table-card" style={{ width: '800px', minHeight: '400px' }}>
@@ -81,7 +81,9 @@ const LaunchTable = ({ history }) => {
                 render: data => (
                   <button
                     className={`flex flex-row items-center justify-around w-24 pr-4 selected:outline-none ${
-                      typeof count === 'number' && count > 0 ? 'bg-gray-600 cursor-default' : 'btn-gray hover:bg-teal-500 hover:text-gray-200'
+                      typeof count === 'number' && count > 0
+                        ? 'bg-gray-600 cursor-default'
+                        : 'btn-gray hover:bg-teal-500 hover:text-gray-200'
                     }`}
                     type="button"
                     onClick={event => handleLaunch(event, data)}
@@ -115,7 +117,8 @@ const LaunchTable = ({ history }) => {
           />
         )}
         <p className="py-4 pl-2 ml-6 text-gray-200">
-          * Provisioned instances are limited to (1) and a duration of idle activity (TBD) before automatic instance shutdown. New instances may not be launched until prior instance has been fully terminated.
+          * Provisioned instances are limited to (1) and a duration of idle activity (TBD) before automatic instance
+          shutdown. New instances may not be launched until prior instance has been fully terminated.
         </p>
       </div>
     </>
@@ -124,6 +127,7 @@ const LaunchTable = ({ history }) => {
 
 LaunchTable.propTypes = {
   history: ReactRouterPropTypes.history,
+  handleOpen: PropTypes.func,
 };
 
 export default withRouter(LaunchTable);
