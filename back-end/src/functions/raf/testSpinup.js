@@ -15,7 +15,7 @@ const sendMessage = async message => {
   return sqs.sendMessage(params).promise();
 };
 
-const initializeInstance = () =>
+const initializeInstance = index =>
   new Promise(async (resolve, reject) => {
     try {
       const username = 'ftsresearcher';
@@ -31,11 +31,20 @@ const initializeInstance = () =>
       const creatorId = creator[0].Id;
       const region = creator[0].Region;
 
+      const configs = await db.query(
+        `SELECT * FROM InstanceConfiguration WHERE IsActive = true`
+      );
+
+      console.log(configs);
+      const totalConfigs = configs.length;
+      const currentConfig = configs[index % totalConfigs];
+      const { Type, OS, Id, Processor } = currentConfig;
+
       const data = await db.query(
         `INSERT INTO Environment (CreatedBy_FK, Configuration_FK, Region, Status) values (:CreatedBy, :Configuration, :Region, 'provisioning')`,
         {
           CreatedBy: creatorId,
-          Configuration: 1,
+          Configuration: Id,
           Region: region,
         }
       );
@@ -43,9 +52,9 @@ const initializeInstance = () =>
 
       const params = {
         Id: insertId,
-        Type: 'LMCO',
-        OS: 'FreeRTOS',
-        Processor: 'chisel_p1',
+        Type,
+        OS,
+        Processor,
         Region: region,
         username,
         password,
@@ -66,7 +75,7 @@ exports.handler = async (event, context) => {
   console.log(spinupNumber);
   const initializerPromises = [];
   for (let i = 0; i < spinupNumber; i++) {
-    const initializer = initializeInstance();
+    const initializer = initializeInstance(i);
     initializerPromises.push(initializer);
   }
   await Promise.all(

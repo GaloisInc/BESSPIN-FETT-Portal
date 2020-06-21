@@ -17,7 +17,7 @@ const sendMessage = async instanceId => {
 };
 const updateStatusToDB = async dbId => {
   await db.query(
-    `UPDATE Environment set Status = "terminating" WHERE id = :dbId`,
+    `UPDATE Environment set Status = "terminating" WHERE Id = :dbId`,
     { dbId }
   );
 };
