@@ -48,11 +48,14 @@ const getUserData = (f1Config, iName) => {
   const subset = Object.keys(f1Config)
     .filter(key => configOptions.indexOf(key) >= 0)
     .reduce((obj2, key) => Object.assign(obj2, { [key]: f1Config[key] }), {});
+  subset.awsJumpBoxIp = '172.31.30.56';
   // eslint-disable-next-line
   const userdata = `#cloud-boothook
 #!/bin/bash
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+echo \`date\`
 sudo yum install -y jq git-lfs
+echo \`date\`
 sudo -i -u centos bash << EOF
 cd /home/centos
 source .bashrc
@@ -62,30 +65,47 @@ aws secretsmanager get-secret-value --secret-id githubAccess --region ${
   } | jq '.SecretString | fromjson' | jq '.gitHubSSHKey' -r | base64 -d > /home/centos/.ssh/id_rsa
 chmod 400 /home/centos/.ssh/id_rsa
 ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+echo \`date\`
 git clone git@github.com:DARPA-SSITH-Demonstrators/SSITH-FETT-Target.git
+echo \`date\`
 pushd SSITH-FETT-Target/ 
 git checkout develop
 git submodule init
 git submodule update --init --recursive
+echo \`date\`
 pushd SSITH-FETT-Binaries
+echo \`date\`
 git lfs pull
+echo \`date\`
 popd
 nix-shell --command "python fett.py -ep awsProd -job ${iName} -cjson '${JSON.stringify(
     subset
   )
     .replace(/\//g, '\\/')
     .replace(/"/g, '\\"')}'"
+echo \`date\`
 EOF`;
   console.log(userdata);
   return Buffer.from(userdata).toString('base64');
 };
-const startInstance = (f1Config, instanceName) => {
+const startInstance = async (f1Config, instanceName) => {
+  console.log(f1Config);
   const iName = `${f1Config.processor}-${f1Config.osImage}-${
     f1Config.binarySource
   }-${instanceName}`;
   const params = {
     MaxCount: '1',
     MinCount: '1',
+    NetworkInterfaces: [
+      {
+        AssociatePublicIpAddress: false,
+        DeleteOnTermination: true,
+        DeviceIndex: 0,
+        Ipv6AddressCount: 0,
+        SecondaryPrivateIpAddressCount: 1,
+        SubnetId: f1Config.subnetIds[f1Config.subnetChoice],
+      },
+    ],
     BlockDeviceMappings: [
       {
         DeviceName: '/dev/sdm',
@@ -119,8 +139,6 @@ const startInstance = (f1Config, instanceName) => {
     Placement: {
       Tenancy: 'dedicated',
     },
-    SecurityGroupIds: [f1Config.securityGroupId],
-    SubnetId: f1Config.subnetIds[f1Config.subnetChoice],
     TagSpecifications: [
       {
         ResourceType: 'instance',
@@ -134,7 +152,13 @@ const startInstance = (f1Config, instanceName) => {
     ],
     UserData: getUserData(f1Config, iName),
   };
-  return ec2.runInstances(params).promise();
+  const ec2Data = await ec2.runInstances(params).promise();
+  const sgParams = {
+    InstanceId: ec2Data.Instances[0].InstanceId,
+    Groups: [f1Config.securityGroupId],
+  };
+  await ec2.modifyInstanceAttribute(sgParams).promise();
+  return new Promise((resolve, reject) => resolve(ec2Data));
 };
 const hashPassword = pw =>
   Buffer.from(sha512crypt(pw, 'xcnc07LxM26Xq')).toString('base64');
@@ -197,7 +221,7 @@ exports.handler = async event => {
     try {
       const instanceName = `${message.creatorId}-${message.Id}`;
       ec2Return = await startInstance(f1Config, instanceName);
-      console.log(ec2Return);
+      console.log('func return', ec2Return);
       if (
         Object.prototype.hasOwnProperty.call(ec2Return, 'errorType') &&
         ec2Return.errorType === 'InsufficientInstanceCapacity'
