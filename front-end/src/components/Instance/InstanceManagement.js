@@ -33,6 +33,11 @@ export default function InstanceManagement() {
 
   useEffect(() => {
     fetchEnvironments();
+    const interval = setInterval(() => {
+      console.log('This will run every second!');
+      fetchEnvironments();
+    }, 30000);
+    return () => clearInterval(interval);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
