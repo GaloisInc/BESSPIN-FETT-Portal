@@ -182,7 +182,8 @@ export const createTeams = async teamNumber => {
       const region = i % 2 === 0 ? 'us-west-2' : 'us-east-1';
       let username;
       while (!username || username.length > 14) {
-        username = generate({ words: 2, alliterative: true }).dashed;
+        const words = generate({ words: 2, alliterative: true }).raw;
+        username = words.join('');
       }
       const teamPromise = createTeam(username, password, region);
       teamCreation.push(teamPromise);
