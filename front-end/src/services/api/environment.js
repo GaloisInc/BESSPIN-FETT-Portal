@@ -108,7 +108,7 @@ export const forceTerminateEnvironment = async record =>
   new Promise(async (resolve, reject) => {
     fetch(`${BASE_API}/forceTermination`, {
       headers: await makeHeaders(),
-      body: JSON.stringify({ Id: record.Id, Status: record.Status, InstanceId: record.F1EnvironmentId }),
+      body: JSON.stringify({ Id: record.Id, Status: record.Status, F1EnvironmentId: record.F1EnvironmentId }),
       method: 'POST',
     })
       .then(handleErrors)
