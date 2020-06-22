@@ -70,7 +70,7 @@ export default function History() {
 
 	
   return (
-	  <div className="relative overflow-y-scroll" style={{ minHeight: '630px', maxHeight: height - 340 }}>
+	  <div className="relative overflow-y-scroll fettScroll" style={{ maxHeight: height - 340 }}>
 	  	{isLoading ? <Spinner /> : announcementDisplay};
 	  </div>
   );
