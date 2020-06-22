@@ -6,7 +6,13 @@ import InstanceDetail from './InstanceDetail';
 const InstanceModal = ({ handleClose, modalData, cardHeight, fetchEnvironments }) => {
   console.log(modalData);
   const mappedData = modalData.map((env, index) => (
-    <InstanceDetail key={index} environment={env} index={index} fetchEnvironments={fetchEnvironments} />
+    <InstanceDetail
+      key={index}
+      environment={env}
+      index={index}
+      fetchEnvironments={fetchEnvironments}
+      handleClose={handleClose}
+    />
   ));
   const username = mappedData[0].UserName;
   return (

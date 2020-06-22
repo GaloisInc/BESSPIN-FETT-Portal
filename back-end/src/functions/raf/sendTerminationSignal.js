@@ -5,21 +5,27 @@ const sqs = new aws.SQS();
 const db = new Database();
 
 const sendMessage = async instanceId => {
+  console.log(instanceId);
   const params = {
     QueueUrl: process.env.PORTAL_TO_INSTANCE_TERMINATION_QUEUE_URL,
     MessageBody: 'terminate',
     MessageAttributes: {
-      DataType: 'String',
-      StringValue: String(instanceId),
+      instance_id: {
+        DataType: 'String',
+        StringValue: String(instanceId),
+      },
     },
   };
   return sqs.sendMessage(params).promise();
 };
 const updateStatusToDB = async dbId => {
-  await db.query(
+  await db.makeConnection();
+
+  const data = await db.query(
     `UPDATE Environment set Status = "terminating" WHERE Id = :dbId`,
     { dbId }
   );
+  return data;
 };
 
 exports.handler = async event => {
@@ -29,10 +35,13 @@ exports.handler = async event => {
   try {
     const payload = JSON.parse(event.body);
     const dbData = await updateStatusToDB(payload.Id);
-    console.log(dbData);
-    await sendMessage(dbData.InstanceId);
-    new Response({ message: 'success' }).success();
+    if (dbData.changedRows === 1) {
+      await sendMessage(payload.InstanceId);
+      return new Response({ items: dbData }).success();
+    }
+    throw new Error('error updating db');
   } catch (e) {
-    new Response({ message: 'Invalid payload' }).success();
+    console.log(e);
+    return new Response({ message: e }).success();
   }
 };
