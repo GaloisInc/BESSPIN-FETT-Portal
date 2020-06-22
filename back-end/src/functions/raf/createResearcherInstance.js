@@ -64,7 +64,7 @@ chmod 400 /home/centos/.ssh/id_rsa
 ssh-keyscan -H github.com >> ~/.ssh/known_hosts
 git clone git@github.com:DARPA-SSITH-Demonstrators/SSITH-FETT-Target.git
 pushd SSITH-FETT-Target/ 
-git checkout base64_decode_password_hash
+git checkout develop
 git submodule init
 git submodule update --init --recursive
 pushd SSITH-FETT-Binaries
