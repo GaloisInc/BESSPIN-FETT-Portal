@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
+import classes from '../../../styles/scrollbar.css';
 import Spinner from '../../Spinner.js';
 import { getMyMessages, createMessage } from '../../../services/api/messages';
+
 import send from '../../../assets/send.svg';
 import useWindowDimensions from '../../../services/useDimensions';
 
@@ -50,6 +52,7 @@ export default function Messages() {
   };
 
   const messagesDisplay = messages.map((mId, index) =>
+
     mId.ResearcherName === mId.SpeakerName ? (
       <div
         className="p-4 pr-20 text-gray-200 "
@@ -83,9 +86,11 @@ export default function Messages() {
     )
   );
 
+
   return (
-    <div className="relative overflow-y-scroll" style={{ minHeight: '630px', maxHeight: height - 340 }}>
-      {isLoading ? <Spinner /> : messagesDisplay}
+	  <div className="relative overflow-y-scroll fettScroll" style={{ minHeight: '630px', maxHeight: height - 340 }}>
+	  	{isLoading ? <Spinner /> : messagesDisplay}
+
 
       <div className="sticky bottom-0 p-4 bg-blue-700" style={{ width: '26em' }}>
         <input
