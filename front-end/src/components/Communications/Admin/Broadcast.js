@@ -3,7 +3,7 @@
 /* eslint-disable */
 
 import React, { useState, useEffect } from 'react';
-import { createAnnouncement } from '../../../services/api/announcements';
+import { createAnnouncement, getAnnouncement } from '../../../services/api/announcements';
 import PropTypes from 'prop-types'
 
 const Broadcast = ({ update, announceID }) => {
@@ -17,6 +17,7 @@ const Broadcast = ({ update, announceID }) => {
   const fetchAnnouncement = async announceID => {
     try {
     const response = await getAnnouncement(announceID);
+      console.log(response);
       setVulnurability(response.vulnerability);
       setDescription(response.description);
       
