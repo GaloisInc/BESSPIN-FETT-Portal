@@ -66,7 +66,8 @@ const InstanceHistory = params => {
       console.log(newModalData);
       setModalData({ ...newModalData[0] });
     }
-  }, [environments, modalData]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [environments]);
 
   return (
     <>
