@@ -25,7 +25,6 @@ export default function InstanceManagement() {
     try {
       const response = await getEnvironments();
       setEnvironments(response);
-      setFilteredEnvironments(response);
       setIsLoading(false);
     } catch (error) {
       console.log(`Error fetching configurations${error}`);
@@ -47,8 +46,13 @@ export default function InstanceManagement() {
         env.Status.toLowerCase().includes(searchTerm.toLowerCase())
     );
     setFilteredEnvironments(filteredData);
+    if (open) {
+      const { CreatedBy } = modalData[0];
+      const teamData = environments.filter(env => env.CreatedBy === CreatedBy);
+      setModalData(teamData);
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [searchTerm]);
+  }, [searchTerm, environments]);
 
   const handleSearch = event => {
     event.preventDefault();

@@ -10,11 +10,16 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
   const [open, setOpen] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
+  const [isForceDisabled, setIsForceDisabled] = useState(false);
 
   const updateInstanceStatus = async (event, newStatus) => {
     event.preventDefault();
     setIsLoading(true);
-    setIsDisabled(true);
+    if (newStatus === 'terminating') {
+      setIsDisabled(true);
+    } else if (newStatus === 'forcing') {
+      setIsForceDisabled(true);
+    }
     try {
       await ec2StatusUpdate(environment, newStatus);
       fetchEnvironments();
@@ -121,7 +126,7 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
             </div>
             <p className="text-base text-200-gray">{environment.IpAddress}</p>
           </div>
-          <div className="flex flex-row justify-center">
+          <div className="flex flex-row justify-end">
             <button
               className={` px-2 mr-10 mt-4 mb-4 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded w-56 ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
@@ -131,9 +136,25 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
                   : 'bg-gray-200 hover:bg-teal-500 hover:text-gray-200'
               }`}
               type="submit"
+              onClick={event => updateInstanceStatus(event, 'terminating')}
+              disabled={
+                isLoading || isDisabled || environment.Status === 'terminated' || environment.Status === 'terminating'
+              }
+            >
+              {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Terminate Instance'}
+            </button>
+            <button
+              className={` px-2 mr-10 mt-4 mb-4 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded w-56 ${
+                isLoading ? 'opacity-50 cursor-not-allowed' : ''
+              } ${
+                isForceDisabled || environment.Status === 'terminated' || environment.Status === 'forcing'
+                  ? 'bg-gray-600 cursor-default'
+                  : 'bg-gray-200 hover:bg-teal-500 hover:text-gray-200'
+              }`}
+              type="submit"
               onClick={event => updateInstanceStatus(event, 'forcing')}
               disabled={
-                isLoading || isDisabled || environment.Status === 'terminated' || environment.Status === 'forcing'
+                isLoading || isForceDisabled || environment.Status === 'terminated' || environment.Status === 'forcing'
               }
             >
               {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Force Terminate Instance'}
