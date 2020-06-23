@@ -7,6 +7,7 @@ import search from '../../assets/search.svg';
 import settings from '../../assets/settings.svg';
 import InstanceModal from './InstanceModal';
 import alert from '../../assets/alert.svg';
+import greenAlert from '../../assets/greenAlert.png';
 import { getEnvironments } from '../../services/api/environment';
 import useWindowDimensions from '../../services/useDimensions';
 import Spinner from '../Spinner.js';
@@ -110,7 +111,11 @@ export default function InstanceManagement() {
                   title: '',
                   field: 'alert',
                   width: '1em',
-                  render: data => <div className="w-3">{data.Status !== 'running' && <img src={alert} alt="" />}</div>,
+                  render: data => (
+                    <div className="w-3">
+                      {data.Status === 'running' ? <img src={greenAlert} alt="" /> : <img src={alert} alt="" />}
+                    </div>
+                  ),
                 },
                 { title: 'TEAM', field: 'UserName', width: '8em' },
                 {
