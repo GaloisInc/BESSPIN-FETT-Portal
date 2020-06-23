@@ -56,6 +56,7 @@ const initializeInstance = index =>
         OS,
         Processor,
         Region: region,
+        ConfigurationKey: Id,
         username,
         password,
         creatorId,
