@@ -23,7 +23,7 @@ exports.handler = async event => {
   const params = {
     QueueUrl: process.env.INSTANCE_STATUS_QUEUE_URL,
     MessageBody: JSON.stringify(msg),
-    MessageDeduplicationId: String(body.F1EnvironmentId),
+    MessageDeduplicationId: String(body.F1EnvironmentId).replace('-', ''),
     MessageGroupId: String(Math.floor(Math.random(1) * 100)),
   };
   await sqs.sendMessage(params).promise();

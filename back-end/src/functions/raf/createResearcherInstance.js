@@ -1,12 +1,13 @@
 const aws = require('aws-sdk');
 const { sha512crypt } = require('sha512crypt-node');
+const util = require('util');
 const { Response, Database } = require('../../helpers');
 
 const db = new Database();
 const ec2 = new aws.EC2();
 const ssm = new aws.SSM();
 
-const writeInstanceInfoToDB = async (dbId, instanceId) => {
+const writeInstanceIdToDB = async (dbId, instanceId) => {
   await db.query(
     `UPDATE Environment set F1EnvironmentId = :instanceId WHERE id = :id`,
     { id: dbId, instanceId }
@@ -52,43 +53,65 @@ const getUserData = (f1Config, iName) => {
   // eslint-disable-next-line
   const userdata = `#cloud-boothook
 #!/bin/bash
+timstamp() {
+  echo \`date\`
+}
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-echo \`date\`
+echo "Installing packages..."
+timestamp
 sudo yum install -y jq git-lfs
-echo \`date\`
-sudo -i -u centos bash << EOF
+echo "running sub script as u centos..."
+timestamp
+nohup sudo -i -u centos bash << EOF
 cd /home/centos
 source .bashrc
 source .bash_profile
+echo "Retrieving SSH key..."
+timestamp
 aws secretsmanager get-secret-value --secret-id githubAccess --region ${
     f1Config.region
-  } | jq '.SecretString | fromjson' | jq '.gitHubSSHKey' -r | base64 -d > /home/centos/.ssh/id_rsa
-chmod 400 /home/centos/.ssh/id_rsa
+  } | jq '.SecretString | fromjson' | jq '.gitHubSSHKey' -r | base64 -d > /home/centos/.ssh/github
+echo "Setting up github ssh..."
+timestamp
+chmod 400 /home/centos/.ssh/github
 ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-echo \`date\`
+touch /home/centos/.ssh/config
+chmod 600 /home/centos/.ssh/config
+echo "Host github.com
+HostName github.com
+PreferredAuthentications publickey
+IdentityFile /home/centos/.ssh/github
+User git" > /home/centos/.ssh/config
+echo "Cloning repo..."
+timestamp
 git clone git@github.com:DARPA-SSITH-Demonstrators/SSITH-FETT-Target.git
-echo \`date\`
 pushd SSITH-FETT-Target/ 
-git checkout develop
+echo "setting up git repo..."
+timestamp
+git checkout master
 git submodule init
 git submodule update --init --recursive
-echo \`date\`
 pushd SSITH-FETT-Binaries
-echo \`date\`
+echo "Pulling binaries...."
+timestamp
 git lfs pull
-echo \`date\`
+echo "Running fett command..."
+timestamp
 popd
 nix-shell --command "python fett.py -ep awsProd -job ${iName} -cjson '${JSON.stringify(
     subset
   )
     .replace(/\//g, '\\/')
     .replace(/"/g, '\\"')}'"
-echo \`date\`
-EOF`;
+timestamp
+EOF &
+echo "Done with userdata script..."
+timestamp
+`;
   console.log(userdata);
   return Buffer.from(userdata).toString('base64');
 };
-const startInstance = async (f1Config, instanceName) => {
+const callStartInstance = async (f1Config, instanceName) => {
   console.log(f1Config);
   const iName = `${f1Config.processor}-${f1Config.osImage}-${
     f1Config.binarySource
@@ -162,21 +185,75 @@ const startInstance = async (f1Config, instanceName) => {
 };
 const hashPassword = pw =>
   Buffer.from(sha512crypt(pw, 'xcnc07LxM26Xq')).toString('base64');
+
+const mergeSSMparamsAndPortalParams = async f1Config => {
+  const config = await getParams(
+    `/fetttarget/environment/config/${f1Config.region}`
+  );
+  const amiColumn =
+    f1Config.region === 'us-west-2' ? 'AMIId_West' : 'AMIId_East';
+  const amiId = await db.query(
+    `SELECT ${amiColumn} FROM InstanceConfiguration WHERE Id = :id`,
+    { id: f1Config.ConfigurationKey }
+  );
+  console.log('Select AMI ID ', amiId);
+  if (amiId[0][amiColumn] === null) {
+    console.log(f1Config);
+    throw new Error('Null AMI ID Specified');
+  }
+  return { ...f1Config, ...JSON.parse(config), amiId: amiId[0][amiColumn] };
+};
+
+const startInstance = async (f1Config, instanceName) => {
+  if (f1Config.subnetIds.length < 1) {
+    f1Config.region =
+      f1Config.region === 'us-east-1' ? 'us-west-2' : 'us-east-1';
+    console.log('Changing Region to: ', f1Config.region);
+    // need to get other regions config values from SSM
+    // eslint-disable-next-line no-param-reassign
+    f1Config = await mergeSSMparamsAndPortalParams(f1Config);
+  }
+  f1Config.subnetChoice = Math.floor(
+    Math.random() * f1Config.subnetIds.length + 1
+  );
+  const ec2Return = await callStartInstance(f1Config, instanceName);
+  console.log(util.inspect(ec2Return, { depth: null }));
+  if (
+    Object.prototype.hasOwnProperty.call(ec2Return, 'errorType') &&
+    ec2Return.errorType === 'InsufficientInstanceCapacity'
+  ) {
+    f1Config.subnetIds.splice(f1Config.subnetChoice - 1, 1);
+    await startInstance(f1Config, instanceName);
+  }
+  return ec2Return;
+};
+
 /**
- * Incoming payload
- * 
- * 
+ * Incoming portal payload
+ *
  * {
       Id: insertId,
       Type: body.Type,
       OS: body.OS,
       Processor: body.Processor,
+      ConfigurationKey: body.Configuration
       Region: region,
       username,
       password,
       creatorId,
-    };
- */
+    }
+ *
+ * SSM Payload
+ *
+ * {
+    "securityGroupId": "sg-04dd000b322bb16ef",
+     "keyName": "researcher-uswest-f1key",
+     "subnetIds": ["subnet-072693e099da6fa58", "subnet-0945a400dbc186b6d", "subnet-0ca9161c4572c767b" ],
+     "instanceRoleName": "researcher-uswest-f1profile"
+   }
+ *
+ *
+*/
 exports.handler = async event => {
   await db.makeConnection();
   for (const msg of event.Records) {
@@ -208,32 +285,34 @@ exports.handler = async event => {
       }
     }
     try {
-      const config = await getParams(
-        `/fetttarget/environment/config/${f1Config.region}`
-      );
-      f1Config = { ...f1Config, ...JSON.parse(config) };
-      f1Config.subnetChoice = Math.round(Math.random(1)); // random 0 or 1
+      f1Config = await mergeSSMparamsAndPortalParams(f1Config.region);
     } catch (e) {
-      console.log(e);
+      console.log('error merging params objects');
       throw e;
     }
-    let ec2Return = {};
+    let instanceId = null;
     try {
       const instanceName = `${message.creatorId}-${message.Id}`;
-      ec2Return = await startInstance(f1Config, instanceName);
-      console.log('func return', ec2Return);
-      if (
-        Object.prototype.hasOwnProperty.call(ec2Return, 'errorType') &&
-        ec2Return.errorType === 'InsufficientInstanceCapacity'
-      ) {
-        f1Config.subnetChoice = f1Config.subnetChoice === 1 ? 0 : 1;
-        ec2Return = await startInstance(f1Config, instanceName);
-      }
+      // recursively attempt to start instance in all available subnets for
+      // specified region; once all subnets in region have been exhausted, repeat for other region
+      const ec2Return = await startInstance(f1Config, instanceName);
+      instanceId = ec2Return.Instances[0].InstanceId;
     } catch (e) {
       // handle retry? let lambda just auto-retry?
+      // throwing an error will just put the SQS message back into the queue
+      // and it will be picked up when the visibility timeout is over (15 mins)
+      console.log('Error Starting instance');
       throw e;
     }
-    const instanceId = ec2Return.Instances[0].InstanceId;
-    await writeInstanceInfoToDB(message.Id, instanceId);
+    try {
+      await writeInstanceIdToDB(message.Id, instanceId);
+    } catch (e) {
+      console.log('Error Writing instance information to DB');
+      // If we have made it this far, the instance has been spun up but we had an error writing to the DB
+      // that means that instance will be orphaned; lets terminate that instance so that doesn't happen
+      await ec2.stopInstances({ InstanceIds: [instanceId] }).promise();
+      // rethrow the error so this SQS message gets retried
+      throw e;
+    }
   }
 };
