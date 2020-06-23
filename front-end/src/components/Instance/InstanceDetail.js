@@ -3,9 +3,8 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import DetailsIcon from '@material-ui/icons/Details';
 import { CircularProgress } from '@material-ui/core';
-import alert from '../../assets/alert.svg';
-import greenAlert from '../../assets/greenAlert.png';
 import { ec2StatusUpdate } from '../../services/launcher';
+import Alert from './Alert';
 
 const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
   const [open, setOpen] = useState(true);
@@ -119,11 +118,9 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
               <p className="text-base text-teal-500 uppercase">Status</p>
             </div>
             <p className="text-base uppercase text-200-gray">{environment.Status}</p>
-            {environment && environment.Status === 'running' ? (
-              <img src={greenAlert} className="w-4 h-4 mt-1 ml-4" alt="" />
-            ) : (
-              <img src={alert} className="w-4 ml-4" alt="" />
-            )}
+            <div className="w-4 h-4 mt-1 ml-4">
+              <Alert status={environment.Status} />
+            </div>
           </div>
           <div className="flex flex-row py-2 bg-blue-700">
             <div className="w-48 ml-8 mr-8">

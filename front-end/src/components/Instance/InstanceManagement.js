@@ -1,4 +1,5 @@
 /* eslint-disable react/display-name */
+/* eslint-disable camelcase */
 
 import React, { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
@@ -6,11 +7,10 @@ import { Modal, Paper } from '@material-ui/core';
 import search from '../../assets/search.svg';
 import settings from '../../assets/settings.svg';
 import InstanceModal from './InstanceModal';
-import alert from '../../assets/alert.svg';
-import greenAlert from '../../assets/greenAlert.png';
 import { getEnvironments } from '../../services/api/environment';
 import useWindowDimensions from '../../services/useDimensions';
 import Spinner from '../Spinner.js';
+import Alert from './Alert';
 
 export default function InstanceManagement() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -53,8 +53,8 @@ export default function InstanceManagement() {
     );
     setFilteredEnvironments(filteredData);
     if (open) {
-      const { CreatedBy } = modalData[0];
-      const teamData = environments.filter(env => env.CreatedBy === CreatedBy);
+      const { CreatedBy_FK } = modalData[0];
+      const teamData = environments.filter(env => env.CreatedBy_FK === CreatedBy_FK);
       setModalData(teamData);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -66,8 +66,9 @@ export default function InstanceManagement() {
   };
 
   const handleOpen = async data => {
+    console.log(data);
     setIsModalLoading(true);
-    const teamData = environments.filter(env => env.CreatedBy === data.CreatedBy);
+    const teamData = environments.filter(env => env.CreatedBy_FK === data.CreatedBy_FK);
     setModalData(teamData);
     setOpen(true);
   };
@@ -113,7 +114,7 @@ export default function InstanceManagement() {
                   width: '1em',
                   render: data => (
                     <div className="w-3">
-                      {data.Status === 'running' ? <img src={greenAlert} alt="" /> : <img src={alert} alt="" />}
+                      <Alert status={data.Status} />
                     </div>
                   ),
                 },
@@ -128,7 +129,7 @@ export default function InstanceManagement() {
                     </p>
                   ),
                 },
-                { title: 'IDLE TIME', field: 'IdleTime', width: '6em' },
+                { title: 'IDLE TIME', field: 'IdleTime', width: '7em' },
                 { title: 'STATUS', field: 'Status', width: '6em' },
                 {
                   title: '',
@@ -159,7 +160,6 @@ export default function InstanceManagement() {
                 search: false,
                 showTitle: false,
                 toolbar: false,
-                sorting: false,
               }}
               data={filteredEnvironments}
             />
