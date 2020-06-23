@@ -138,7 +138,6 @@ const InstanceHistory = params => {
             data={environments}
           />
         )}
-        ;
         <p className="pt-4 pl-2 text-gray-200">
           Provisioned instances are limited to (1) and a duration of idle activity (TBD) before automatic instance
           shutdown.
