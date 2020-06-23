@@ -9,9 +9,10 @@ const sendMessage = async message => {
   const params = {
     QueueUrl: process.env.RESEARCHER_INITIALIZATION_QUEUE_URL,
     MessageBody: JSON.stringify(message),
-    MessageDeduplicationId: String(message.creatorId),
+    MessageDeduplicationId: String(message.index),
     MessageGroupId: String(message.Id),
   };
+  console.log(params);
   return sqs.sendMessage(params).promise();
 };
 
@@ -59,6 +60,7 @@ const initializeInstance = index =>
         username,
         password,
         creatorId,
+        index,
       };
       await sendMessage(params);
       console.log('provisioning', params);
