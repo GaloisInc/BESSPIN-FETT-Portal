@@ -64,7 +64,9 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
             type="button"
           >
             <p className="text-sm text-blue-900 uppercase">
-              {environment.Status === 'provisioning' || environment.Status === 'terminated' ? (
+              {environment.Status === 'provisioning' ||
+              environment.Status === 'terminated' ||
+              !environment.F1EnvironmentId ? (
                 'View On AWS'
               ) : (
                 <a
