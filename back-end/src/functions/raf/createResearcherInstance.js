@@ -4,7 +4,7 @@ const util = require('util');
 const { Response, Database } = require('../../helpers');
 
 const db = new Database();
-const ec2 = new aws.EC2();
+let ec2 = new aws.EC2();
 const ssm = new aws.SSM();
 
 const writeInstanceIdToDB = async (dbId, instanceId) => {
@@ -114,6 +114,9 @@ end script
 };
 const callStartInstance = async (f1Config, instanceName) => {
   console.log(f1Config);
+  if (f1Config.region === 'us-east-1') {
+    ec2 = new aws.EC2({ region: 'us-east-1' });
+  }
   const iName = `${f1Config.processor}-${f1Config.osImage}-${
     f1Config.binarySource
   }-${instanceName}`;
@@ -226,7 +229,6 @@ const startInstance = async (f1Config, instanceName) => {
   }
   return ec2Return;
 };
-Math.floor(Math.random() * 3);
 /**
  * Incoming portal payload
  *
