@@ -71,7 +71,7 @@ const InstanceHistory = params => {
 
   return (
     <>
-      <div className="relative mb-4 mr-6 bg-blue-600 table-card" style={{ width: '600px', minHeight: '' }}>
+      <div className="relative mb-4 mr-6 bg-blue-600 table-card" style={{ width: '700px', minHeight: '' }}>
         <div className="flex flex-row items-center justify-between pl-2 mt-2 mb-2">
           <h5 className="text-gray-200 uppercase">instance history</h5>
           <button
@@ -101,6 +101,7 @@ const InstanceHistory = params => {
                   </p>
                 ),
               },
+              { title: 'Code Name', field: 'CodeName' },
               {
                 title: 'Launched',
                 field: 'Created',

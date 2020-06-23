@@ -81,7 +81,7 @@ export default function InstanceManagement() {
     <>
       <div
         className="relative mr-6 bg-blue-600 table-card"
-        style={{ width: '700px', minHeight: '630px', maxHeight: height - 340 }}
+        style={{ width: '800px', minHeight: '630px', maxHeight: height - 340 }}
       >
         <div className="flex flex-row items-center justify-between pl-4 mt-4 mb-2">
           <h5 className="font-medium text-gray-200 uppercase">environment management</h5>
@@ -129,7 +129,8 @@ export default function InstanceManagement() {
                     </p>
                   ),
                 },
-                { title: 'IDLE TIME', field: 'IdleTime', width: '7em' },
+                { title: 'Code Name', field: 'CodeName', width: '12em' },
+                { title: 'Idle Time', field: 'IdleTime', width: '12em' },
                 { title: 'STATUS', field: 'Status', width: '6em' },
                 {
                   title: '',
