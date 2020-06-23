@@ -23,6 +23,13 @@ const MessagesChat = ({ researcherId }) => {
     }
   };
 
+  const truncate = name => {
+    if (name.length > 14) {
+      return `${name.slice(0, 13)}...`;
+    }
+    return name;
+  };
+
   useEffect(() => {
     fetchConversation();
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -55,7 +62,7 @@ const MessagesChat = ({ researcherId }) => {
         style={{ backgroundColor: index % 2 ? '#1E2B34' : '#26343E' }}
       >
         <div className="flex flex-row justify-between">
-          <p className="uppercase">{mId.SpeakerName}</p>
+          <p className="uppercase">{truncate(mId.SpeakerName)}</p>
           <div className="flex flex-row">
             <p className="pr-2">{moment(mId.Created).format('DD/MM/YY')}</p>
             <p>{moment(mId.Created).format('hh:mm A')}</p>
@@ -74,7 +81,7 @@ const MessagesChat = ({ researcherId }) => {
             <p className="pr-2">{moment(mId.Created).format('DD/MM/YY')}</p>
             <p>{moment(mId.Created).format('hh:mm A')}</p>
           </div>
-          <p className="uppercase">{mId.SpeakerName}</p>
+          <p className="uppercase">{truncate(mId.SpeakerName)}</p>
         </div>
         <p className="pt-2 leading-tight">{mId.Payload}</p>
       </div>

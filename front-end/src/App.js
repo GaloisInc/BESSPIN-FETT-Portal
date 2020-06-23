@@ -24,6 +24,21 @@ const theme = createMuiTheme({
     primary: { main: '#ED1C24' },
     secondary: { main: '#FFF200' },
   },
+  overrides: {
+    MuiTableSortLabel: {
+      root: {
+        '&:hover': {
+          color: '#62AEB5',
+        },
+      },
+      active: {
+        color: '#62AEB5 !important',
+      },
+      icon: {
+        color: '#62AEB5 !important',
+      },
+    },
+  },
 });
 class App extends React.Component {
   constructor(props) {
@@ -107,7 +122,9 @@ class App extends React.Component {
     );
   }
 }
-export default (process.env.NODE_ENV === 'development' ? hot(withRouter(withStyles(_styles)(App))) : withRouter(withStyles(_styles)(App)));
+export default (process.env.NODE_ENV === 'development'
+  ? hot(withRouter(withStyles(_styles)(App)))
+  : withRouter(withStyles(_styles)(App)));
 
 App.propTypes = {
   history: ReactRouterPropTypes.history,
