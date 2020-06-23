@@ -249,7 +249,6 @@ const startInstance = async (f1Config, instanceName) => {
     "securityGroupId": "sg-04dd000b322bb16ef",
      "keyName": "researcher-uswest-f1key",
      "subnetIds": ["subnet-072693e099da6fa58", "subnet-0945a400dbc186b6d", "subnet-0ca9161c4572c767b" ],
-     "amiId": "ami-04c55ee64b3c6f758",
      "instanceRoleName": "researcher-uswest-f1profile"
    }
  *
