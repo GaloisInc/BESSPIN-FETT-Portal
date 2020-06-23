@@ -72,6 +72,7 @@ const LaunchTable = ({ history, handleOpen }) => {
               Container: props => <Paper {...props} elevation={0} />,
             }}
             columns={[
+              { title: 'CodeName', field: 'CodeName' },
               { title: 'Type', field: 'Type', cellStyle: { paddingLeft: '2em' }, headerStyle: { paddingLeft: '2em' } },
               { title: 'Processor', field: 'Processor' },
               { title: 'OS', field: 'OS' },

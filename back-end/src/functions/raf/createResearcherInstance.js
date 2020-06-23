@@ -4,7 +4,7 @@ const util = require('util');
 const { Response, Database } = require('../../helpers');
 
 const db = new Database();
-const ec2 = new aws.EC2();
+let ec2 = new aws.EC2();
 const ssm = new aws.SSM();
 
 const writeInstanceIdToDB = async (dbId, instanceId) => {
@@ -51,68 +51,72 @@ const getUserData = (f1Config, iName) => {
     .reduce((obj2, key) => Object.assign(obj2, { [key]: f1Config[key] }), {});
   subset.awsJumpBoxIp = '172.31.30.56';
   // eslint-disable-next-line
-  const userdata = `#cloud-boothook
-#!/bin/bash
-timstamp() {
+  const userdata = `#upstart-job
+description "configures and runs Fett Target"
+author "Brian McCall"
+
+start on stopped rc RUNLEVEL=[345]
+script
+  #!/bin/bash
+  exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+  echo "Installing packages..."
   echo \`date\`
-}
-exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-echo "Installing packages..."
-timestamp
-sudo yum install -y jq git-lfs
-echo "running sub script as u centos..."
-timestamp
-nohup sudo -i -u centos bash << EOF
-cd /home/centos
-source .bashrc
-source .bash_profile
-echo "Retrieving SSH key..."
-timestamp
-aws secretsmanager get-secret-value --secret-id githubAccess --region ${
+  sudo yum install -y jq git-lfs
+  echo "running sub script as u centos..."
+  echo \`date\`
+  cd /home/centos
+  source .bashrc
+  source .bash_profile
+  echo "Retrieving SSH key..."
+  echo \`date\`
+  aws secretsmanager get-secret-value --secret-id githubAccess --region ${
     f1Config.region
   } | jq '.SecretString | fromjson' | jq '.gitHubSSHKey' -r | base64 -d > /home/centos/.ssh/github
-echo "Setting up github ssh..."
-timestamp
-chmod 400 /home/centos/.ssh/github
-ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-touch /home/centos/.ssh/config
-chmod 600 /home/centos/.ssh/config
-echo "Host github.com
-HostName github.com
-PreferredAuthentications publickey
-IdentityFile /home/centos/.ssh/github
-User git" > /home/centos/.ssh/config
-echo "Cloning repo..."
-timestamp
-git clone git@github.com:DARPA-SSITH-Demonstrators/SSITH-FETT-Target.git
-pushd SSITH-FETT-Target/ 
-echo "setting up git repo..."
-timestamp
-git checkout master
-git submodule init
-git submodule update --init --recursive
-pushd SSITH-FETT-Binaries
-echo "Pulling binaries...."
-timestamp
-git lfs pull
-echo "Running fett command..."
-timestamp
-popd
-nix-shell --command "python fett.py -ep awsProd -job ${iName} -cjson '${JSON.stringify(
+  echo "Setting up github ssh..."
+  echo \`date\`
+  chmod 400 /home/centos/.ssh/github
+  ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+  touch /home/centos/.ssh/config
+  chmod 600 /home/centos/.ssh/config
+  echo "Host github.com
+  HostName github.com
+  PreferredAuthentications publickey
+  IdentityFile /home/centos/.ssh/github
+  User git" > /home/centos/.ssh/config
+  echo "Cloning repo..."
+  echo \`date\`
+  git clone git@github.com:DARPA-SSITH-Demonstrators/SSITH-FETT-Target.git
+  pushd SSITH-FETT-Target/ 
+  echo "setting up git repo..."
+  echo \`date\`
+  git checkout master
+  git submodule init
+  git submodule update --init --recursive
+  pushd SSITH-FETT-Binaries
+  echo "Pulling binaries...."
+  echo \`date\`
+  git lfs pull
+  echo "Running fett command..."
+  echo \`date\`
+  popd
+  nix-shell --command "python fett.py -ep awsProd -job ${iName} -cjson '${JSON.stringify(
     subset
   )
     .replace(/\//g, '\\/')
     .replace(/"/g, '\\"')}'"
-timestamp
-EOF &
-echo "Done with userdata script..."
-timestamp
+  echo \`date\`
+  echo "Done with userdata script..."
+  echo \`date\`
+end script  
 `;
   console.log(userdata);
   return Buffer.from(userdata).toString('base64');
 };
 const callStartInstance = async (f1Config, instanceName) => {
   console.log(f1Config);
+  if (f1Config.region === 'us-east-1') {
+    ec2 = new aws.EC2({ region: 'us-east-1' });
+  }
   const iName = `${f1Config.processor}-${f1Config.osImage}-${
     f1Config.binarySource
   }-${instanceName}`;
@@ -213,9 +217,7 @@ const startInstance = async (f1Config, instanceName) => {
     // eslint-disable-next-line no-param-reassign
     f1Config = await mergeSSMparamsAndPortalParams(f1Config);
   }
-  f1Config.subnetChoice = Math.floor(
-    Math.random() * f1Config.subnetIds.length + 1
-  );
+  f1Config.subnetChoice = Math.floor(Math.random() * f1Config.subnetIds.length);
   const ec2Return = await callStartInstance(f1Config, instanceName);
   console.log(util.inspect(ec2Return, { depth: null }));
   if (
@@ -227,7 +229,6 @@ const startInstance = async (f1Config, instanceName) => {
   }
   return ec2Return;
 };
-
 /**
  * Incoming portal payload
  *
