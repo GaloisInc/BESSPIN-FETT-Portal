@@ -1,5 +1,6 @@
 /* eslint-disable no-plusplus */
 const aws = require('aws-sdk');
+const { v4: uuidv4 } = require('uuid');
 const { Database, SsmHelper } = require('../../helpers');
 
 const sqs = new aws.SQS();
@@ -9,7 +10,7 @@ const sendMessage = async message => {
   const params = {
     QueueUrl: process.env.RESEARCHER_INITIALIZATION_QUEUE_URL,
     MessageBody: JSON.stringify(message),
-    MessageDeduplicationId: String(message.index),
+    MessageDeduplicationId: uuidv4(),
     MessageGroupId: String(message.Id),
   };
   console.log(params);
@@ -60,7 +61,6 @@ const initializeInstance = index =>
         username,
         password,
         creatorId,
-        index,
       };
       await sendMessage(params);
       console.log('provisioning', params);
