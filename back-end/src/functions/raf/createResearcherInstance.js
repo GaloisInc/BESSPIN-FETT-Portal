@@ -243,7 +243,7 @@ const startInstance = async (f1Config, instanceName) => {
       creatorId,
     }
  *
- * SSM Payload
+ * SSM Payload example
  *
  * {
     "securityGroupId": "sg-04dd000b322bb16ef",
@@ -263,6 +263,7 @@ exports.handler = async event => {
       region: message.Region,
       osImage: message.OS,
       processor: message.Processor,
+      ConfigurationKey: message.ConfigurationKey,
       binarySource: message.Type,
       useCustomCredentials: 'yes',
       rootUserAccess: 'no',
@@ -273,19 +274,29 @@ exports.handler = async event => {
     if (f1Config.region === 'us-west-2') {
       try {
         const res = await checkWestInstanceCount();
-        const f1Count = res.Reservations && res.Reservations[0].Instances;
-        if (f1Count.filter(ele => ele.State.Name === 'running') > 45) {
-          // getting close to limit for region, manually switching to east
-          // 45 leaves room for error and some randoms in the state of stopping, terminating, provisioning, etc...
-          console.log('Changing region to us-east-1');
-          f1Config.region = 'us-east-1';
+        console.log('running instances', res);
+        if (
+          res.Reservations.length &&
+          Object.prototype.hasOwnProperty.call(res.Reservations[0], 'Instances')
+        ) {
+          const f1Count = res.Reservations[0].Instances;
+          const westCount = f1Count.filter(ele => ele.State.Name === 'running')
+            .length;
+          if (westCount > 45) {
+            // getting close to limit for region, manually switching to east
+            // 45 leaves room for error and some randoms in the state of stopping, terminating, provisioning, etc...
+            console.log(
+              `Changing region to us-east-1. ${westCount} instances running in us-west-2.`
+            );
+            f1Config.region = 'us-east-1';
+          }
         }
       } catch (e) {
         throw e;
       }
     }
     try {
-      f1Config = await mergeSSMparamsAndPortalParams(f1Config.region);
+      f1Config = await mergeSSMparamsAndPortalParams(f1Config);
     } catch (e) {
       console.log('error merging params objects');
       throw e;
