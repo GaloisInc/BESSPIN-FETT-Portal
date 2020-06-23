@@ -46,7 +46,7 @@ const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => 
   };
 
   return (
-    <div className="bg-blue-600 table-card" style={{ width: '700px', minHeight: '630px', maxHeight: height - 340 }}>
+    <div className="bg-blue-600 table-card" style={{ width: '700px' }}>
       <div className="flex flex-row items-center justify-between pl-8 mt-4 mb-4">
         <h5 className="text-gray-200 uppercase">current teams/ users</h5>
         <div className="flex flex-row items-center mr-4">
@@ -62,55 +62,57 @@ const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => 
           </form>
         </div>
       </div>
-      <MaterialTable
-        components={{
-          Container: props => <Paper {...props} elevation={0} />,
-        }}
-        columns={[
-          {
-            title: 'USER NAME',
-            field: 'UserName',
-            width: '18em',
-            cellStyle: { paddingLeft: '2em' },
-            headerStyle: { paddingLeft: '2em' },
-          },
-          { title: 'ROLE', field: 'Role' },
-          {
-            title: '',
-            field: 'detailsView',
-            render: data => (
-              <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none">
-                <img src={chevronRight} alt="" />
-              </button>
-            ),
-          },
-        ]}
-        options={{
-          headerStyle: {
-            position: 'sticky',
-            top: 0,
-            backgroundColor: '#1E2B34',
-            color: '#46878E',
-            fontWeight: '500',
-            fontSize: '1em',
-            textTransform: 'uppercase',
-          },
-          maxBodyHeight: height - 340,
-          rowStyle: rowData => ({
-            backgroundColor: rowData.tableData.id % 2 ? '#293A46' : '#26343E',
-            color: '#F4F4F4',
-            border: 'none',
-            textTransform: 'uppercase',
-          }),
-          paging: false,
-          search: false,
-          showTitle: false,
-          toolbar: false,
-          sorting: false,
-          overflowY: false,
-        }}
-        data={filteredUsers}
-      />
+      <div className="relative overflow-y-scroll fettScroll" style={{ maxHeight: height - 340 }}>
+        <MaterialTable
+          components={{
+            Container: props => <Paper {...props} elevation={0} />,
+          }}
+          columns={[
+            {
+              title: 'USER NAME',
+              field: 'UserName',
+              width: '18em',
+              cellStyle: { paddingLeft: '2em' },
+              headerStyle: { paddingLeft: '2em' },
+            },
+            { title: 'ROLE', field: 'Role' },
+            {
+              title: '',
+              field: 'detailsView',
+              render: data => (
+                <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none">
+                  <img src={chevronRight} alt="" />
+                </button>
+              ),
+            },
+          ]}
+          options={{
+            headerStyle: {
+              position: 'sticky',
+              top: 0,
+              backgroundColor: '#1E2B34',
+              color: '#46878E',
+              fontWeight: '500',
+              fontSize: '1em',
+              textTransform: 'uppercase',
+            },
+
+            rowStyle: rowData => ({
+              backgroundColor: rowData.tableData.id % 2 ? '#293A46' : '#26343E',
+              color: '#F4F4F4',
+              border: 'none',
+              textTransform: 'uppercase',
+            }),
+            paging: false,
+            search: false,
+            showTitle: false,
+            toolbar: false,
+            sorting: false,
+            overflowY: false,
+          }}
+          data={filteredUsers}
+        />
+      </div>
       <Modal open={open} onClose={handleClose}>
         <UserModal handleClose={handleClose} selectedUser={selectedUser} fetchUsers={fetchUsers} />
       </Modal>

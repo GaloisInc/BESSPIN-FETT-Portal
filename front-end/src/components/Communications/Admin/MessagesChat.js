@@ -49,7 +49,11 @@ const MessagesChat = ({ researcherId }) => {
 
   const messagesDisplay = messages.map((mId, index) =>
     mId.ResearcherName === mId.SpeakerName ? (
-      <div className="p-4 pr-20 text-gray-200 " key={index} style={{ backgroundColor: index % 2 ? '#1E2B34' : '#26343E' }}>
+      <div
+        className="p-4 pr-20 text-gray-200 "
+        key={index}
+        style={{ backgroundColor: index % 2 ? '#1E2B34' : '#26343E' }}
+      >
         <div className="flex flex-row justify-between">
           <p className="uppercase">{mId.SpeakerName}</p>
           <div className="flex flex-row">
@@ -60,7 +64,11 @@ const MessagesChat = ({ researcherId }) => {
         <p className="pt-2 leading-tight">{mId.Payload}</p>
       </div>
     ) : (
-      <div className="flex flex-col p-4 pl-20 pr-6 text-gray-200 " key={index} style={{ backgroundColor: index % 2 ? '#1E2B34' : '#26343E' }}>
+      <div
+        className="flex flex-col p-4 pl-20 pr-6 text-gray-200 "
+        key={index}
+        style={{ backgroundColor: index % 2 ? '#1E2B34' : '#26343E' }}
+      >
         <div className="flex flex-row justify-between">
           <div className="flex flex-row">
             <p className="pr-2">{moment(mId.Created).format('DD/MM/YY')}</p>
@@ -75,7 +83,7 @@ const MessagesChat = ({ researcherId }) => {
 
   return (
     <div className="">
-      <div className="relative overflow-y-scroll" style={{ height: '27em' }}>
+      <div className="relative overflow-y-scroll fettScroll" style={{ height: '25em' }}>
         {isLoading ? <Spinner /> : messagesDisplay}
 
         <div className="sticky" />
