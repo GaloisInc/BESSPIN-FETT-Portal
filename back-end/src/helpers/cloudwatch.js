@@ -90,7 +90,7 @@ class CloudWatch {
   static async putDashboard(instanceId) {
     try {
       const dashParams = {
-        DashboardBody: JSON.stringify(createTemplate('i-0a10c1586d8c67668')),
+        DashboardBody: JSON.stringify(createTemplate(instanceId)),
         DashboardName: `FettPortal${instanceId}`,
       };
       const response = await cw
