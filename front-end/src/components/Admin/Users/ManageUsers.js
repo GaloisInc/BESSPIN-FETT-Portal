@@ -79,6 +79,7 @@ const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => 
             {
               title: '',
               field: 'detailsView',
+              sorting: false,
               render: data => (
                 <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none">
                   <img src={chevronRight} alt="" />
@@ -107,7 +108,6 @@ const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => 
             search: false,
             showTitle: false,
             toolbar: false,
-            sorting: false,
             overflowY: false,
           }}
           data={filteredUsers}

@@ -112,6 +112,7 @@ export default function InstanceManagement() {
                   title: '',
                   field: 'alert',
                   width: '1em',
+                  sorting: false,
                   render: data => (
                     <div className="w-3">
                       <Alert status={data.Status} />
@@ -135,6 +136,8 @@ export default function InstanceManagement() {
                 {
                   title: '',
                   field: 'detailsView',
+                  sorting: false,
+                  width: '4em',
                   render: data => (
                     <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none">
                       <img src={settings} alt="" />
