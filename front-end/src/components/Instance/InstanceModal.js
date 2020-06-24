@@ -14,7 +14,7 @@ const InstanceModal = ({ handleClose, modalData, cardHeight, fetchEnvironments }
       handleClose={handleClose}
     />
   ));
-  const username = mappedData[0].UserName;
+  const username = modalData[0].UserName;
   return (
     <div
       className="absolute overflow-y-scroll text-4xl text-gray-200 bg-blue-600"
