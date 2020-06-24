@@ -51,63 +51,49 @@ const getUserData = (f1Config, iName) => {
     .reduce((obj2, key) => Object.assign(obj2, { [key]: f1Config[key] }), {});
   subset.awsJumpBoxIp = '172.31.30.56';
   // eslint-disable-next-line
-  const userdata = `#upstart-job
-description "configures and runs Fett Target"
-author "Brian McCall"
-
-start on stopped rc RUNLEVEL=[345]
-script
-  #!/bin/bash
-  exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-  echo "Installing packages..."
-  echo \`date\`
-  sudo yum install -y jq git-lfs
-  echo "running sub script as u centos..."
-  echo \`date\`
-  cd /home/centos
-  source .bashrc
-  source .bash_profile
-  echo "Retrieving SSH key..."
-  echo \`date\`
-  aws secretsmanager get-secret-value --secret-id githubAccess --region ${
+  const userdata = `#cloud-boothook
+#!/bin/bash
+exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+echo "Installing packages..."
+sudo yum install -y jq git-lfs
+echo "running sub script as u centos..."
+sudo -i -u centos bash << EOF
+cd /home/centos
+source .bashrc
+source .bash_profile
+echo "Retrieving SSH key..."
+aws secretsmanager get-secret-value --secret-id githubAccess --region ${
     f1Config.region
   } | jq '.SecretString | fromjson' | jq '.gitHubSSHKey' -r | base64 -d > /home/centos/.ssh/github
-  echo "Setting up github ssh..."
-  echo \`date\`
-  chmod 400 /home/centos/.ssh/github
-  ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-  touch /home/centos/.ssh/config
-  chmod 600 /home/centos/.ssh/config
-  echo "Host github.com
-  HostName github.com
-  PreferredAuthentications publickey
-  IdentityFile /home/centos/.ssh/github
-  User git" > /home/centos/.ssh/config
-  echo "Cloning repo..."
-  echo \`date\`
-  git clone git@github.com:DARPA-SSITH-Demonstrators/SSITH-FETT-Target.git
-  pushd SSITH-FETT-Target/ 
-  echo "setting up git repo..."
-  echo \`date\`
-  git checkout master
-  git submodule init
-  git submodule update --init --recursive
-  pushd SSITH-FETT-Binaries
-  echo "Pulling binaries...."
-  echo \`date\`
-  git lfs pull
-  echo "Running fett command..."
-  echo \`date\`
-  popd
-  nix-shell --command "python fett.py -ep awsProd -job ${iName} -cjson '${JSON.stringify(
+echo "Setting up github ssh..."
+chmod 400 /home/centos/.ssh/github
+ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+touch /home/centos/.ssh/config
+chmod 600 /home/centos/.ssh/config
+echo "Host github.com
+HostName github.com
+PreferredAuthentications publickey
+IdentityFile /home/centos/.ssh/github
+User git" > /home/centos/.ssh/config
+echo "Cloning repo..."
+git clone git@github.com:DARPA-SSITH-Demonstrators/SSITH-FETT-Target.git
+pushd SSITH-FETT-Target/ 
+echo "setting up git repo..."
+git checkout master
+git submodule init
+git submodule update --init --recursive
+pushd SSITH-FETT-Binaries
+echo "Pulling binaries...."
+git lfs pull
+echo "Running fett command..."
+popd
+nohup nix-shell --command "python fett.py -ep awsProd -job ${iName} -cjson '${JSON.stringify(
     subset
   )
     .replace(/\//g, '\\/')
-    .replace(/"/g, '\\"')}'"
-  echo \`date\`
-  echo "Done with userdata script..."
-  echo \`date\`
-end script  
+    .replace(/"/g, '\\"')}'" userdata.log 2>&1 </dev/null &
+EOF
+echo "Done with userdata script..."
 `;
   console.log(userdata);
   return Buffer.from(userdata).toString('base64');
