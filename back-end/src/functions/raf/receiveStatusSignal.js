@@ -37,7 +37,16 @@ exports.handler = async event => {
     const message = JSON.parse(msg.body);
     const signal = message.job.reason.split('-').pop();
     if (signal === 'termination') {
-      await stopInstance(message.instance.id);
+      try {
+        await stopInstance(message.instance.id);
+      } catch (e) {
+        if (e.code === 'InvalidInstanceID.NotFound') {
+          console.log('msg', e.message);
+          console.log('Instance has already gone away');
+        } else {
+          throw e;
+        }
+      }
       await updateDBForTermination(message.instance.id);
       await CloudWatch.deleteDashboards(message.instance.id);
     }
@@ -49,7 +58,16 @@ exports.handler = async event => {
       await CloudWatch.putDashboard(instanceId);
     } else if (signal === 'deployment' && message.job.status === 'failure') {
       // tear down instance and start over
-      await stopInstance(message.instance.id);
+      try {
+        await stopInstance(message.instance.id);
+      } catch (e) {
+        if (e.code === 'InvalidInstanceID.NotFound') {
+          console.log('msg', e.message);
+          console.log('Instance has already gone away');
+        } else {
+          throw e;
+        }
+      }
       await getInstanceConfig(message.instance.id);
       await CloudWatch.deleteDashboards(message.instance.id);
     }
