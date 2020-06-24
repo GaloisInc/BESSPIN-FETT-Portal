@@ -51,7 +51,7 @@ exports.handler = async (event, context) => {
     );
 
     const count = instanceCount[0].ActiveCount;
-    if (count < 1) {
+    if (username === 'ftsresearcher' || count < 1) {
       const data = await db.query(
         `INSERT INTO Environment (CreatedBy_FK, Configuration_FK, Region, Status) values (:CreatedBy, :Configuration, :Region, 'provisioning')`,
         {
