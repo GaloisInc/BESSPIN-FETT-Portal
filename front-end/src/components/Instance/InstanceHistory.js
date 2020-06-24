@@ -10,6 +10,7 @@ import rocketDark from '../../assets/rocketDark.svg';
 import { getMyEnvironments } from '../../services/api/environment';
 import InstanceHistoryModal from './InstanceHistoryModal';
 import Spinner from '../Spinner.js';
+import Alert from './Alert';
 
 const InstanceHistory = params => {
   const [modalData, setModalData] = useState(null);
@@ -92,6 +93,17 @@ const InstanceHistory = params => {
             }}
             columns={[
               {
+                title: '',
+                field: 'alert',
+                width: '1em',
+                sorting: false,
+                render: data => (
+                  <div className="w-3">
+                    <Alert status={data.Status} />
+                  </div>
+                ),
+              },
+              {
                 title: 'F1 Instance',
                 field: 'instance',
                 width: '14em',
@@ -111,6 +123,7 @@ const InstanceHistory = params => {
               {
                 title: '',
                 field: 'launch',
+                sorting: false,
                 render: data => (
                   <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none">
                     <img src={settings} alt="" />
@@ -134,7 +147,6 @@ const InstanceHistory = params => {
               search: false,
               showTitle: false,
               toolbar: false,
-              sorting: false,
             }}
             data={environments}
           />

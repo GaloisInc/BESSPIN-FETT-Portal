@@ -6,6 +6,7 @@ import ReactRouterPropTypes from 'react-router-prop-types';
 import MaterialTable from 'material-table';
 import { Paper } from '@material-ui/core';
 import PropTypes from 'prop-types';
+import { Auth } from 'aws-amplify';
 import rocketDark from '../../../assets/rocketDark.svg';
 import { getInstanceConfigurations } from '../../../services/api/instanceConfiguration';
 import { ec2Launcher } from '../../../services/launcher';
@@ -31,7 +32,12 @@ const LaunchTable = ({ history, handleOpen }) => {
     try {
       const instanceCount = await getRunningInstanceCount();
       console.log(instanceCount);
-      if (Array.isArray(instanceCount) && instanceCount[0].ActiveCount) setCount(instanceCount[0].ActiveCount);
+      const user = await Auth.currentSession();
+      const id = await user.getIdToken();
+      const name = id.payload['cognito:username'];
+      if (name === 'ftsresearcher') {
+        setCount(0);
+      } else if (Array.isArray(instanceCount) && instanceCount[0].ActiveCount) setCount(instanceCount[0].ActiveCount);
       setIsLoading(false);
     } catch (error) {
       console.log(`Error fetching count${error}`);

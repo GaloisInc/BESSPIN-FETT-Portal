@@ -6,7 +6,7 @@ const { Response, Database } = require('../../helpers');
 const db = new Database();
 let ec2 = new aws.EC2();
 const ssm = new aws.SSM();
-
+const sqs = new aws.SQS();
 const writeInstanceIdToDB = async (dbId, instanceId) => {
   await db.query(
     `UPDATE Environment set F1EnvironmentId = :instanceId WHERE id = :id`,
@@ -51,63 +51,52 @@ const getUserData = (f1Config, iName) => {
     .reduce((obj2, key) => Object.assign(obj2, { [key]: f1Config[key] }), {});
   subset.awsJumpBoxIp = '172.31.30.56';
   // eslint-disable-next-line
-  const userdata = `#upstart-job
-description "configures and runs Fett Target"
-author "Brian McCall"
-
-start on stopped rc RUNLEVEL=[345]
-script
-  #!/bin/bash
-  exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
-  echo "Installing packages..."
-  echo \`date\`
-  sudo yum install -y jq git-lfs
-  echo "running sub script as u centos..."
-  echo \`date\`
-  cd /home/centos
-  source .bashrc
-  source .bash_profile
-  echo "Retrieving SSH key..."
-  echo \`date\`
-  aws secretsmanager get-secret-value --secret-id githubAccess --region ${
-    f1Config.region
-  } | jq '.SecretString | fromjson' | jq '.gitHubSSHKey' -r | base64 -d > /home/centos/.ssh/github
-  echo "Setting up github ssh..."
-  echo \`date\`
-  chmod 400 /home/centos/.ssh/github
-  ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-  touch /home/centos/.ssh/config
-  chmod 600 /home/centos/.ssh/config
-  echo "Host github.com
-  HostName github.com
-  PreferredAuthentications publickey
-  IdentityFile /home/centos/.ssh/github
-  User git" > /home/centos/.ssh/config
-  echo "Cloning repo..."
-  echo \`date\`
-  git clone git@github.com:DARPA-SSITH-Demonstrators/SSITH-FETT-Target.git
-  pushd SSITH-FETT-Target/ 
-  echo "setting up git repo..."
-  echo \`date\`
-  git checkout master
-  git submodule init
-  git submodule update --init --recursive
-  pushd SSITH-FETT-Binaries
-  echo "Pulling binaries...."
-  echo \`date\`
-  git lfs pull
-  echo "Running fett command..."
-  echo \`date\`
-  popd
-  nix-shell --command "python fett.py -ep awsProd -job ${iName} -cjson '${JSON.stringify(
+  const userdata = `#cloud-boothook
+#!/bin/bash
+exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+echo "Installing packages..."
+sudo yum install -y jq git-lfs
+echo "Setting up ssh files"
+touch /home/centos/.ssh/config
+touch /home/centos/.ssh/github
+chown centos:centos /home/centos/.ssh/config
+chown centos:centos /home/centos/.ssh/github
+echo "running sub script as u centos..."
+sudo -i -u centos bash << EOF
+cd /home/centos
+source .bashrc
+source .bash_profile
+echo "Retrieving SSH key..."
+aws secretsmanager get-secret-value --secret-id githubAccess --region us-west-2 | jq '.SecretString | fromjson' | jq '.gitHubSSHKey' -r | base64 -d > /home/centos/.ssh/github
+echo "Setting up github ssh..."
+ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+echo "Host github.com
+HostName github.com
+PreferredAuthentications publickey
+IdentityFile /home/centos/.ssh/github
+User git" > /home/centos/.ssh/config
+chmod 400 /home/centos/.ssh/github
+chmod 400 /home/centos/.ssh/config
+echo "Cloning repo..."
+git clone git@github.com:DARPA-SSITH-Demonstrators/SSITH-FETT-Target.git
+pushd SSITH-FETT-Target/ 
+echo "setting up git repo..."
+git checkout master
+git submodule init
+git submodule update --init --recursive
+pushd SSITH-FETT-Binaries
+echo "Pulling binaries...."
+git lfs pull
+echo "Running fett command..."
+popd
+nix-shell --command "python fett.py -ep awsProd -job ${iName} -cjson '${JSON.stringify(
     subset
   )
     .replace(/\//g, '\\/')
     .replace(/"/g, '\\"')}'"
-  echo \`date\`
-  echo "Done with userdata script..."
-  echo \`date\`
-end script  
+EOF &
+cat /home/centos/nix-shell.log >> /var/log/user-data.log
+echo "Done with userdata script..."
 `;
   console.log(userdata);
   return Buffer.from(userdata).toString('base64');
@@ -229,6 +218,15 @@ const startInstance = async (f1Config, instanceName) => {
   }
   return ec2Return;
 };
+
+const deleteMessage = async msg => {
+  sqs
+    .deleteMessage({
+      QueueUrl: process.env.RESEARCHER_INITIALIZATION_QUEUE_URL,
+      ReceiptHandle: msg.ReceiptHandle,
+    })
+    .promise();
+};
 /**
  * Incoming portal payload
  *
@@ -259,6 +257,12 @@ exports.handler = async event => {
   await db.makeConnection();
   for (const msg of event.Records) {
     console.log(msg);
+    if (parseInt(msg.attributes.ApproximateReceiveCount) > 3) {
+      // shoulld probably alert someone here too.
+      await deleteMessage(msg);
+      // eslint-disable-next-line no-continue
+      continue;
+    }
     const message = JSON.parse(msg.body);
     let f1Config = {
       region: message.Region,
@@ -311,9 +315,17 @@ exports.handler = async event => {
       instanceId = ec2Return.Instances[0].InstanceId;
     } catch (e) {
       // handle retry? let lambda just auto-retry?
-      // throwing an error will just put the SQS message back into the queue
-      // and it will be picked up when the visibility timeout is over (15 mins)
-      console.log('Error Starting instance');
+      // put message back in the queue for retrying
+
+      console.log('Error Starting instance', e);
+      console.log('handle', msg.ReceiptHandle);
+      await sqs
+        .changeMessageVisibility({
+          QueueUrl: process.env.RESEARCHER_INITIALIZATION_QUEUE_URL,
+          ReceiptHandle: msg.ReceiptHandle,
+          VisibilityTimeout: 0,
+        })
+        .promise();
       throw e;
     }
     try {
