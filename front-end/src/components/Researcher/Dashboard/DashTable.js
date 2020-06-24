@@ -61,7 +61,6 @@ const DashTable = () => {
             search: false,
             showTitle: false,
             toolbar: false,
-            sorting: false,
           }}
           data={dummyInstances}
         />
