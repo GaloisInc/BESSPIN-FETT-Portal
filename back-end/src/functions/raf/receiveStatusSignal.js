@@ -12,11 +12,13 @@ const stopInstance = async (instanceId, region) => {
   };
   return ec2.stopInstances(params).promise();
 };
-const updateDBForTermination = async instanceId =>
-  db.query(
+const updateDBForTermination = async instanceId => {
+  console.log('updating for termination');
+  return db.query(
     `UPDATE Environment set Status = "terminated" WHERE F1EnvironmentId = :instanceId`,
     { instanceId }
   );
+};
 const updateDBForStarted = async (instanceId, instanceIp, fpgaIp) => {
   console.log('updating for started');
   return db.query(
@@ -84,7 +86,6 @@ exports.handler = async event => {
           throw e;
         }
       }
-      // TODO build this out
       let instanceConfigData = await getInstanceConfig(message.instance.id);
       console.log('top', instanceConfigData);
       [instanceConfigData] = instanceConfigData;
