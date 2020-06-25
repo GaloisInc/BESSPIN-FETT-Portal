@@ -7,10 +7,10 @@ const db = new Database();
 let ec2 = new aws.EC2({ region: 'us-west-2' });
 const ssm = new aws.SSM();
 const sqs = new aws.SQS();
-const writeInstanceIdToDB = async (dbId, instanceId) => {
+const writeRegionAndInstanceIdToDB = async (dbId, instanceId, region) => {
   await db.query(
-    `UPDATE Environment set F1EnvironmentId = :instanceId WHERE id = :id`,
-    { id: dbId, instanceId }
+    `UPDATE Environment set F1EnvironmentId = :instanceId, Region = :region WHERE id = :id`,
+    { id: dbId, instanceId, region }
   );
 };
 const checkWestInstanceCount = async () => {
@@ -331,7 +331,11 @@ exports.handler = async event => {
       throw e;
     }
     try {
-      await writeInstanceIdToDB(message.Id, instanceId);
+      await writeRegionAndInstanceIdToDB(
+        message.Id,
+        instanceId,
+        f1Config.region
+      );
     } catch (e) {
       console.log('Error Writing instance information to DB');
       // If we have made it this far, the instance has been spun up but we had an error writing to the DB
