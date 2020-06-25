@@ -68,6 +68,7 @@ exports.handler = async event => {
           throw e;
         }
       }
+      // TODO build this out
       await getInstanceConfig(message.instance.id);
       await CloudWatch.deleteDashboards(message.instance.id);
     }
