@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { CircularProgress } from '@material-ui/core';
@@ -7,8 +7,11 @@ import Alert from './Alert';
 
 const InstanceDetail = ({ environment, fetchEnvironments }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
+
   const updateInstanceStatus = async (event, newStatus) => {
     event.preventDefault();
+    setIsDisabled(true);
     setIsLoading(true);
     try {
       await ec2StatusUpdate(environment, newStatus);
@@ -79,7 +82,7 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
       <div className="flex flex-row items-center justify-end py-2 my-10 bg-blue-600">
         <button
           className={`w-48 px-2 py-1 mr-10 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded ${
-            isLoading ? 'opacity-50 cursor-not-allowed' : ''
+            isDisabled ? 'opacity-50 cursor-not-allowed' : ''
           } ${
             environment.Status === 'terminated' || environment.Status === 'terminating'
               ? 'bg-gray-600 cursor-default'
@@ -87,7 +90,7 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
           }`}
           type="submit"
           onClick={event => updateInstanceStatus(event, 'terminating')}
-          disabled={isLoading || environment.Status === 'terminated' || environment.Status === 'terminating'}
+          disabled={isDisabled || environment.Status === 'terminated' || environment.Status === 'terminating'}
         >
           {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Terminate Instance'}
         </button>
