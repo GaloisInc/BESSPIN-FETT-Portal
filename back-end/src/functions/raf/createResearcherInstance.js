@@ -4,13 +4,13 @@ const util = require('util');
 const { Response, Database } = require('../../helpers');
 
 const db = new Database();
-let ec2 = new aws.EC2();
+let ec2 = new aws.EC2({ region: 'us-west-2' });
 const ssm = new aws.SSM();
 const sqs = new aws.SQS();
-const writeInstanceIdToDB = async (dbId, instanceId) => {
+const writeRegionAndInstanceIdToDB = async (dbId, instanceId, region) => {
   await db.query(
-    `UPDATE Environment set F1EnvironmentId = :instanceId WHERE id = :id`,
-    { id: dbId, instanceId }
+    `UPDATE Environment set F1EnvironmentId = :instanceId, Region = :region WHERE id = :id`,
+    { id: dbId, instanceId, region }
   );
 };
 const checkWestInstanceCount = async () => {
@@ -62,10 +62,11 @@ touch /home/centos/.ssh/github
 chown centos:centos /home/centos/.ssh/config
 chown centos:centos /home/centos/.ssh/github
 echo "running sub script as u centos..."
-sudo -i -u centos bash << EOF
+touch /home/centos/downloadAndStartFett.sh
+chmod +x /home/centos/downloadAndStartFett.sh
+chown centos:centos /home/centos/downloadAndStartFett.sh
+tee /home/centos/downloadAndStartFett.sh << EOF
 cd /home/centos
-source .bashrc
-source .bash_profile
 echo "Retrieving SSH key..."
 aws secretsmanager get-secret-value --secret-id githubAccess --region us-west-2 | jq '.SecretString | fromjson' | jq '.gitHubSSHKey' -r | base64 -d > /home/centos/.ssh/github
 echo "Setting up github ssh..."
@@ -94,10 +95,11 @@ nix-shell --command "python fett.py -ep awsProd -job ${iName} -cjson '${JSON.str
   )
     .replace(/\//g, '\\/')
     .replace(/"/g, '\\"')}'"
-EOF &
-cat /home/centos/nix-shell.log >> /var/log/user-data.log
+EOF
+/bin/su -c "/home/centos/downloadAndStartFett.sh" - centos /dev/null &/dev/null &
 echo "Done with userdata script..."
 `;
+
   console.log(userdata);
   return Buffer.from(userdata).toString('base64');
 };
@@ -223,7 +225,7 @@ const deleteMessage = async msg => {
   sqs
     .deleteMessage({
       QueueUrl: process.env.RESEARCHER_INITIALIZATION_QUEUE_URL,
-      ReceiptHandle: msg.ReceiptHandle,
+      ReceiptHandle: msg.receiptHandle,
     })
     .promise();
 };
@@ -318,18 +320,22 @@ exports.handler = async event => {
       // put message back in the queue for retrying
 
       console.log('Error Starting instance', e);
-      console.log('handle', msg.ReceiptHandle);
+      console.log('handle', msg.receiptHandle);
       await sqs
         .changeMessageVisibility({
           QueueUrl: process.env.RESEARCHER_INITIALIZATION_QUEUE_URL,
-          ReceiptHandle: msg.ReceiptHandle,
+          ReceiptHandle: msg.receiptHandle,
           VisibilityTimeout: 0,
         })
         .promise();
       throw e;
     }
     try {
-      await writeInstanceIdToDB(message.Id, instanceId);
+      await writeRegionAndInstanceIdToDB(
+        message.Id,
+        instanceId,
+        f1Config.region
+      );
     } catch (e) {
       console.log('Error Writing instance information to DB');
       // If we have made it this far, the instance has been spun up but we had an error writing to the DB

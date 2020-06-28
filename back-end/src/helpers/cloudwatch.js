@@ -2,7 +2,7 @@ const aws = require('aws-sdk');
 
 const cw = new aws.CloudWatch();
 
-const createTemplate = f1 => ({
+const createTemplate = (f1, region) => ({
   start: '-PT6H',
   periodOverride: 'inherit',
   widgets: [
@@ -42,7 +42,7 @@ const createTemplate = f1 => ({
           ['AWS/EC2', 'NetworkIn', 'InstanceId', `${f1}`],
           ['.', 'NetworkOut', '.', '.'],
         ],
-        region: 'us-west-2',
+        region: `${region}`,
         title: 'Network Activity',
       },
     },
@@ -61,7 +61,7 @@ const createTemplate = f1 => ({
           ['.', 'DiskReadOps', '.', '.'],
           ['.', 'DiskWriteOps', '.', '.'],
         ],
-        region: 'us-west-2',
+        region: `${region}`,
         title: 'Disk Reads/Writes',
       },
     },
@@ -79,7 +79,7 @@ const createTemplate = f1 => ({
           ['.', 'StatusCheckFailed_Instance', '.', '.'],
           ['.', 'StatusCheckFailed_System', '.', '.'],
         ],
-        region: 'us-west-2',
+        region: `${region}`,
         title: 'Status Checks',
       },
     },
@@ -87,10 +87,10 @@ const createTemplate = f1 => ({
 });
 
 class CloudWatch {
-  static async putDashboard(instanceId) {
+  static async putDashboard(instanceId, region) {
     try {
       const dashParams = {
-        DashboardBody: JSON.stringify(createTemplate(instanceId)),
+        DashboardBody: JSON.stringify(createTemplate(instanceId, region)),
         DashboardName: `FettPortal${instanceId}`,
       };
       const response = await cw
@@ -102,7 +102,8 @@ class CloudWatch {
         });
       return response;
     } catch (e) {
-      throw new Error('Error retrieving parameter');
+      console.log(`Error adding dashboard ${e}`);
+      throw new Error(`Error adding dashboard ${e}`);
     }
   }
 
@@ -120,7 +121,8 @@ class CloudWatch {
         });
       return response;
     } catch (e) {
-      throw new Error('Error retrieving parameter');
+      console.log(`Error adding dashboard ${e}`);
+      throw new Error(`Error removing dashboard`);
     }
   }
 }
