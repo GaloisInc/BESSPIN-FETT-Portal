@@ -7,7 +7,7 @@ exports.handler = async (event, context) => {
   try {
     await db.makeConnection();
     const data = await db.query(
-      `SELECT e.*, c.Type, c.OS, c.Processor, u.UserName FROM Environment AS e JOIN InstanceConfiguration AS c ON e.Configuration_FK = c.Id JOIN User as u ON u.Id = e.CreatedBy_FK WHERE e.IsActive = TRUE ORDER BY Created DESC;`
+      `SELECT e.*, c.Type, c.OS, c.Processor, c.CodeName, u.UserName FROM Environment AS e JOIN InstanceConfiguration AS c ON e.Configuration_FK = c.Id JOIN User as u ON u.Id = e.CreatedBy_FK WHERE e.IsActive = TRUE ORDER BY Created DESC;`
     );
     return new Response({ items: data }).success();
   } catch (err) {
