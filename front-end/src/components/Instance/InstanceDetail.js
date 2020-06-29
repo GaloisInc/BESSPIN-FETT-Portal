@@ -55,18 +55,18 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
         </div>
         <div className="flex items-center">
           <button
-            disabled={environment.Status === 'provisioning' || environment.Status === 'terminated'}
+            disabled={
+              environment.Status === 'provisioning' || environment.Status === 'terminated' || !environment.FPGAIp
+            }
             className={`px-4 ${
-              environment.Status === 'provisioning' || environment.Status === 'terminated'
+              environment.Status === 'provisioning' || environment.Status === 'terminated' || !environment.FPGAIp
                 ? 'bg-gray-600 cursor-default'
                 : 'bg-gray-200'
             } rounded`}
             type="button"
           >
             <p className="text-sm text-blue-900 uppercase">
-              {environment.Status === 'provisioning' ||
-              environment.Status === 'terminated' ||
-              !environment.F1EnvironmentId ? (
+              {environment.Status === 'provisioning' || environment.Status === 'terminated' || !environment.FPGAIp ? (
                 'View On AWS'
               ) : (
                 <a
