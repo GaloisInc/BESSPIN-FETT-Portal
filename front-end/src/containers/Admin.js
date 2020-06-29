@@ -15,7 +15,7 @@ const Admin = props => {
       <Header isAdmin={isAdmin} name={name} />
       <div style={{ minHeight: 'calc(100vh - 6em)' }} className="flex flex-row">
         <Sidebar isAdmin={isAdmin} />
-        <div className="w-10/12 bg-blue-700">
+        <div className="bg-blue-700" style={{ width: '90%' }}>
           {checkAuth ? (
             <>
               <Route path="/adminportal/dashboard" component={AdminDash} />

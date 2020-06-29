@@ -79,10 +79,7 @@ export default function InstanceManagement() {
 
   return (
     <>
-      <div
-        className="relative mr-6 bg-blue-600 table-card"
-        style={{ width: '800px', minHeight: '630px', maxHeight: height - 340 }}
-      >
+      <div className="relative mr-6 bg-blue-600 table-card col-span-8" style={{ height: '67vh' }}>
         <div className="flex flex-row items-center justify-between pl-4 mt-4 mb-2">
           <h5 className="font-medium text-gray-200 uppercase">environment management</h5>
           <div className="flex flex-row items-center mr-4">
@@ -99,7 +96,7 @@ export default function InstanceManagement() {
             </form>
           </div>
         </div>
-        <div className="relative overflow-y-scroll fettScroll" style={{ maxHeight: height - 340 }}>
+        <div className="relative overflow-y-scroll fettScroll" style={{ height: '55vh' }}>
           {isLoading ? (
             <Spinner />
           ) : (
