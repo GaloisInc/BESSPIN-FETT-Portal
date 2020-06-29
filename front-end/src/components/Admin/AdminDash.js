@@ -10,7 +10,7 @@ export default function AdminDash() {
         This interface may be used to view all instances provisioned by any research team, and to broadcast messages
         visible within the FETT-Portal interface to logged in research teams.
       </p>
-      <div className="flex flex-row w-full mt-4">
+      <div className="flex flex-row mt-4 grid grid-cols-12" style={{ width: '95%' }}>
         <InstanceManagement />
         <Comms userType="admin" />
       </div>

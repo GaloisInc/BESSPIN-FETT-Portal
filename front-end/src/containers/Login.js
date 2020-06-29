@@ -71,7 +71,6 @@ const Login = props => {
           <span className="hidden">FETT Portal</span>
         </h1>
         <p className="mb-8 text-center text-teal-500 uppercase">Sign in to access FETT Portal</p>
-
         <label htmlFor="username" className="mt-8 text-gray-200 font-body">
           Username
         </label>
