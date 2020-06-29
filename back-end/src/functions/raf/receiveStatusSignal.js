@@ -70,7 +70,7 @@ exports.handler = async event => {
       const instanceIp = message.instance['instance-ip'];
       const fpgaIp = message.instance['fpga-ip'];
       await updateDBForStarted(instanceId, instanceIp, fpgaIp);
-      await CloudWatch.putDashboard(instanceId);
+      await CloudWatch.putDashboard(instanceId, envConf[0].Region);
     } else if (signal === 'deployment' && message.job.status === 'failure') {
       // tear down instance and start over
       try {
