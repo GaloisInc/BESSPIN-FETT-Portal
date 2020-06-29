@@ -30,7 +30,6 @@ const InstanceHistory = params => {
   };
 
   const handleLaunch = event => {
-    console.log(params);
     event.preventDefault();
     params.history.push('/bountyportal/launch');
   };
