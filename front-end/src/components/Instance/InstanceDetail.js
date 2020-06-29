@@ -99,7 +99,7 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
               {environment.Created && moment(environment.Created).format('MM/DD/YY hh:mm A')}
             </p>
           </div>
-          <div className="flex flex-row py-2 bg-blue-600">
+          {/* <div className="flex flex-row py-2 bg-blue-600">
             <div className="w-48 ml-8 mr-8">
               <p className="text-base text-teal-500 uppercase">Idle Time</p>
             </div>
@@ -114,7 +114,7 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
             <p className="text-base text-200-gray">
               {environment.IdleTime && moment(environment.IdleTime).format('HH:mm')}
             </p>
-          </div>
+          </div> */}
           <div className="flex flex-row py-2 bg-blue-600">
             <div className="w-48 ml-8 mr-8">
               <p className="text-base text-teal-500 uppercase">Status</p>

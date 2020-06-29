@@ -44,33 +44,33 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
           <Alert status={environment.Status} />
         </div>
       </div>
-      <div className="flex flex-row py-2 bg-blue-700">
+      {/* <div className="flex flex-row py-2 bg-blue-700">
         <div className="w-48 ml-8 mr-8">
           <p className="text-base text-teal-500 uppercase">Idle Time</p>
         </div>
         <p className="text-base text-200-gray">
           {environment.IdleTime && moment(environment.IdleTime).format('HH:mm')}
         </p>
-      </div>
-      <div className="flex flex-row py-2 bg-blue-600">
+      </div> */}
+      {/* <div className="flex flex-row py-2 bg-blue-600">
         <div className="w-48 ml-8 mr-8">
           <p className="text-base text-teal-500 uppercase">Elapsed Time</p>
         </div>
         <p className="text-base uppercase text-200-gray" />
-      </div>
-      <div className="flex flex-row py-2 bg-blue-700">
+      </div> */}
+      {/* <div className="flex flex-row py-2 bg-blue-700">
         <div className="w-48 ml-8 mr-8">
           <p className="text-base text-teal-500 uppercase">Researchers Using</p>
         </div>
         <p className="text-base text-200-gray" />
-      </div>
-      <div className="flex flex-row py-2 bg-blue-600">
+      </div> */}
+      <div className="flex flex-row py-2 bg-blue-700">
         <div className="w-48 ml-8 mr-8">
           <p className="text-base text-teal-500 uppercase">Environment ID</p>
         </div>
         <p className="text-base uppercase text-200-gray">{environment.F1EnvironmentId}</p>
       </div>
-      <div className="flex flex-row py-2 bg-blue-700">
+      <div className="flex flex-row py-2 bg-blue-600">
         <div className="w-48 ml-8 mr-8">
           <p className="text-base text-teal-500 uppercase">Fett target</p>
         </div>

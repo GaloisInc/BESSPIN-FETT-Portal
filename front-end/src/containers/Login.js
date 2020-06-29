@@ -48,6 +48,12 @@ const Login = props => {
       setIsDisabled(false);
     }
   };
+
+  const handleKeyPress = event => {
+    if (event.key === 'Enter') {
+      handleSubmit();
+    }
+  };
   return (
     <div
       className="flex justify-center min-h-screen bg-blue-700"
@@ -86,6 +92,7 @@ const Login = props => {
           className={`w-full p-1 text-gray-200 bg-blue-600 border ${
             error && error === 'NotAuthorizedException' ? 'border-red-500' : 'border-gray-200'
           } border-solid rounded`}
+          onKeyPress={handleKeyPress}
         />
         {error && error === 'NotAuthorizedException' && (
           <p className="text-sm text-red-500">Incorrect username or password</p>
