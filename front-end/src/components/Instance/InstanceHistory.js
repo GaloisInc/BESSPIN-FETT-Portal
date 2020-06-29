@@ -112,7 +112,7 @@ const InstanceHistory = params => {
                   </p>
                 ),
               },
-              { title: 'Code Name', field: 'CodeName' },
+              { title: 'Code Name', field: 'CodeName', width: '7em' },
               {
                 title: 'Launched',
                 field: 'Created',

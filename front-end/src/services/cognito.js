@@ -48,7 +48,7 @@ export const createAdminUser = async email =>
 
         cognito.adminCreateUser(params, function(err, data) {
           if (err) {
-            console.log(err, err.stack);
+            reject(err);
           } else {
             const role = 'admin';
             const region = 'us-west-2';

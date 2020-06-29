@@ -128,7 +128,7 @@ export default function InstanceManagement() {
                   ),
                 },
                 { title: 'Code Name', field: 'CodeName', width: '12em' },
-                { title: 'Idle Time', field: 'IdleTime', width: '12em' },
+                // { title: 'Idle Time', field: 'IdleTime', width: '12em' },
                 { title: 'STATUS', field: 'Status', width: '6em' },
                 {
                   title: '',

@@ -48,6 +48,12 @@ const Login = props => {
       setIsDisabled(false);
     }
   };
+
+  const handleKeyPress = event => {
+    if (event.key === 'Enter') {
+      handleSubmit();
+    }
+  };
   return (
     <div
       className="flex justify-center min-h-screen bg-blue-700"
@@ -65,43 +71,41 @@ const Login = props => {
           <span className="hidden">FETT Portal</span>
         </h1>
         <p className="mb-8 text-center text-teal-500 uppercase">Sign in to access FETT Portal</p>
-
-        <form>
-          <label htmlFor="username" className="mt-8 text-gray-200 font-body">
-            Username
-          </label>
-          <input
-            id="username"
-            value={username}
-            onChange={event => setUsername(event.target.value)}
-            className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
-          />
-          <label htmlFor="password" className="mt-8 text-gray-200 font-body">
-            Password
-          </label>
-          <input
-            id="password"
-            value={password}
-            type="password"
-            onChange={event => setPassword(event.target.value)}
-            className={`w-full p-1 text-gray-200 bg-blue-600 border ${
-              error && error === 'NotAuthorizedException' ? 'border-red-500' : 'border-gray-200'
-            } border-solid rounded`}
-          />
-          {error && error === 'NotAuthorizedException' && (
-            <p className="text-sm text-red-500">Incorrect username or password</p>
-          )}
-          <button
-            className={`w-full px-2 py-1 mt-8 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded hover:bg-teal-500 hover:text-gray-200 ${
-              isDisabled ? 'opacity-50 cursor-not-allowed' : ''
-            }`}
-            type="submit"
-            disabled={isDisabled}
-            onClick={event => handleSubmit(event)}
-          >
-            {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Login'}
-          </button>
-        </form>
+        <label htmlFor="username" className="mt-8 text-gray-200 font-body">
+          Username
+        </label>
+        <input
+          id="username"
+          value={username}
+          onChange={event => setUsername(event.target.value)}
+          className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
+        />
+        <label htmlFor="password" className="mt-8 text-gray-200 font-body">
+          Password
+        </label>
+        <input
+          id="password"
+          value={password}
+          type="password"
+          onChange={event => setPassword(event.target.value)}
+          className={`w-full p-1 text-gray-200 bg-blue-600 border ${
+            error && error === 'NotAuthorizedException' ? 'border-red-500' : 'border-gray-200'
+          } border-solid rounded`}
+          onKeyPress={handleKeyPress}
+        />
+        {error && error === 'NotAuthorizedException' && (
+          <p className="text-sm text-red-500">Incorrect username or password</p>
+        )}
+        <button
+          className={`w-full px-2 py-1 mt-8 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded hover:bg-teal-500 hover:text-gray-200 ${
+            isDisabled ? 'opacity-50 cursor-not-allowed' : ''
+          }`}
+          type="submit"
+          disabled={isDisabled}
+          onClick={event => handleSubmit(event)}
+        >
+          {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Login'}
+        </button>
       </div>
     </div>
   );

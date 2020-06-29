@@ -12,6 +12,8 @@ const UserForm = ({ fetchUsers }) => {
   const [teamNumber, setTeamNumber] = useState('');
   const [teams, setTeams] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isError, setIsError] = useState(false);
+  const [error, setError] = useState('');
   const headers = [{ label: 'Username', key: 'username' }, { label: 'Password', key: 'password' }];
   const csvLink = useRef();
 
@@ -19,12 +21,19 @@ const UserForm = ({ fetchUsers }) => {
     event.preventDefault();
     setIsLoading(true);
     try {
-      await createAdminUser(email);
+      const response = await createAdminUser(email);
+      console.log(response);
       setEmail('');
       fetchUsers();
+      setIsError(false);
+      setError('');
       setIsLoading(false);
     } catch (error) {
       console.log(`failed to create user ${error}`);
+      // if (error && error.code === 'UsernameExistsException') {
+      setIsError(true);
+      setError(error.message);
+      // }
       setIsLoading(false);
     }
   };
@@ -92,9 +101,12 @@ const UserForm = ({ fetchUsers }) => {
           id="email"
           value={email}
           onChange={event => setEmail(event.target.value)}
-          className="w-full p-1 pl-4 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
+          className={`w-full p-1 pl-4 text-gray-200 bg-blue-600 border ${
+            isError ? 'border-red-500' : 'border-gray-200'
+          } border-solid rounded`}
           autoComplete="off"
         />
+        {error && isError && <p className="text-sm text-red-500">{error}</p>}
         <button
           className={`w-full px-2 py-1 mt-6 font-bold text-blue-700 uppercase bg-gray-200 rounded hover:bg-teal-500 hover:text-gray-200 font-body ${
             isLoading ? 'opacity-50 cursor-not-allowed' : ''
