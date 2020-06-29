@@ -14,3 +14,10 @@ GRANT ALL PRIVILEGES ON *.* TO 'fettportals'@'localhost';
 
 ### Development
 * `sls offline start --stage local`
+
+
+
+### Brian Notes
+- After an instance stops and you want to start it again; **MAKE SURE YOU REMOVE THE USER DATA BEFORE RESTARTING**
+- Userdata logs sudo cat /var/log/user-data.log
+- User data creates a file /home/centos/downloadAndStartFett.sh and runs that

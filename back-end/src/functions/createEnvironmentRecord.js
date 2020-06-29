@@ -42,7 +42,7 @@ exports.handler = async (event, context) => {
         COUNT(DISTINCT CASE
           WHEN
             CreatedBy_FK = :ResearcherId
-          AND (Status = 'running' OR Status = 'terminating' OR Status = 'provisioning')
+          AND (Status = 'running' OR Status = 'provisioning')
           THEN
             Id
           END) AS ActiveCount

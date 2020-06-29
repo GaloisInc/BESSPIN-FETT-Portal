@@ -49,7 +49,6 @@ const getUserData = (f1Config, iName) => {
   const subset = Object.keys(f1Config)
     .filter(key => configOptions.indexOf(key) >= 0)
     .reduce((obj2, key) => Object.assign(obj2, { [key]: f1Config[key] }), {});
-  subset.awsJumpBoxIp = '172.31.30.56';
   // eslint-disable-next-line
   const userdata = `#cloud-boothook
 #!/bin/bash
@@ -65,6 +64,14 @@ echo "running sub script as u centos..."
 touch /home/centos/downloadAndStartFett.sh
 chmod +x /home/centos/downloadAndStartFett.sh
 chown centos:centos /home/centos/downloadAndStartFett.sh
+JSON='${JSON.stringify(subset)}'
+echo $JSON
+IP=$(aws ec2 describe-instances --instance-ids \`curl -s http://169.254.169.254/latest/meta-data/instance-id\` --region ${
+    f1Config.region
+  } | jq -r '.Reservations[0].Instances[0].NetworkInterfaces[0].PrivateIpAddresses[] | select(.Primary == false).PrivateIpAddress')
+echo $IP
+OUT=$(jq -SRn $JSON | jq --arg ip "$IP" ' . + {"productionTargetIp": $ip}|tostring' | sed -e 's/^"//' -e 's/"$//' -e 's/"/\\"/' )
+echo $OUT
 tee /home/centos/downloadAndStartFett.sh << EOF
 cd /home/centos
 echo "Retrieving SSH key..."
@@ -90,11 +97,7 @@ echo "Pulling binaries...."
 git lfs pull
 echo "Running fett command..."
 popd
-nix-shell --command "python fett.py -ep awsProd -job ${iName} -cjson '${JSON.stringify(
-    subset
-  )
-    .replace(/\//g, '\\/')
-    .replace(/"/g, '\\"')}'"
+nix-shell --command "python fett.py -ep awsProd -job ${iName} -cjson '$OUT'"
 EOF
 /bin/su -c "/home/centos/downloadAndStartFett.sh" - centos /dev/null &/dev/null &
 echo "Done with userdata script..."
@@ -105,6 +108,7 @@ echo "Done with userdata script..."
 };
 const callStartInstance = async (f1Config, instanceName) => {
   console.log(f1Config);
+
   if (f1Config.region === 'us-east-1') {
     ec2 = new aws.EC2({ region: 'us-east-1' });
   }
@@ -331,6 +335,12 @@ exports.handler = async event => {
       throw e;
     }
     try {
+      console.log(
+        'RDS UPDATE PAYLOAD',
+        message.Id,
+        instanceId,
+        f1Config.region
+      );
       await writeRegionAndInstanceIdToDB(
         message.Id,
         instanceId,

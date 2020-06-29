@@ -128,7 +128,7 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
             <div className="w-48 ml-8 mr-8">
               <p className="text-base text-teal-500 uppercase">Fett target</p>
             </div>
-            <p className="text-base text-200-gray">{environment.IpAddress}</p>
+            <p className="text-base text-200-gray">{environment.FPGAIp}</p>
           </div>
           <div className="flex flex-row justify-end">
             <button
