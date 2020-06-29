@@ -26,7 +26,7 @@ exports.handler = async (event, context) => {
     const researcherId = researcher[0].Id;
 
     const data = await db.query(
-      `SELECT e.*, c.Type, c.OS, c.Processor, u.UserName FROM Environment AS e JOIN InstanceConfiguration AS c ON e.Configuration_FK = c.Id JOIN User as u ON u.Id = e.CreatedBy_FK WHERE e.IsActive = TRUE AND u.ID = :Id ORDER BY Created DESC;`,
+      `SELECT e.*, c.Type, c.OS, c.Processor, c.CodeName, u.UserName FROM Environment AS e JOIN InstanceConfiguration AS c ON e.Configuration_FK = c.Id JOIN User as u ON u.Id = e.CreatedBy_FK WHERE e.IsActive = TRUE AND u.ID = :Id ORDER BY Created DESC;`,
       { Id: researcherId }
     );
     return new Response({ items: data }).success();
