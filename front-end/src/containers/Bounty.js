@@ -27,7 +27,7 @@ const Bounty = props => {
       <Header name={name} />
       <div style={{ minHeight: 'calc(100vh - 6em)' }} className="flex flex-row">
         <Sidebar />
-        <div className="w-full bg-blue-700">
+        <div className="bg-blue-700" style={{ width: '90%' }}>
           {checkAuth ? (
             <>
               <Route path="/bountyportal/dashboard" component={BountyDash} />

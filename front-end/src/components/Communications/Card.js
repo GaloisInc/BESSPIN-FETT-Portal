@@ -68,11 +68,11 @@ useEffect(() => {
   const renderedContent = renderContent();
   
   return (
-    <div className="bg-blue-600" style={{ width: '500px', minHeight: '630px' }}>
+    <div className="bg-blue-600 col-span-4">
       <div className="flex flex-row items-center justify-between pl-4 mt-2 mb-4">
         <h5 className="ml-4 text-gray-200 uppercase">{renderedNav}</h5>
       </div>
-      <div className="self-center m-8 mt-2 bg-blue-700" style={{ minHeight: '500px' }}>
+      <div className="self-center m-8 mt-2 bg-blue-700">
         {renderedContent}
       </div>
     </div>
