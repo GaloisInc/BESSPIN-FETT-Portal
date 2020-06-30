@@ -85,10 +85,11 @@ IdentityFile /home/centos/.ssh/github
 User git" > /home/centos/.ssh/config
 chmod 400 /home/centos/.ssh/github
 chmod 400 /home/centos/.ssh/config
-echo "Cloning repo..."
-git clone git@github.com:DARPA-SSITH-Demonstrators/SSITH-FETT-Target.git
+
+
 pushd SSITH-FETT-Target/ 
 echo "setting up git repo..."
+git pull
 git checkout master
 git submodule init
 git submodule update --init --recursive
