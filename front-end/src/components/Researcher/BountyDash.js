@@ -9,7 +9,7 @@ export default function BountyDash() {
       <p className="pt-4 text-gray-200">
         Use the interface below to understand the status of any instances you have launched, and to manipulate them.
       </p>
-      <div className="flex flex-row w-full mt-4">
+      <div className="flex flex-row w-full mt-4 ">
         <InstanceHistory />
         <Comms userType="researcher" />
       </div>
