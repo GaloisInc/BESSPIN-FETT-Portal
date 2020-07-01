@@ -12,7 +12,7 @@ const Sidebar = ({ isAdmin, history }) => {
   const { pathname } = history.location;
   return (
     <div
-      className="bg-blue-800 text-gray-200 pt-6"
+      className="pt-6 text-gray-200 bg-blue-800"
       style={{ backgroundImage: 'linear-gradient(#1E272F, #314457)', width: '10%' }}
     >
       {isAdmin ? (

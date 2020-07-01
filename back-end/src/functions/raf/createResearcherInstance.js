@@ -88,7 +88,6 @@ chmod 400 /home/centos/.ssh/config
 
 
 pushd SSITH-FETT-Target/ 
-
 nix-shell --command "python fett.py -ep awsProd -job ${iName} -cjson '$OUT'"
 EOF
 /bin/su -c "/home/centos/downloadAndStartFett.sh" - centos /dev/null &/dev/null &
