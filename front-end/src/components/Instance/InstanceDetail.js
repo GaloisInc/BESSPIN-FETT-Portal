@@ -56,17 +56,26 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
         <div className="flex items-center">
           <button
             disabled={
-              environment.Status === 'provisioning' || environment.Status === 'terminated' || !environment.FPGAIp
+              environment.Status === 'provisioning' ||
+              environment.Status === 'terminated' ||
+              environment.Status === 'queueing' ||
+              !environment.FPGAIp
             }
             className={`px-4 ${
-              environment.Status === 'provisioning' || environment.Status === 'terminated' || !environment.FPGAIp
+              environment.Status === 'provisioning' ||
+              environment.Status === 'terminated' ||
+              environment.Status === 'queueing' ||
+              !environment.FPGAIp
                 ? 'bg-gray-600 cursor-default'
                 : 'bg-gray-200'
             } rounded`}
             type="button"
           >
             <p className="text-sm text-blue-900 uppercase">
-              {environment.Status === 'provisioning' || environment.Status === 'terminated' || !environment.FPGAIp ? (
+              {environment.Status === 'provisioning' ||
+              environment.Status === 'terminated' ||
+              environment.Status === 'queueing' ||
+              !environment.FPGAIp ? (
                 'View On AWS'
               ) : (
                 <a
@@ -135,14 +144,23 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
               className={` px-2 mr-10 mt-4 mb-4 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded w-56 ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               } ${
-                isDisabled || environment.Status === 'terminated' || environment.Status === 'terminating'
+                isDisabled ||
+                isForceDisabled ||
+                environment.Status === 'terminated' ||
+                environment.Status === 'terminating' ||
+                environment.Status === 'queueing'
                   ? 'bg-gray-600 cursor-default'
                   : 'bg-gray-200 hover:bg-teal-500 hover:text-gray-200'
               }`}
               type="submit"
               onClick={event => updateInstanceStatus(event, 'terminating')}
               disabled={
-                isLoading || isDisabled || environment.Status === 'terminated' || environment.Status === 'terminating'
+                isLoading ||
+                isDisabled ||
+                isForceDisabled ||
+                environment.Status === 'terminated' ||
+                environment.Status === 'terminating' ||
+                environment.Status === 'queueing'
               }
             >
               {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Terminate Instance'}
@@ -151,14 +169,14 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
               className={` px-2 mr-10 mt-4 mb-4 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded w-56 ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               } ${
-                isForceDisabled || environment.Status === 'terminated' || environment.Status === 'forcing'
+                isForceDisabled || environment.Status === 'terminated' || environment.Status === 'queueing'
                   ? 'bg-gray-600 cursor-default'
                   : 'bg-gray-200 hover:bg-teal-500 hover:text-gray-200'
               }`}
               type="submit"
               onClick={event => updateInstanceStatus(event, 'forcing')}
               disabled={
-                isLoading || isForceDisabled || environment.Status === 'terminated' || environment.Status === 'forcing'
+                isLoading || isForceDisabled || environment.Status === 'terminated' || environment.Status === 'queueing'
               }
             >
               {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Force Terminate Instance'}

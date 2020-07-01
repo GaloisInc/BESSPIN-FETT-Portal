@@ -9,7 +9,7 @@ const ssm = new aws.SSM();
 const sqs = new aws.SQS();
 const writeRegionAndInstanceIdToDB = async (dbId, instanceId, region) => {
   await db.query(
-    `UPDATE Environment set F1EnvironmentId = :instanceId, Region = :region WHERE id = :id`,
+    `UPDATE Environment set F1EnvironmentId = :instanceId, Region = :region, Status = 'provisioning' WHERE id = :id`,
     { id: dbId, instanceId, region }
   );
 };

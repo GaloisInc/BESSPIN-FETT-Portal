@@ -9,7 +9,7 @@ const Alert = ({ status }) => {
     if (status === 'running') {
       return <img src={greenAlert} alt="green exclamation" />;
     }
-    if (status === 'provisioning' || status === 'terminating') {
+    if (status === 'provisioning' || status === 'terminating' || status === 'queueing') {
       return <img src={amberAlert} alt="amber exclamation" />;
     }
     if (status === 'terminated' || status === 'failed') {

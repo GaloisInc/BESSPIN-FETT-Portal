@@ -49,6 +49,16 @@ const checkInstanceStatus = async (instanceId, region) => {
     .promise();
 };
 
+const stopInstance = async (instanceId, region) => {
+  const ec2 = new aws.EC2({ region });
+  const params = {
+    InstanceIds: [instanceId],
+    DryRun: false,
+    Force: false,
+  };
+  return ec2.stopInstances(params).promise();
+};
+
 exports.handler = async event => {
   if (!event.body) {
     return new Response({ Message: 'Invalid payload' }).fail();
@@ -69,7 +79,11 @@ exports.handler = async event => {
     try {
       instanceStatus = await checkInstanceStatus(payload.InstanceId, region);
       console.log(util.inspect(instanceStatus, { depth: null }));
-      running = instanceStatus[0].InstanceState.Name === 'running';
+      if (instanceStatus[0].InstanceState.Name === 'running') {
+        running = 'running';
+      } else if (instanceStatus[0].InstanceState.Name === 'pending') {
+        running = 'pending';
+      }
     } catch (e) {
       if (e.code === 'InvalidInstanceID.NotFound') {
         running = false;
@@ -77,12 +91,15 @@ exports.handler = async event => {
         throw e;
       }
     }
-    if (running) {
-      // send message to stop instance
+    if (running && running === 'running') {
+      // send message to fett to stop instance
       await sendMessage(payload.InstanceId);
+    } else if (running && running === 'pending') {
+      // force an instance to stop
+      await stopInstance(payload.InstanceId);
     } else {
       // just update the DB
-      await updateDBForTermined(payload.InstanceId);
+      await updateDBForTermined(payload.InstanceId, region);
     }
     return new Response({ items: dbData }).success();
   } catch (e) {
