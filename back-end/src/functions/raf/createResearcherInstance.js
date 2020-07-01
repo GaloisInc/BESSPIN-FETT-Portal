@@ -255,6 +255,7 @@ exports.handler = async event => {
   for (const msg of event.Records) {
     console.log(msg);
     if (parseInt(msg.attributes.ApproximateReceiveCount) > 3) {
+      console.log('Stopping initiation after 3 failed tries');
       // shoulld probably alert someone here too.
       await deleteMessage(msg);
       // eslint-disable-next-line no-continue
@@ -271,7 +272,7 @@ exports.handler = async event => {
       rootUserAccess: 'no',
       username: message.username,
       userPasswordHash: hashPassword(message.password),
-      jobId: `${message.creatorId}-${message.insertId}`,
+      jobId: `${message.creatorId}-${message.Id}`,
     };
     if (f1Config.region === 'us-west-2') {
       try {
