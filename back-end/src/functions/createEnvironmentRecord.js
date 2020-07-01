@@ -6,10 +6,11 @@ const sqs = new aws.SQS();
 const db = new Database();
 
 const sendMessage = async message => {
+  console.log('sending message', message);
   const params = {
     QueueUrl: process.env.RESEARCHER_INITIALIZATION_QUEUE_URL,
     MessageBody: JSON.stringify(message),
-    MessageDeduplicationId: String(message.creatorId),
+    MessageDeduplicationId: `${message.creatorId}-${message.Id}`,
     MessageGroupId: String(message.Id),
   };
   return sqs.sendMessage(params).promise();
