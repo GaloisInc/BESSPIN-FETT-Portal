@@ -34,14 +34,16 @@ const InstanceHistory = params => {
     params.history.push('/bountyportal/launch');
   };
 
-  const fetchEnvironments = async () => {
-    setIsModalLoading(true);
+  const fetchEnvironments = async load => {
+    if (load) setIsModalLoading(true);
     try {
-      setIsLoading(true);
+      if (load) setIsLoading(true);
       const response = await getMyEnvironments();
       setEnvironments(response);
-      setIsLoading(false);
-      setIsModalLoading(false);
+      if (load) {
+        setIsLoading(false);
+        setIsModalLoading(false);
+      }
     } catch (error) {
       console.log(`Error fetching Environments: ${error}`);
       setIsModalLoading(false);
@@ -49,7 +51,7 @@ const InstanceHistory = params => {
   };
 
   useEffect(() => {
-    fetchEnvironments();
+    fetchEnvironments('load');
     const interval = setInterval(() => {
       console.log('This will run every second!');
       fetchEnvironments();
@@ -72,7 +74,7 @@ const InstanceHistory = params => {
   return (
     <>
       <div className="relative mb-4 mr-6 bg-blue-600 table-card" style={{ width: '700px', minHeight: '' }}>
-        <div className="flex flex-row items-center justify-between pl-2 mt-2 mb-2">
+        <div className="flex flex-row items-center justify-between w-full pl-2 mt-2 mb-2">
           <h5 className="text-gray-200 uppercase">instance history</h5>
           <button
             className="flex flex-row items-center justify-around w-auto pl-4 pr-4 selected:outline-none btn-gray hover:bg-teal-500 hover:text-gray-200"
