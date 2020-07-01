@@ -81,13 +81,20 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
           className={`w-48 px-2 py-1 mr-10 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded ${
             isLoading ? 'opacity-50 cursor-not-allowed' : ''
           } ${
-            environment.Status === 'terminated' || environment.Status === 'terminating'
+            environment.Status === 'terminated' ||
+            environment.Status === 'terminating' ||
+            environment.Status === 'queueing'
               ? 'bg-gray-600 cursor-default'
               : 'bg-gray-200 hover:bg-teal-500 hover:text-gray-200'
           }`}
           type="submit"
           onClick={event => updateInstanceStatus(event, 'terminating')}
-          disabled={isLoading || environment.Status === 'terminated' || environment.Status === 'terminating'}
+          disabled={
+            isLoading ||
+            environment.Status === 'terminated' ||
+            environment.Status === 'terminating' ||
+            environment.Status === 'queueing'
+          }
         >
           {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Terminate Instance'}
         </button>

@@ -42,7 +42,7 @@ exports.handler = async (event, context) => {
         COUNT(DISTINCT CASE
           WHEN
             CreatedBy_FK = :ResearcherId
-          AND (Status = 'running' OR Status = 'provisioning')
+          AND (Status = 'running' OR Status = 'provisioning' OR Status = 'queueing')
           THEN
             Id
           END) AS ActiveCount
@@ -53,7 +53,7 @@ exports.handler = async (event, context) => {
     const count = instanceCount[0].ActiveCount;
     if (username === 'ftsresearcher' || count < 1) {
       const data = await db.query(
-        `INSERT INTO Environment (CreatedBy_FK, Configuration_FK, Region, Status) values (:CreatedBy, :Configuration, :Region, 'provisioning')`,
+        `INSERT INTO Environment (CreatedBy_FK, Configuration_FK, Region, Status) values (:CreatedBy, :Configuration, :Region, 'queueing')`,
         {
           CreatedBy: creatorId,
           Configuration: body.Configuration,
