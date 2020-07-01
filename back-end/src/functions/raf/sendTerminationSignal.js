@@ -79,9 +79,12 @@ exports.handler = async event => {
     try {
       instanceStatus = await checkInstanceStatus(payload.InstanceId, region);
       console.log(util.inspect(instanceStatus, { depth: null }));
-      if (instanceStatus[0].InstanceState.Name === 'running') {
+      console.log(instanceStatus);
+      console.log(instanceStatus.InstanceStatuses[0]);
+      const status = instanceStatus.InstanceStatuses[0].InstanceState.Name;
+      if (status === 'running') {
         running = 'running';
-      } else if (instanceStatus[0].InstanceState.Name === 'pending') {
+      } else if (status === 'pending') {
         running = 'pending';
       }
     } catch (e) {
