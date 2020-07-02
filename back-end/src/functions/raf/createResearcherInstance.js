@@ -13,6 +13,13 @@ const writeRegionAndInstanceIdToDB = async (dbId, instanceId, region) => {
     { id: dbId, instanceId, region }
   );
 };
+
+const HandleFailure = async dbId => {
+  await db.query(`UPDATE Environment set Status = 'error' WHERE id = :id`, {
+    id: dbId,
+  });
+};
+
 const checkWestInstanceCount = async () => {
   const params = {
     Filters: [
@@ -88,16 +95,16 @@ chmod 400 /home/centos/.ssh/config
 
 
 pushd SSITH-FETT-Target/ 
-echo "setting up git repo..."	
-git pull	
-git checkout master	
-git submodule init	
-git submodule update --init --recursive	
-pushd SSITH-FETT-Binaries	
-echo "Pulling binaries...."	
-git lfs pull	
-echo "Running fett command..."	
-popd
+#echo "setting up git repo..."	
+#git pull	
+#git checkout master	
+#git submodule init	
+#git submodule update --init --recursive	
+#pushd SSITH-FETT-Binaries	
+#echo "Pulling binaries...."	
+#git lfs pull	
+#echo "Running fett command..."	
+#popd
 
 nix-shell --command "python fett.py -d -ep awsProd -job ${iName} -cjson '$OUT'"
 EOF
@@ -136,8 +143,8 @@ const callStartInstance = async (f1Config, instanceName) => {
         Ebs: {
           DeleteOnTermination: true,
           Encrypted: false,
-          Iops: 200,
-          VolumeSize: 10,
+          Iops: 400,
+          VolumeSize: 120,
           VolumeType: 'io1',
         },
       },
@@ -145,7 +152,7 @@ const callStartInstance = async (f1Config, instanceName) => {
     ],
     DisableApiTermination: false,
     DryRun: false, // change this back to false
-    EbsOptimized: false,
+    EbsOptimized: true,
     IamInstanceProfile: {
       Name: f1Config.instanceRoleName,
     },
@@ -265,14 +272,17 @@ exports.handler = async event => {
   await db.makeConnection();
   for (const msg of event.Records) {
     console.log(msg);
-    if (parseInt(msg.attributes.ApproximateReceiveCount) > 3) {
-      console.log('Stopping initiation after 3 failed tries');
+    const message = JSON.parse(msg.body);
+
+    if (parseInt(msg.attributes.ApproximateReceiveCount) > 10) {
+      console.log('Stopping initiation after 10 failed tries');
+      await HandleFailure(message.Id);
       // shoulld probably alert someone here too.
       await deleteMessage(msg);
       // eslint-disable-next-line no-continue
       continue;
     }
-    const message = JSON.parse(msg.body);
+
     let f1Config = {
       region: message.Region,
       osImage: message.OS,
