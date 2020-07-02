@@ -6,7 +6,7 @@ const sqs = new aws.SQS();
 const db = new Database();
 
 const sendMessage = async instanceId => {
-  console.log(instanceId);
+  // console.log(instanceId);
   const params = {
     QueueUrl: process.env.PORTAL_TO_INSTANCE_TERMINATION_QUEUE_URL,
     MessageBody: 'terminate',
@@ -17,6 +17,7 @@ const sendMessage = async instanceId => {
       },
     },
   };
+  console.log('msg: ', params);
   return sqs.sendMessage(params).promise();
 };
 const updateStatusToDB = async dbId => {
@@ -40,7 +41,7 @@ const updateDBForTermined = async instanceId =>
     { instanceId }
   );
 const checkInstanceStatus = async (instanceId, region) => {
-  console.log('region', region);
+  // console.log('region', region);
   const ec2 = new aws.EC2({ region });
   return ec2
     .describeInstanceStatus({
@@ -78,9 +79,9 @@ exports.handler = async event => {
     let running;
     try {
       instanceStatus = await checkInstanceStatus(payload.InstanceId, region);
-      console.log(util.inspect(instanceStatus, { depth: null }));
-      console.log(instanceStatus);
-      console.log(instanceStatus.InstanceStatuses[0]);
+      //   console.log(util.inspect(instanceStatus, { depth: null }));
+      //   console.log(instanceStatus);
+      //   console.log(instanceStatus.InstanceStatuses[0]);
       const status = instanceStatus.InstanceStatuses[0].InstanceState.Name;
       if (status === 'running') {
         running = 'running';

@@ -94,7 +94,7 @@ const LaunchTable = ({ history, handleOpen }) => {
                     }`}
                     type="button"
                     onClick={event => handleLaunch(event, data)}
-                    disabled={count > 0}
+                    disabled={count > 5}
                   >
                     <img src={rocketDark} alt="" className="w-3" />
                     <p className="self-center text-sm font-medium text-blue-900 uppercase">launch</p>
