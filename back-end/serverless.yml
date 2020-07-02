@@ -467,7 +467,15 @@ functions:
           cors: true
           authorizer:
             name: authorizer
-            arn: ${self:custom.authorizerPool.${self:provider.stage}}                
+            arn: ${self:custom.authorizerPool.${self:provider.stage}}      
+  scheduledCleanup:
+    handler: src/functions/raf/scheduledCleanup.handler
+    timeout: 60
+    events: 
+      - eventBridge:
+          schedule: rate(4 hours)
+          enabled: true
+  
 
 resources:
   - ${file(cloudformation/hosting.yml)}
