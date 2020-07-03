@@ -53,6 +53,7 @@ exports.handler = async event => {
     console.log('environment config', envConf);
     if (signal === 'termination') {
       try {
+        console.log('Message Output: ', message.instance);
         await stopInstance(message.instance.id, envConf[0].Region);
       } catch (e) {
         if (e.code === 'InvalidInstanceID.NotFound') {

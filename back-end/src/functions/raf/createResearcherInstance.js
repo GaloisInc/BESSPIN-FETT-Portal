@@ -125,6 +125,7 @@ echo "Done with userdata script..."
 };
 const callStartInstance = async (f1Config, instanceName) => {
   console.log(f1Config);
+  ec2 = new aws.EC2({ region: 'us-west-2' });
 
   if (f1Config.region === 'us-east-1') {
     ec2 = new aws.EC2({ region: 'us-east-1' });

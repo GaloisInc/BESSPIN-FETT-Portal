@@ -63,9 +63,11 @@ const initializeInstance = index =>
         password,
         creatorId,
       };
-      await sendMessage(params);
-      console.log('provisioning', params);
-      resolve('success');
+      const p = await sendMessage(params);
+      Promise.resolve(p).then(() => {
+        console.log('provisioning', params);
+        resolve('success');
+      });
     } catch (error) {
       console.log(error);
       reject(error);
