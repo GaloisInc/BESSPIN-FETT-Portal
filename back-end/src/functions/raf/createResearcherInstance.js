@@ -59,6 +59,7 @@ const getUserData = (f1Config, iName) => {
   // eslint-disable-next-line
   const userdata = `#cloud-boothook
 #!/bin/bash
+
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 echo "Installing packages..."
 sudo yum install -y jq git-lfs
@@ -106,7 +107,14 @@ pushd SSITH-FETT-Target/
 #echo "Running fett command..."	
 #popd
 
+echo "running sed"
+sudo sed -i "/^[1:]/ s/$/ \${HOSTNAME}/" /etc/hosts
+
+#./testPortalSpeed/test_nonix.py -job ${iName}
+#nix-shell --command "./testPortalSpeed/test1.py -job ${iName}"
+
 nix-shell --command "python fett.py -d -ep awsProd -job ${iName} -cjson '$OUT'"
+
 EOF
 /bin/su -c "/home/centos/downloadAndStartFett.sh" - centos /dev/null &/dev/null &
 echo "Done with userdata script..."
