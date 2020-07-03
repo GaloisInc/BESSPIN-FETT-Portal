@@ -473,7 +473,7 @@ functions:
     timeout: 60
     events: 
       - eventBridge:
-          schedule: rate(4 hours)
+          schedule: rate(1 hour)
           enabled: true
   
 
