@@ -7,15 +7,25 @@ const db = new Database();
 
 const sendMessage = async instanceId => {
   // console.log(instanceId);
+  let messageAttrs = {
+    REPLACE_ME: {
+      DataType: 'String',
+      StringValue: String(instanceId),
+    },
+  };
+  let messageAttrsJson = JSON.stringify(messageAttrs);
+  console.log('start', messageAttrsJson);
+
+  messageAttrsJson = messageAttrsJson.replace('REPLACE_ME', instanceId);
+  console.log('messageJson', messageAttrsJson);
+
+  messageAttrs = JSON.parse(messageAttrsJson);
+  console.log('done', messageAttrs);
+
   const params = {
     QueueUrl: process.env.PORTAL_TO_INSTANCE_TERMINATION_QUEUE_URL,
     MessageBody: 'terminate',
-    MessageAttributes: {
-      instance_id: {
-        DataType: 'String',
-        StringValue: String(instanceId),
-      },
-    },
+    MessageAttributes: messageAttrs,
   };
   console.log('msg: ', params);
   return sqs.sendMessage(params).promise();

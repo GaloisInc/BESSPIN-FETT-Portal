@@ -10,19 +10,28 @@ const terminateInstance = Id =>
   new Promise(async (resolve, reject) => {
     try {
       console.log(`terminating id: ${Id}`);
+      let messageAttrs = {
+        REPLACE_ME: {
+          DataType: 'String',
+          StringValue: String(Id),
+        },
+      };
+
+      let messageAttrsJson = JSON.stringify(messageAttrs);
+      messageAttrsJson = messageAttrsJson.replace('REPLACE_ME', Id);
+      messageAttrs = JSON.parse(messageAttrsJson);
+
       const params = {
         QueueUrl: process.env.PORTAL_TO_INSTANCE_TERMINATION_QUEUE_URL,
         MessageBody: 'terminate',
-        MessageAttributes: {
-          instance_id: {
-            DataType: 'String',
-            StringValue: String(Id),
-          },
-        },
+        MessageAttributes: messageAttrs,
       };
-      await sqs.sendMessage(params).promise();
-      resolve(`success`);
+      sqs
+        .sendMessage(params)
+        .promise()
+        .then(() => resolve(true));
     } catch (error) {
+      reject(error);
       console.log(error);
     }
   });
@@ -32,25 +41,21 @@ exports.handler = async (event, context) => {
     await db.makeConnection();
 
     const provisioningEnvironments = await db.query(
-      `SELECT Id, Hour(TIMEDIFF( date(now()), date(Created))) as 'RunningTime' from Environment where Status = 'running'`
+      `SELECT Id, F1EnvironmentId 
+       FROM Environment 
+       WHERE Status = 'running' 
+              AND Created < NOW() - INTERVAL 4 HOUR`
     );
     console.log(provisioningEnvironments);
 
-    const longRunningInstances = provisioningEnvironments.filter(
-      env => env.RunningTime >= 4
-    );
-    console.log(longRunningInstances);
-
     const terminationPromises = [];
 
-    if (longRunningInstances.length > 0) {
-      longRunningInstances.forEach(instance => {
-        terminationPromises.push(terminateInstance(instance.Id));
+    if (provisioningEnvironments.length > 0) {
+      provisioningEnvironments.forEach(instance => {
+        terminationPromises.push(terminateInstance(instance.F1EnvironmentId));
       });
 
-      Promise.all(
-        terminationPromises.map(prom => prom.catch(e => console.log(e)))
-      );
+      await Promise.all(terminationPromises);
     } else {
       console.log('no long running instances');
     }
