@@ -14,10 +14,21 @@ const writeRegionAndInstanceIdToDB = async (dbId, instanceId, region) => {
   );
 };
 
-const HandleFailure = async dbId => {
+const handleFailure = async dbId => {
   await db.query(`UPDATE Environment set Status = 'error' WHERE id = :id`, {
     id: dbId,
   });
+};
+
+const changeUserRegion = async (userName, newRegion) => {
+  console.log(`Changing ${userName} region to ${newRegion}`);
+  await db.query(
+    `UPDATE User set Region = :newRegion WHERE  UserName = :userName`,
+    {
+      userName,
+      newRegion,
+    }
+  );
 };
 
 const checkWestInstanceCount = async () => {
@@ -198,7 +209,7 @@ const callStartInstance = async (f1Config, instanceName) => {
     Groups: [f1Config.securityGroupId],
   };
   await ec2.modifyInstanceAttribute(sgParams).promise();
-  return new Promise((resolve, reject) => resolve(ec2Data));
+  return new Promise(resolve => resolve(ec2Data));
 };
 const hashPassword = pw =>
   Buffer.from(sha512crypt(pw, 'xcnc07LxM26Xq')).toString('base64');
@@ -283,17 +294,22 @@ exports.handler = async event => {
     console.log(msg);
     const message = JSON.parse(msg.body);
 
-    if (parseInt(msg.attributes.ApproximateReceiveCount) > 10) {
-      console.log('Stopping initiation after 10 failed tries');
-      await HandleFailure(message.Id);
+    if (parseInt(msg.attributes.ApproximateReceiveCount) > 5) {
+      console.log('Stopping initiation after 5 failed tries');
+      await handleFailure(message.Id);
       // shoulld probably alert someone here too.
       await deleteMessage(msg);
       // eslint-disable-next-line no-continue
       continue;
     }
+    const reg = await db.query(
+      `SELECT Region FROM User WHERE UserName = :userName`,
+      { userName: message.username }
+    );
+    console.log(reg);
 
     let f1Config = {
-      region: message.Region,
+      region: reg[0].Region,
       osImage: message.OS,
       processor: message.Processor,
       ConfigurationKey: message.ConfigurationKey,
@@ -304,6 +320,7 @@ exports.handler = async event => {
       userPasswordHash: hashPassword(message.password),
       jobId: `${message.creatorId}-${message.Id}`,
     };
+
     if (f1Config.region === 'us-west-2') {
       try {
         const res = await checkWestInstanceCount();
@@ -347,11 +364,20 @@ exports.handler = async event => {
 
       console.log('Error Starting instance', e);
       console.log('handle', msg.receiptHandle);
+      let newRegion = 'us-west-2';
+      if (e.code === 'VcpuLimitExceeded') {
+        if (f1Config.region === 'us-west-2') {
+          newRegion = 'us-east-1';
+        }
+
+        console.log(`Failover from ${f1Config.region} to ${newRegion}`);
+        await changeUserRegion(f1Config.username, newRegion);
+      }
       await sqs
         .changeMessageVisibility({
           QueueUrl: process.env.RESEARCHER_INITIALIZATION_QUEUE_URL,
           ReceiptHandle: msg.receiptHandle,
-          VisibilityTimeout: 0,
+          VisibilityTimeout: 5,
         })
         .promise();
       throw e;
