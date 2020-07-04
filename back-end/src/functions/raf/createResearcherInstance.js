@@ -97,7 +97,7 @@ chmod 400 /home/centos/.ssh/config
 
 pushd SSITH-FETT-Target/ 
 #echo "setting up git repo..."	
-#git pull	
+git pull	
 #git checkout master	
 #git submodule init	
 #git submodule update --init --recursive	
