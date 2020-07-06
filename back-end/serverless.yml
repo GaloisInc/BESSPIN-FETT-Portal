@@ -473,14 +473,14 @@ functions:
     timeout: 60
     events: 
       - eventBridge:
-          schedule: rate(1 hour)
+          schedule: rate(30 minutes)
           enabled: true
   provisioningCleanup:
     handler: src/functions/raf/provisioningCleanup.handler
     timeout: 60
     events: 
       - eventBridge:
-          schedule: rate(1 hour)
+          schedule: rate(30 minutes)
           enabled: true
   
 
