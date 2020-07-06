@@ -19,6 +19,16 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
       setIsLoading(false);
     }
   };
+
+  const terminateButtonText = () => {
+    if (environment.Status === 'provisioning') {
+      return 'Cancel Instance';
+    }
+    if (environment.Status === 'terminating') {
+      return 'Terminating';
+    }
+    return 'Terminate Instance';
+  };
   return (
     <>
       <div className="flex flex-row py-2 bg-blue-600">
@@ -96,7 +106,7 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
             environment.Status === 'queueing'
           }
         >
-          {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Terminate Instance'}
+          {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : () => terminateButtonText()}
         </button>
       </div>
     </>

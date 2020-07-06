@@ -31,6 +31,16 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
   };
   const toggleOpen = () => setOpen(prevOpened => !prevOpened);
 
+  const terminateButtonText = () => {
+    if (environment.Status === 'provisioning') {
+      return 'Cancel Instance';
+    }
+    if (environment.Status === 'terminating') {
+      return 'Terminating';
+    }
+    return 'Terminate Instance';
+  };
+
   return (
     <>
       <div className="flex flex-row items-center justify-between px-4 py-2 bg-blue-900">
@@ -163,7 +173,7 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
                 environment.Status === 'queueing'
               }
             >
-              {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Terminate Instance'}
+              {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : () => terminateButtonText()}
             </button>
             <button
               className={` px-2 mr-10 mt-4 mb-4 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded w-56 ${
