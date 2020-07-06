@@ -7,8 +7,10 @@ import Alert from './Alert';
 
 const InstanceDetail = ({ environment, fetchEnvironments }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
   const updateInstanceStatus = async (event, newStatus) => {
     event.preventDefault();
+    setIsDisabled(true);
     setIsLoading(true);
     try {
       await ec2StatusUpdate(environment, newStatus);
@@ -20,15 +22,6 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
     }
   };
 
-  const terminateButtonText = () => {
-    if (environment.Status === 'provisioning') {
-      return 'Cancel Instance';
-    }
-    if (environment.Status === 'terminating') {
-      return 'Terminating';
-    }
-    return 'Terminate Instance';
-  };
   return (
     <>
       <div className="flex flex-row py-2 bg-blue-600">
@@ -86,10 +79,16 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
         </div>
         <p className="text-base text-200-gray">{environment.FPGAIp}</p>
       </div>
+      <div className="flex flex-row py-2 bg-blue-700">
+        <div className="w-48 ml-8 mr-8">
+          <p className="text-base text-teal-500 uppercase">Region</p>
+        </div>
+        <p className="text-base uppercase text-200-gray">{environment.Region}</p>
+      </div>
       <div className="flex flex-row items-center justify-end py-2 my-10 bg-blue-600">
         <button
           className={`w-48 px-2 py-1 mr-10 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded ${
-            isLoading ? 'opacity-50 cursor-not-allowed' : ''
+            isLoading || isDisabled ? 'opacity-50 cursor-not-allowed' : ''
           } ${
             environment.Status === 'terminated' ||
             environment.Status === 'terminating' ||
@@ -101,12 +100,13 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
           onClick={event => updateInstanceStatus(event, 'terminating')}
           disabled={
             isLoading ||
+            isDisabled ||
             environment.Status === 'terminated' ||
             environment.Status === 'terminating' ||
             environment.Status === 'queueing'
           }
         >
-          {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : () => terminateButtonText()}
+          {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Terminate Instance'}
         </button>
       </div>
     </>
