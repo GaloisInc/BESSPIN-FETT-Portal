@@ -480,7 +480,7 @@ functions:
     timeout: 60
     events: 
       - eventBridge:
-          schedule: rate(30 minutes)
+          schedule: rate(5 minutes)
           enabled: true
   
 
