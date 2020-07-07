@@ -15,7 +15,9 @@ if __name__ == "__main__":
 	index = int(sys.argv[1])
 	name = sys.argv[2]
 
-	driver = webdriver.Chrome()
+	options = webdriver.ChromeOptions()
+	options.add_argument("--start-maximized")
+	driver = webdriver.Chrome(options=options)
 	driver.get("https://fett.securehardware.org/")
 
 	print("[", os.getpid(), "]", "Started WebDriver, Logging In")
@@ -52,8 +54,10 @@ if __name__ == "__main__":
 	while not status == 'provisioning':
 		time.sleep(2)
 		assert(status == 'queueing')
-		status = WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[5]"))).text
-		#print(status)
+		try:
+			status = WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[5]"))).text
+		except:
+			print("[", os.getpid(), "]", "Failed to get status once")
 
 	print("[", os.getpid(), "]", "Provisioning Started")
 
@@ -62,21 +66,28 @@ if __name__ == "__main__":
 	while not status == 'running':
 		time.sleep(2)
 		assert(status == 'provisioning')
-		status = WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[5]"))).text
-		#print(status)
+		try:
+			status = WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[5]"))).text
+		except:
+			print("[", os.getpid(), "]", "Failed to get status once in Provisioning")
 
 	t1 = time.time()
 
 	print("[", os.getpid(), "]", "Time Captured, Instance Started")
 
-	# /html/body/div[3]/div[3]/div[7]/button
-	WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[6]/button")))
-	driver.find_element_by_xpath("//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[6]/button").click()
-	
-	WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[3]/div[3]/div[7]/button")))
-	driver.find_element_by_xpath("/html/body/div[3]/div[3]/div[7]/button").click()
+	try:
+		# /html/body/div[3]/div[3]/div[7]/button
+		WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[6]/button")))
+		driver.find_element_by_xpath("//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[6]/button").click()
+		
+		WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[3]/div[3]/div[7]/button")))
+		driver.find_element_by_xpath("/html/body/div[3]/div[3]/div[7]/button").click()
 
-	print("[", os.getpid(), "]", "Terminated Instance, Writing to File")
+		print("[", os.getpid(), "]", "Terminated Instance, Writing to File")
+
+	except:
+
+		print("[", os.getpid(), "]", "Failed to terminate; Writing to file")
 
 	with open("results.txt", 'a') as f:
 		f.write(name + " : " + str(time))
