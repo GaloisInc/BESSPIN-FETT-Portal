@@ -51,7 +51,10 @@ const Bounty = props => {
             </div>
             <div>
               <h3>Your SSITH target connection is being provisioned</h3>
-              <h5>Please be patient as this process can take up to 20 minutes</h5>
+              <h6>
+                Please be patient as this process can take up to 20 minutes. Once provisioned, if applicable, your SSH
+                credentials are the same as your portal credentials.
+              </h6>
             </div>
             <div className="flex flex-row justify-center">
               <button
