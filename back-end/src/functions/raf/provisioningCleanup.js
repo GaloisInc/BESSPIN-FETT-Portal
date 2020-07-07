@@ -41,7 +41,7 @@ exports.handler = async (event, context) => {
       `SELECT Id, F1EnvironmentId, Region 
        FROM Environment 
        WHERE Status = 'provisioning' 
-              AND Created < NOW() - INTERVAL 1 HOUR`
+              AND Created < NOW() - INTERVAL 30 MINUTE`
     );
     console.log(provisioningEnvironments);
 
