@@ -88,13 +88,13 @@ const LaunchTable = ({ history, handleOpen }) => {
                 render: data => (
                   <button
                     className={`flex flex-row items-center justify-around w-24 pr-4 selected:outline-none ${
-                      typeof count === 'number' && count > 0
+                      typeof count === 'number' && count > 1
                         ? 'bg-gray-600 cursor-default'
                         : 'btn-gray hover:bg-teal-500 hover:text-gray-200'
                     }`}
                     type="button"
                     onClick={event => handleLaunch(event, data)}
-                    disabled={count > 5}
+                    disabled={count > 1}
                   >
                     <img src={rocketDark} alt="" className="w-3" />
                     <p className="self-center text-sm font-medium text-blue-900 uppercase">launch</p>
@@ -124,8 +124,8 @@ const LaunchTable = ({ history, handleOpen }) => {
           />
         )}
         <p className="py-4 pl-2 ml-6 text-gray-200">
-          * Provisioned instances are limited to (1) and a duration of idle activity (TBD) before automatic instance
-          shutdown. New instances may not be launched until prior instance has been fully terminated.
+          * Provisioned instances are limited to (2) and a running time of 8 hours before automatic instance shutdown.
+          New instances may not be launched until prior instances are being terminated.
         </p>
       </div>
     </>

@@ -108,7 +108,7 @@ const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => 
             search: false,
             showTitle: false,
             toolbar: false,
-            overflowY: false,
+            // overflowY: false,
           }}
           data={filteredUsers}
         />
