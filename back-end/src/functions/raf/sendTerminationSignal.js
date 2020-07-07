@@ -106,8 +106,13 @@ exports.handler = async event => {
       }
     }
     if (running && running === 'running') {
-      // send message to fett to stop instance
-      await sendMessage(payload.InstanceId);
+      if (payload.Status === 'provisioning') {
+        await stopInstance(payload.InstanceId);
+        await updateDBForTermined(payload.InstanceId, region);
+      } else {
+        // send message to fett to stop instance
+        await sendMessage(payload.InstanceId);
+      }
     } else if (running && running === 'pending') {
       // force an instance to stop
       await stopInstance(payload.InstanceId);
