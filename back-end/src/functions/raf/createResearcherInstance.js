@@ -108,7 +108,7 @@ chmod 400 /home/centos/.ssh/config
 
 pushd SSITH-FETT-Target/ 
 #echo "setting up git repo..."	
-git pull	
+#git pull	
 #git checkout master	
 #git submodule init	
 #git submodule update --init --recursive	
@@ -120,9 +120,6 @@ git pull
 
 echo "running sed"
 sudo sed -i "/^[1:]/ s/$/ \${HOSTNAME}/" /etc/hosts
-
-#./testPortalSpeed/test_nonix.py -job ${iName}
-#nix-shell --command "./testPortalSpeed/test1.py -job ${iName}"
 
 nix-shell --command "python fett.py -d -ep awsProd -job ${iName} -cjson '$OUT'"
 
@@ -315,7 +312,7 @@ exports.handler = async event => {
       ConfigurationKey: message.ConfigurationKey,
       binarySource: message.Type,
       useCustomCredentials: 'yes',
-      rootUserAccess: 'no',
+      rootUserAccess: 'yes',
       username: message.username,
       userPasswordHash: hashPassword(message.password),
       jobId: `${message.creatorId}-${message.Id}`,
