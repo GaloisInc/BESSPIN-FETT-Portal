@@ -139,6 +139,18 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
             </div>
             <p className="text-base text-200-gray">{environment.FPGAIp}</p>
           </div>
+          <div className="flex flex-row py-2 bg-blue-600">
+            <div className="w-48 ml-8 mr-8 ">
+              <p className="text-base text-teal-500 uppercase">Region</p>
+            </div>
+            <p className="text-base text-200-gray">{environment.Region}</p>
+          </div>
+          <div className="flex flex-row py-2 bg-blue-700">
+            <div className="w-48 ml-8 mr-8">
+              <p className="text-base text-teal-500 uppercase">Code Name</p>
+            </div>
+            <p className="text-base text-200-gray">{environment.CodeName}</p>
+          </div>
           <div className="flex flex-row justify-end">
             <button
               className={` px-2 mr-10 mt-4 mb-4 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded w-56 ${
