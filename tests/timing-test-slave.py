@@ -90,7 +90,7 @@ if __name__ == "__main__":
 		print("[", os.getpid(), "]", "Failed to terminate; Writing to file")
 
 	with open("results.txt", 'a') as f:
-		f.write(name + " : " + str(time))
+		f.write(name + " : " + str(t1-t0))
 		f.close()
 
 	print("[", os.getpid(), "]", "Ending")
