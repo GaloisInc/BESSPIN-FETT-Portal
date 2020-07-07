@@ -38,7 +38,7 @@ const Header = ({ history, name }) => {
 
   return (
     <div className="flex flex-row items-center justify-between flex-initial h-24 bg-blue-800">
-      <img className="h-16 pl-4" src={fettLogo} alt="Fett Logo Arc" />
+      <img className="h-20 pl-10" src={fettLogo} alt="Fett Logo Arc" />
       <div className="flex flex-row">
         <img className="mr-4" src={droid} alt="droid icon" />
         <button

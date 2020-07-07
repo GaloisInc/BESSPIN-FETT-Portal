@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import { CircularProgress } from '@material-ui/core';
 
 import backgroundCity from '../assets/fett_cityscape.png';
-import backgroundLogo from '../assets/fett_logo_login.png';
+import backgroundLogo from '../assets/fettLogo.png';
 import backgroundPlanet from '../assets/fett_planets.png';
 
 const Login = props => {
@@ -64,12 +64,10 @@ const Login = props => {
       }}
     >
       <div className="flex-col self-center w-64">
-        <h1
-          className="bg-no-repeat"
-          style={{ backgroundImage: `url(${backgroundLogo})`, height: '90px', width: '266px' }}
-        >
+        <div>
+          <img className="h-64" src={backgroundLogo} alt="edgy uncle sam inviting to FETT" />
           <span className="hidden">FETT Portal</span>
-        </h1>
+        </div>
         <p className="mb-8 text-center text-teal-500 uppercase">Sign in to access FETT Portal</p>
         <label htmlFor="username" className="mt-8 text-gray-200 font-body">
           Username
