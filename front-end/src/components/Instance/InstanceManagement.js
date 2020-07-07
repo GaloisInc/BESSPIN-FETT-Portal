@@ -130,7 +130,7 @@ export default function InstanceManagement() {
                     </p>
                   ),
                 },
-                { title: 'Code Name', field: 'CodeName', width: '12em' },
+                { title: 'Fett Target', field: 'FPGAIp', width: '12em' },
                 // { title: 'Idle Time', field: 'IdleTime', width: '12em' },
                 { title: 'STATUS', field: 'Status', width: '6em' },
                 {
