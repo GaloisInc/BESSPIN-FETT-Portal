@@ -11,6 +11,7 @@ front-end/node_modules/
 
 # testing
 /coverage
+tests/accts.txt
 
 # production
 /build
