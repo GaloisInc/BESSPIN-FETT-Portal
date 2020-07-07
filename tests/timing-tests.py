@@ -55,8 +55,11 @@ def run_timing_test (driver, index):
 	t1 = time.time()
 
 	# /html/body/div[3]/div[3]/div[7]/button
-	WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[6]/button"))).click()
-	WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[3]/div[3]/div[7]/button"))).click()
+	WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[6]/button")))
+	driver.find_element_by_xpath("//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[6]/button").click()
+	
+	WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[3]/div[3]/div[7]/button")))
+	driver.find_element_by_xpath("/html/body/div[3]/div[3]/div[7]/button").click()
 
 	return t1-t0
 
@@ -75,7 +78,9 @@ def main ():
 
 	# Open webpage and determine the combinations to run
 
-	driver_chrome = webdriver.Chrome()
+	options = webdriver.ChromeOptions()
+	options.add_argument("--start-maximized")
+	driver_chrome = webdriver.Chrome(options=options)
 	driver_chrome.get("https://fett.securehardware.org/")
 
 	login(driver_chrome, accounts[0][0], accounts[0][1])
@@ -101,7 +106,9 @@ def main ():
 
 	#for run_index in range (0, len(run_names)):
 
-	driver_chrome = webdriver.Chrome()
+	options = webdriver.ChromeOptions()
+	options.add_argument("--start-maximized")
+	driver_chrome = webdriver.Chrome(options=options)
 	driver_chrome.get("https://fett.securehardware.org/")
 	login(driver_chrome, accounts[0][0], accounts[0][1])
 	a = run_timing_test(driver_chrome, 0)
