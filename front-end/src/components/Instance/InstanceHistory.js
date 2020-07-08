@@ -77,7 +77,7 @@ const InstanceHistory = params => {
         <div className="flex flex-row items-center justify-between w-full pl-2 mt-2 mb-2">
           <h5 className="text-gray-200 uppercase">instance history</h5>
           <button
-            className="flex flex-row items-center justify-around w-auto pl-4 pr-4 selected:outline-none btn-gray hover:bg-teal-500 hover:text-gray-200"
+            className="flex flex-row items-center justify-around whitespace-no-wrap pl-4 pr-4 selected:outline-none btn-gray hover:bg-teal-500 hover:text-gray-200"
             type="button"
             onClick={event => handleLaunch(event)}
           >
@@ -114,7 +114,7 @@ const InstanceHistory = params => {
                   </p>
                 ),
               },
-              { title: 'Code Name', field: 'CodeName', width: '7em' },
+              { title: 'CodeName', field: 'CodeName', width: '7em' },
               {
                 title: 'Launched',
                 field: 'Created',

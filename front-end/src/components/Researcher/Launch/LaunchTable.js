@@ -87,7 +87,7 @@ const LaunchTable = ({ history, handleOpen }) => {
                 field: 'Launch',
                 render: data => (
                   <button
-                    className={`flex flex-row items-center justify-around w-24 pr-4 selected:outline-none ${
+                    className={`flex flex-row items-center justify-around whitespace-no-wrap w-24 px-4 selected:outline-none ${
                       typeof count === 'number' && count > 1
                         ? 'bg-gray-600 cursor-default'
                         : 'btn-gray hover:bg-teal-500 hover:text-gray-200'
@@ -96,7 +96,7 @@ const LaunchTable = ({ history, handleOpen }) => {
                     onClick={event => handleLaunch(event, data)}
                     disabled={count > 1}
                   >
-                    <img src={rocketDark} alt="" className="w-3" />
+                    <img src={rocketDark} alt="" className="w-3 mr-2" />
                     <p className="self-center text-sm font-medium text-blue-900 uppercase">launch</p>
                   </button>
                 ),
