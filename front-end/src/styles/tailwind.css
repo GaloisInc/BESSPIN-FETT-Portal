@@ -55,6 +55,10 @@ a {
   @apply text-sm;
 }
 
+ul {
+  @apply font-body;
+}
+
 td.MuiTableCell-root {
   @apply border-b-0;
   @apply py-2;
