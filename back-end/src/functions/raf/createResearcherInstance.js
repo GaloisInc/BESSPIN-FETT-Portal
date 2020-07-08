@@ -71,6 +71,9 @@ const getUserData = (f1Config, iName) => {
   const userdata = `#cloud-boothook
 #!/bin/bash
 
+#iptables -F
+#service sshd restart
+
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 echo "Installing packages..."
 sudo yum install -y jq git-lfs
@@ -121,7 +124,7 @@ pushd SSITH-FETT-Target/
 echo "running sed"
 sudo sed -i "/^[1:]/ s/$/ \${HOSTNAME}/" /etc/hosts
 
-nix-shell --command "python fett.py -d -ep awsProd -job ${iName} -cjson '$OUT'"
+nohup nix-shell --command "python fett.py -d -ep awsProd -job ${iName} -cjson '$OUT'" &
 
 EOF
 /bin/su -c "/home/centos/downloadAndStartFett.sh" - centos /dev/null &/dev/null &

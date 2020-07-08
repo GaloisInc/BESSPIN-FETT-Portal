@@ -123,9 +123,10 @@ const LaunchTable = ({ history, handleOpen }) => {
             data={instanceConfigurations}
           />
         )}
+
         <p className="py-4 pl-2 ml-6 text-gray-200">
-          * Provisioned instances are limited to (2) and a running time of 8 hours before automatic instance shutdown.
-          New instances may not be launched until prior instances are being terminated.
+          * Provisioned instances are limited to two (2) and will remain active for eight (8) hours before automatic
+          instance shutdown. New instances may not be launched until prior instance has been fully terminated.
         </p>
       </div>
     </>
