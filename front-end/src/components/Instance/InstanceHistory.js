@@ -153,8 +153,8 @@ const InstanceHistory = params => {
           />
         )}
         <p className="pt-4 pl-2 text-gray-200">
-          Provisioned instances are limited to (1) and a duration of idle activity (TBD) before automatic instance
-          shutdown.
+          Provisioned instances are limited to two (2), and automatic instance shutdown will occur after an instance has
+          been active for eight (8) hours.
         </p>
         <Modal open={open} onClose={handleClose}>
           <InstanceHistoryModal

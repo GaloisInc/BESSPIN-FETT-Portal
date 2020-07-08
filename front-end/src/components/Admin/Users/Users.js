@@ -43,7 +43,6 @@ export default function Users() {
             setFilteredUsers={setFilteredUsers}
           />
         )}
-        ;
       </div>
     </div>
   );
