@@ -30,4 +30,5 @@ This will call children. These children have a high success rate, but might fail
 
 - timeout errors (infinite loading spin on launch)
 - stale element errors (unknown cause)
+- password passing errors (cause invalid login)
 
