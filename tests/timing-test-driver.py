@@ -31,57 +31,71 @@ def main ():
 	else:
 		NUMBER_OF_RUNS = int(sys.argv[1])
 		DELAY_BETWEEN_INSTANCES = int(sys.argv[2])
+	
+	# Catch failures in the process of gathering targets. 
+	try:
+		# Assemble list of user accounts from file.
+		print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Started")
+		run_names = []
 
-	# Assemble list of user accounts from file.
-	print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Started")
-	run_names = []
+		with open('accts.txt', 'r', encoding='utf-8-sig') as f:
+			accounts = f.readlines()
+			f.close()
 
-	with open('accts.txt', 'r', encoding='utf-8-sig') as f:
-		accounts = f.readlines()
-		f.close()
+		# Parse accounts into list
+		accounts = [[x.split(",")[0][1:-1], x.split(",")[1].strip()[1:-1]] for x in accounts]
+		print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Found", str(len(accounts)),"Accounts:")
 
-	# Parse accounts into list
-	accounts = [[x.split(",")[0][1:-1], x.split(",")[1].strip()[1:-1]] for x in accounts]
-	print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Found", str(len(accounts)),"Accounts:")
+		# Open webpage and determine the combinations to run
+		# Requires a log in first
+		print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Logging In to Get Launch Candidates")
+		
+		try:
+			driver = webdriver.Chrome()
+			driver.get("https://fett.securehardware.org/")
+		except:
+			print("[", os.getpid(), "@", ct(), "]", "[ Driver ] ERROR: FCould not start driver.")
+			exit()
 
-	# Open webpage and determine the combinations to run
-	# Requires a log in first
-	print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Logging In to Get Launch Candidates")
-	driver = webdriver.Chrome()
-	driver.get("https://fett.securehardware.org/")
+		username = driver.find_element_by_id("username")
+		username.clear()
+		username.send_keys(accounts[0][0])
 
-	username = driver.find_element_by_id("username")
-	username.clear()
-	username.send_keys(accounts[0][0])
+		password = driver.find_element_by_id("password")
+		password.clear()
+		password.send_keys(accounts[0][1])
 
-	password = driver.find_element_by_id("password")
-	password.clear()
-	password.send_keys(accounts[0][1])
+		driver.find_element_by_css_selector("button").click()
 
-	driver.find_element_by_css_selector("button").click()
+		# Logged in OK, let's check the options for launches
+		# Click OK to the popup that appears
+		print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Closing Popup")
+		WebDriverWait(driver,100).until(EC.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div/div[2]/div[2]/div/div/div[1]/div[1]/button')))
+		driver.find_element_by_xpath('//*[@id="root"]/div/div/div[2]/div[2]/div/div/div[1]/div[1]/button').click()
 
-	# Logged in OK, let's check the options for launches
-	# Click OK to the popup that appears
-	print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Closing Popup")
-	WebDriverWait(driver,100).until(EC.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div/div[2]/div[2]/div/div/div[1]/div[1]/button')))
-	driver.find_element_by_xpath('//*[@id="root"]/div/div/div[2]/div[2]/div/div/div[1]/div[1]/button').click()
+		# Gather table of launch candidates
+		table = WebDriverWait(driver,100).until(EC.presence_of_element_located((By.XPATH, "//*[@id='root']/div/div/div[2]/div[2]/div/div/div/div[2]/div/div/div/div/table/tbody")))
+		rows = table.find_elements(By.TAG_NAME, "tr")
 
-	# Gather table of launch candidates
-	table = WebDriverWait(driver,100).until(EC.presence_of_element_located((By.XPATH, "//*[@id='root']/div/div/div[2]/div[2]/div/div/div/div[2]/div/div/div/div/table/tbody")))
-	rows = table.find_elements(By.TAG_NAME, "tr")
+		# For each row in the table, break into items (row @ col)
+		for row in rows:
+			col = row.find_elements(By.TAG_NAME, "td") #note: index start from 0, 1 is col 2
+			tl=[]
 
-	# For each row in the table, break into items (row @ col)
-	for row in rows:
-		col = row.find_elements(By.TAG_NAME, "td") #note: index start from 0, 1 is col 2
-		tl=[]
+			# The name will be these fields (the last one is the launch button)
+			for c in col[0:4]:
+				tl.append(c.text)
+			run_names.append(tl)
 
-		# The name will be these fields (the last one is the launch button)
-		for c in col[0:4]:
-			tl.append(c.text)
-		run_names.append(tl)
+		print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Launch Candidates:")
+		[print("\t" + "- " + '-'.join(x)) for x in run_names]
 
-	print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Launch Candidates:")
-	[print("\t" + "- " + '-'.join(x)) for x in run_names]
+	except:
+
+		print("[", os.getpid(), "@", ct(), "]", "[ Driver ] ERROR: Failed to gather list of launch candidates.")
+		print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Closing Driver")
+		driver.close()
+		exit()
 
 	print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Closing Driver")
 	driver.close()

@@ -17,55 +17,89 @@ def ct():
 	now = datetime.now()
 	return now.strftime("%H:%M:%S")
 
+def write_results(string):
+	with open("results.txt", 'a') as f:
+		now = datetime.now()
+		f.write("[ " + now.strftime("%H:%M:%S") + "] : " + name + " : " + string + "\n")
+		f.close()
+
 if __name__ == "__main__":
 
 	print("[", os.getpid(), "@", ct(), "]", "Child Started with Arguments:", sys.argv[1:5])
 
 	# Parse Arguments
-	index = int(sys.argv[1])
-	name = sys.argv[2]
-	un = sys.argv[3]
-	pw = sys.argv[4]
+	try:
+		index = int(sys.argv[1])
+		name = sys.argv[2]
+		un = sys.argv[3]
+		pw = sys.argv[4]
+	except:
+		print("[", os.getpid(), "@", ct(), "]", "ERROR: Invalid arguments provided to child.")
+		write_results("FAILED: invalid arguments")
+		exit()
 
 	# Start Webdriver
-	print("[", os.getpid(), "@", ct(), "]", "Starting WebDriver")
-	options = webdriver.ChromeOptions()
-	options.add_argument("--start-maximized")
-	driver = webdriver.Chrome(options=options)
-	driver.get("https://fett.securehardware.org/")
+	try:
+		print("[", os.getpid(), "@", ct(), "]", "Starting WebDriver")
+		options = webdriver.ChromeOptions()
+		options.add_argument("--start-maximized")
+		driver = webdriver.Chrome(options=options)
+		driver.get("https://fett.securehardware.org/")
+	except:
+		print("[", os.getpid(), "@", ct(), "]", "ERROR: Child failed to open Webdriver, likely because too many are open")
+		write_results("FAILED: could not open WebDriver")
+		driver.close()
+		exit()
 
-	print("[", os.getpid(), "@", ct(), "]", "Started WebDriver, Logging In")
+	# Logging In
+	try:
+		print("[", os.getpid(), "@", ct(), "]", "Started WebDriver, Logging In")
 
-	username = driver.find_element_by_id("username")
-	username.clear()
-	username.send_keys(un)
+		username = driver.find_element_by_id("username")
+		username.clear()
+		username.send_keys(un)
 
-	password = driver.find_element_by_id("password")
-	password.clear()
-	password.send_keys(pw)
+		password = driver.find_element_by_id("password")
+		password.clear()
+		password.send_keys(pw)
 
-	driver.find_element_by_css_selector("button").click()
+		driver.find_element_by_css_selector("button").click()
+	except:
+		print("[", os.getpid(), "@", ct(), "]", "ERROR: Child failed to log in, likely because of bad credentials:", un, pw)
+		write_results("FAILED: logging in failed")
+		driver.close()
+		exit()
 
 	# Get table
-	print("[", os.getpid(), "@", ct(), "]", "Logged In, Getting Table")
-	WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div/div[2]/div[2]/div/div/div[1]/div[1]/button')))
-	driver.find_element_by_xpath('//*[@id="root"]/div/div/div[2]/div[2]/div/div/div[1]/div[1]/button').click()
+	try:
+		print("[", os.getpid(), "@", ct(), "]", "Logged In, Getting Table")
+		WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div/div[2]/div[2]/div/div/div[1]/div[1]/button')))
+		driver.find_element_by_xpath('//*[@id="root"]/div/div/div[2]/div[2]/div/div/div[1]/div[1]/button').click()
 
-	# Click launch
-	print("[", os.getpid(), "@", ct(), "]", "Launching Instance")
-	button = WebDriverWait(driver,100).until(EC.presence_of_element_located((By.XPATH, "//*[@id='root']/div/div/div[2]/div[2]/div/div/div/div[2]/div/div/div/div/table/tbody/tr[" + str(index+1) + "]/td[5]/button")))
-	button.click()
+		# Click launch
+		print("[", os.getpid(), "@", ct(), "]", "Launching Instance")
+		button = WebDriverWait(driver,100).until(EC.presence_of_element_located((By.XPATH, "//*[@id='root']/div/div/div[2]/div[2]/div/div/div/div[2]/div/div/div/div/table/tbody/tr[" + str(index+1) + "]/td[5]/button")))
+		button.click()
 
-	# click OK on the time notice dialog
-	button = WebDriverWait(driver,100).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div[3]/div[3]/button")))
-	button.click()
+		# click OK on the time notice dialog
+		button = WebDriverWait(driver,100).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[2]/div[3]/div[3]/button")))
+		button.click()
+	except:
+		print("[", os.getpid(), "@", ct(), "]", "ERROR: Portal could not load table of launch candidates for user:", un, " - consider deleting them from accts.txt")
+		write_results("FAILED: portal hung on user " + un)
+		driver.close()
+		exit()
 
 	# Wait for Provisioning to Start
 	print("[", os.getpid(), "@", ct(), "]", "Instance Launched, Queueing")
 	status = WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[5]"))).text
 	while not status == 'provisioning':
 		time.sleep(2)
-		assert(status == 'queueing')
+		if status != 'queueing':
+			write_results("FAILED: terminated before made it to provisioning during queueing")
+			print("[", os.getpid(), "@", ct(), "]", "ERROR: Instance", name, "in account", un, "encountered status", status, "as opposed to expected 'queueing'")
+			driver.close()
+			exit()
 		try:
 			status = WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[5]"))).text
 		except:
@@ -77,7 +111,11 @@ if __name__ == "__main__":
 
 	while not status == 'running':
 		time.sleep(2)
-		assert(status == 'provisioning')
+		if status != 'provisioning':
+			print("[", os.getpid(), "@", ct(), "]", "ERROR: Instance", name, "in account", un, "encountered status", status, "as opposed to expected 'provisioning'")
+			write_results("FAILED: terminated before made it to running during provisioning")
+			driver.close()
+			exit()
 		try:
 			status = WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[5]"))).text
 		except:
@@ -99,13 +137,10 @@ if __name__ == "__main__":
 
 	except:
 
-		print("[", os.getpid(), "@", ct(), "]", "Failed to terminate; Writing to file")
+		print("[", os.getpid(), "@", ct(), "]", "ERROR: Failed to terminate; Writing to file")
 
 	# Write Results Out
-	with open("results.txt", 'a') as f:
-		now = datetime.now()
-		f.write("[ " + now.strftime("%H:%M:%S") + "] : " + name + " : " + str(t1-t0) + "\n")
-		f.close()
+	write_results(str(t1-t0))
 
 	print("[", os.getpid(), "@", ct(), "]", "Ending")
 	driver.close()
