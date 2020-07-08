@@ -68,7 +68,7 @@ def main ():
 			print(cmd)
 			#os.system("python3 timing-test-slave.py " + str(run_index) + " " + ''.join(run_names[run_index]) + " " + accounts[run_index][0] + " " + accounts[run_index][1] + " &""python3 timing-test-slave.py " + str(run_index) + " " + ''.join(run_names[run_index]) + " " + accounts[run_index][0] + " " + accounts[run_index][1] + " &")
 			proc = Popen([cmd], shell=True, stdin=None, stdout=None, stderr=None, close_fds=True)
-			time.sleep(5)
+			time.sleep(60)
 
 if __name__ == "__main__":
 	main()
