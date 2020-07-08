@@ -130,7 +130,8 @@ export default function InstanceManagement() {
                     </p>
                   ),
                 },
-                { title: 'Fett Target', field: 'FPGAIp', width: '12em' },
+                { title: 'Fett Target', field: 'FPGAIp', width: '9em' },
+                { title: 'Instance Ip', field: 'IpAddress', width: '9em' },
                 // { title: 'Idle Time', field: 'IdleTime', width: '12em' },
                 { title: 'STATUS', field: 'Status', width: '6em' },
                 {
@@ -172,7 +173,7 @@ export default function InstanceManagement() {
       </div>
       <Modal open={open} onClose={handleClose}>
         <InstanceModal
-          cardHeight={height - 340}
+          cardHeight={height - 400}
           handleClose={handleClose}
           isModalLoading={isModalLoading}
           modalData={modalData}
