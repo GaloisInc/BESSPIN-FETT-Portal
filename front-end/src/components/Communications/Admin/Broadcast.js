@@ -47,7 +47,7 @@ const Broadcast = ({ update, announceID }) => {
   }, []);
 
   return (
-    <div className="flex flex-col items-center w-auto m-8">
+    <div className="flex flex-col items-center w-auto m-8 pb-8">
       <label htmlFor="vulnurability" className="self-start mt-8 text-gray-200 font-body">
         Subject
       </label>
@@ -68,7 +68,7 @@ const Broadcast = ({ update, announceID }) => {
         className="w-full p-1 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
       />
       <button
-        className={`w-full px-2 py-1 mt-8 font-bold text-blue-700 uppercase bg-gray-200 rounded hover:bg-teal-500 hover:text-gray-200 ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`} 
+        className={`w-full px-2 py-1 mt-8 font-bold text-blue-700 uppercase bg-gray-200 rounded hover:bg-teal-500 hover:text-gray-200 font-body ${isDisabled ? 'opacity-50 cursor-not-allowed' : ''}`} 
         type="submit"
         disabled={isDisabled}
         onClick={event => handleSubmit(event)}

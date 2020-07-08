@@ -151,9 +151,9 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
             </div>
             <p className="text-base text-200-gray">{environment.CodeName}</p>
           </div>
-          <div className="flex flex-row justify-end">
+          <div className="flex flex-row justify-end bg-blue-600">
             <button
-              className={` px-2 mr-10 mt-4 mb-4 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded w-56 ${
+              className={` px-2 mr-10 mt-4 mb-4 text-sm font-medium font-body text-blue-700 uppercase bg-gray-200 rounded w-56 ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               } ${
                 isDisabled ||
@@ -178,7 +178,7 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
               {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Terminate Instance'}
             </button>
             <button
-              className={` px-2 mr-10 mt-4 mb-4 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded w-56 ${
+              className={` px-2 mr-10 mt-4 mb-4 text-sm font-medium font-body text-blue-700 uppercase bg-gray-200 rounded w-56 ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               } ${
                 isForceDisabled || environment.Status === 'terminated' || environment.Status === 'queueing'
@@ -192,6 +192,63 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
               }
             >
               {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Force Terminate Instance'}
+            </button>
+          </div>
+          <div className="flex flex-row justify-end bg-blue-700">
+            <button
+              className={` px-2 mr-10 mt-4 mb-4 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded w-32 ${
+                isLoading ? 'opacity-50 cursor-not-allowed' : ''
+              } ${
+                !environment.F1EnvironmentId
+                  ? 'bg-gray-600 cursor-default'
+                  : 'bg-gray-200 hover:bg-teal-500 hover:text-gray-200'
+              }`}
+              type="button"
+              disabled={!environment.F1EnvironmentId}
+            >
+              <p className="text-sm font-medium text-blue-900 uppercase">
+                {!environment.F1EnvironmentId ? (
+                  'User Logs'
+                ) : (
+                  <a
+                    className="font-medium"
+                    href={`https://us-west-2.console.aws.amazon.com/cloudwatch/home?region=${
+                      environment.Region
+                    }#logsV2:log-groups/log-group/user-data.log/log-events/${environment.F1EnvironmentId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    User Logs
+                  </a>
+                )}
+              </p>
+            </button>
+            <button
+              className={` px-2 mr-10 mt-4 mb-4 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded w-32 ${
+                isLoading ? 'opacity-50 cursor-not-allowed' : ''
+              } ${
+                !environment.F1EnvironmentId
+                  ? 'bg-gray-600 cursor-default'
+                  : 'bg-gray-200 hover:bg-teal-500 hover:text-gray-200'
+              }`}
+              type="button"
+              disabled={!environment.F1EnvironmentId}
+            >
+              <p className="text-sm text-blue-900 uppercase">
+                {!environment.F1EnvironmentId ? (
+                  'Fett Logs'
+                ) : (
+                  <a
+                    href={`https://us-west-2.console.aws.amazon.com/cloudwatch/home?region=${
+                      environment.Region
+                    }#logsV2:log-groups/log-group/fett.log/log-events/${environment.F1EnvironmentId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    FETT Logs
+                  </a>
+                )}
+              </p>
             </button>
           </div>
         </>
