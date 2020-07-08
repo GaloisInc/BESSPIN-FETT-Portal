@@ -87,7 +87,7 @@ const LaunchTable = ({ history, handleOpen }) => {
                 field: 'Launch',
                 render: data => (
                   <button
-                    className={`flex flex-row items-center justify-around whitespace-no-wrap w-24 px-4 selected:outline-none ${
+                    className={`flex flex-row items-center justify-around whitespace-no-wrap w-24 px-4 selected:outline-none rounded ${
                       typeof count === 'number' && count > 1
                         ? 'bg-gray-600 cursor-default'
                         : 'btn-gray hover:bg-teal-500 hover:text-gray-200'
@@ -119,6 +119,7 @@ const LaunchTable = ({ history, handleOpen }) => {
               showTitle: false,
               toolbar: false,
               sorting: false,
+              draggable: false,
             }}
             data={instanceConfigurations}
           />

@@ -20,11 +20,13 @@ export default function InstanceManagement() {
   const [isLoading, setIsLoading] = useState(true);
   const [environments, setEnvironments] = useState([]);
   const [filteredEnvironments, setFilteredEnvironments] = useState([]);
+  const [updateTime, setUpdateTime] = useState('');
   const { height } = useWindowDimensions();
 
   const fetchEnvironments = async () => {
     try {
       const response = await getEnvironments();
+      setUpdateTime(new Date().toLocaleString());
       setEnvironments(response);
       setIsLoading(false);
     } catch (error) {
@@ -165,10 +167,14 @@ export default function InstanceManagement() {
                 search: false,
                 showTitle: false,
                 toolbar: false,
+                draggable: false,
               }}
               data={filteredEnvironments}
             />
           )}
+        </div>
+        <div className="flex flex-row justify-end p-1">
+          <p className="text-xs text-gray-500">Last Updated: {updateTime}</p>
         </div>
       </div>
       <Modal open={open} onClose={handleClose}>
