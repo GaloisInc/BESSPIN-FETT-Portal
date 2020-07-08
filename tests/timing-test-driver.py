@@ -1,13 +1,19 @@
+#!/usr/bin/python3
+
+# Selenium
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
+
+# Other
 import time
 import os
 import sys
 from subprocess import Popen
 from datetime import datetime
 
+# Return current time in printable format
 def ct():
 	now = datetime.now()
 	return now.strftime("%H:%M:%S")
@@ -26,7 +32,7 @@ def main ():
 		NUMBER_OF_RUNS = int(sys.argv[1])
 		DELAY_BETWEEN_INSTANCES = int(sys.argv[2])
 
-	# Assemble list of user accounts from file. 
+	# Assemble list of user accounts from file.
 	print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Started")
 	run_names = []
 
@@ -34,7 +40,7 @@ def main ():
 		accounts = f.readlines()
 		f.close()
 
-	# Parse accounts into list 
+	# Parse accounts into list
 	accounts = [[x.split(",")[0][1:-1], x.split(",")[1].strip()[1:-1]] for x in accounts]
 	print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Found", str(len(accounts)),"Accounts:")
 
@@ -80,8 +86,8 @@ def main ():
 	print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Closing Driver")
 	driver.close()
 
-	# Launch the processes that will collect data. 
-	#	Here, I launch NUMBER_OF_RUNS sets of all n launch candidates, 
+	# Launch the processes that will collect data.
+	#	Here, I launch NUMBER_OF_RUNS sets of all n launch candidates,
 	#	DELAY_BETWEEN_INSTANCES seconds between launches to perform load balancing.
 	for x in range (0, NUMBER_OF_RUNS):
 		for run_index in range (0, len(run_names)):

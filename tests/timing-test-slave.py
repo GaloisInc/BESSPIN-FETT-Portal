@@ -1,12 +1,18 @@
+#!/usr/bin/python3
+
+# Selenium
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
+
+# Other
 import time
 import sys
 import os
 from datetime import datetime
 
+# Return Current Time
 def ct():
 	now = datetime.now()
 	return now.strftime("%H:%M:%S")
@@ -77,17 +83,17 @@ if __name__ == "__main__":
 		except:
 			print("[", os.getpid(), "@", ct(), "]", "Failed to get status once in Provisioning")
 
-	# Running 
+	# Running
 	t1 = time.time()
 	print("[", os.getpid(), "@", ct(), "]", "Second Time Captured at", t1, ", Instance Started")
 
 	# Try to terminate instance
 	try:
-		
+
 		print("[", os.getpid(), "@", ct(), "]", "Terminated Instance, Writing to File")
 		WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[6]/button")))
 		driver.find_element_by_xpath("//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[6]/button").click()
-		
+
 		WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[3]/div[3]/div[7]/button")))
 		driver.find_element_by_xpath("/html/body/div[3]/div[3]/div[7]/button").click()
 
