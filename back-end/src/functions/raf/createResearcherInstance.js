@@ -68,10 +68,11 @@ const getUserData = (f1Config, iName) => {
     .filter(key => configOptions.indexOf(key) >= 0)
     .reduce((obj2, key) => Object.assign(obj2, { [key]: f1Config[key] }), {});
   // eslint-disable-next-line
-  const userdata = `#cloud-boothook
-#!/bin/bash
+const userdata = `#!/bin/bash
 
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+#iptables -F
+#service sshd restart
 echo "Installing packages..."
 sudo yum install -y jq git-lfs
 echo "Setting up ssh files"
@@ -107,24 +108,12 @@ chmod 400 /home/centos/.ssh/config
 
 
 pushd SSITH-FETT-Target/ 
-#echo "setting up git repo..."	
-#git pull	
-#git checkout master	
-#git submodule init	
-#git submodule update --init --recursive	
-#pushd SSITH-FETT-Binaries	
-#echo "Pulling binaries...."	
-#git lfs pull	
-#echo "Running fett command..."	
-#popd
 
-echo "running sed"
-sudo sed -i "/^[1:]/ s/$/ \${HOSTNAME}/" /etc/hosts
-
-nix-shell --command "python fett.py -d -ep awsProd -job ${iName} -cjson '$OUT'"
+nohup nix-shell --command "python fett.py -d -ep awsProd -job ${iName} -cjson '$OUT'" &
 
 EOF
-/bin/su -c "/home/centos/downloadAndStartFett.sh" - centos /dev/null &/dev/null &
+/bin/su -c "/home/centos/downloadAndStartFett.sh" - centos < /dev/null &>/dev/null &
+
 echo "Done with userdata script..."
 `;
 
