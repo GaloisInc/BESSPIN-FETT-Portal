@@ -25,9 +25,7 @@ def main ():
 
 	# Open webpage and determine the combinations to run
 
-	options = webdriver.ChromeOptions()
-	options.add_argument("--headless")
-	driver = webdriver.Chrome(options=options)
+	driver = webdriver.Chrome()
 	driver.get("https://fett.securehardware.org/")
 
 	username = driver.find_element_by_id("username")
