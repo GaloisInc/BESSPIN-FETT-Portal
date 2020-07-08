@@ -10975,6 +10975,10 @@ a {
   font-size: 0.875rem;
 }
 
+ul {
+  font-family: futura-pt;
+}
+
 td.MuiTableCell-root {
   border-bottom-width: 0;
   padding-top: 0.5rem;
