@@ -122,5 +122,7 @@ def main ():
 			proc = Popen([cmd], shell=True, stdin=None, stdout=None, stderr=None, close_fds=True)
 			time.sleep(DELAY_BETWEEN_INSTANCES)
 
+	exit()
+
 if __name__ == "__main__":
 	main()

@@ -141,12 +141,15 @@ def main():
 
 		print_and_log("message", 
 						"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
-						"Terminated Instance, Writing to File")
+						"Terminating Instance, Writing to File")
 		WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[6]/button")))
 		driver.find_element_by_xpath("//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[6]/button").click()
 
 		WebDriverWait(driver, 100).until(EC.presence_of_element_located((By.XPATH, "/html/body/div[3]/div[3]/div[7]/button")))
 		driver.find_element_by_xpath("/html/body/div[3]/div[3]/div[7]/button").click()
+
+		# Possibly fix issue where clicking terminate does not affect instance
+		time.sleep(2)
 
 	except:
 
