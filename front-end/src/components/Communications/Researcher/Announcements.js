@@ -12,7 +12,6 @@ export default function Announcement() {
   const fetchAnnouncements = async () => {
     try {
       const response = await getAnnouncements();
-      console.log(response);
       setAnnouncements(response);
       setIsLoading(false);
     } catch (error) {

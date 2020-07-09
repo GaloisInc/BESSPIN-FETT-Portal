@@ -1,10 +1,18 @@
-import { Auth } from 'aws-amplify';
+import { Auth, Hub } from 'aws-amplify';
+import moment from 'moment';
 
 const BASE_API = process.env.REACT_APP_BASE_API_URI;
 
 const makeHeaders = async () => {
   const sesh = await Auth.currentSession();
   const idToken = await sesh.getIdToken().getJwtToken();
+  const issueTime = moment.unix(sesh.getIdToken().payload.auth_time);
+  const seshTime = moment().diff(issueTime, 'hours');
+  if (seshTime >= 2) {
+    alert('Your session has ended.  To continue using the FETT Bug Bounty Portal please login again');
+    Hub.dispatch('auth', { event: 'logout', data: {}, message: 'logout' });
+  }
+
   return {
     Authorization: idToken,
     'Content-Type': 'application/json',
@@ -12,7 +20,6 @@ const makeHeaders = async () => {
 };
 
 function handleErrors(response) {
-  console.log(response);
   if (!response.ok) {
     throw response;
   }

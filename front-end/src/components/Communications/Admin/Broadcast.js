@@ -12,12 +12,9 @@ const Broadcast = ({ update, announceID }) => {
   const [description, setDescription] = useState('');
   const [isDisabled, setIsDisabled] = useState(false);
   
-  console.log(`announce id is set ${announceID}`);
-
   const fetchAnnouncement = async announceID => {
     try {
     const response = await getAnnouncement(announceID);
-      console.log(response);
       setVulnurability(response.vulnerability);
       setDescription(response.description);
       
