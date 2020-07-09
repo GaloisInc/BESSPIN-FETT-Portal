@@ -33,7 +33,7 @@ def print_and_log(type, header, text):
 	if type == 'warning':
 		print(colored(header, "yellow") + text)
 
-def write_results(string):
+def write_results(name, string):
 	with open("results.txt", 'a') as f:
 		now = datetime.now()
 		f.write("[ " + now.strftime("%H:%M:%S") + "] : " + name + " : " + string + "\n")

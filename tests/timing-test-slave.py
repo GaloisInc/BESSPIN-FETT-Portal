@@ -18,7 +18,7 @@ def main():
 		print_and_log("error", 
 						"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
 						"ERROR: Invalid arguments provided to child.")
-		write_results("FAILED: invalid arguments")
+		write_results(name, "FAILED: invalid arguments")
 		exit()
 
 	# Start Webdriver
@@ -34,7 +34,7 @@ def main():
 		print_and_log("error", 
 						"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
 						"ERROR: Child failed to open Webdriver, likely because too many are open")
-		write_results("FAILED: could not open WebDriver")
+		write_results(name, "FAILED: could not open WebDriver")
 		driver.close()
 		exit()
 
@@ -57,7 +57,7 @@ def main():
 		print_and_log("error",
 						"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] " ,
 						"ERROR: Child failed to log in, likely because of bad credentials: " + str(un) + " " + str(pw))
-		write_results("FAILED: logging in failed")
+		write_results(name, "FAILED: logging in failed")
 		driver.close()
 		exit()
 
@@ -83,7 +83,7 @@ def main():
 		print_and_log("error", 
 						"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
 						"ERROR: Portal could not load table of launch candidates for user: " + str(un) + " - consider deleting them from accts.txt")
-		write_results("FAILED: portal hung on user " + un)
+		write_results(name, "FAILED: portal hung on user " + un)
 		driver.close()
 		exit()
 
@@ -98,7 +98,7 @@ def main():
 			print_and_log("error", 
 							"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
 							"ERROR: Instance " + str(name) + " using account " + str(un) + " encountered status '" + status + "' as opposed to expected 'queueing'")
-			write_results("FAILED: terminated before made it to provisioning during queueing")
+			write_results(name, "FAILED: terminated before made it to provisioning during queueing")
 			driver.close()
 			exit()
 		try:
@@ -120,7 +120,7 @@ def main():
 			print_and_log("error", 
 							"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
 							"ERROR: Instance " + str(name) + " using account " + str(un) + " encountered status '" + status + "' as opposed to expected 'provisioning'")
-			write_results("FAILED: terminated before made it to running during provisioning")
+			write_results(name, "FAILED: terminated before made it to running during provisioning")
 			driver.close()
 			exit()
 		try:
@@ -155,7 +155,7 @@ def main():
 						"ERROR: Failed to terminate; Writing to file")
 
 	# Write Results Out
-	write_results(str(t1-t0))
+	write_results(name, str(t1-t0))
 
 	print_and_log("message", 
 					"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
