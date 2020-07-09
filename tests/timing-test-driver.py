@@ -26,8 +26,8 @@ def main ():
 
 	# Parse CLI Args / default
 	if (len(sys.argv) < 3):
-		NUMBER_OF_RUNS = 4
-		DELAY_BETWEEN_INSTANCES = 30
+		NUMBER_OF_RUNS = 2
+		DELAY_BETWEEN_INSTANCES = 20
 	else:
 		NUMBER_OF_RUNS = int(sys.argv[1])
 		DELAY_BETWEEN_INSTANCES = int(sys.argv[2])
