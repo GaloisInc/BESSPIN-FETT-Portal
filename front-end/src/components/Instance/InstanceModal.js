@@ -15,12 +15,13 @@ const InstanceModal = ({ handleClose, modalData, cardHeight, fetchEnvironments }
     />
   ));
   const username = modalData[0].UserName;
+  console.log(cardHeight);
   return (
     <div
-      className="absolute overflow-y-scroll text-4xl text-gray-200 bg-blue-600"
-      style={{ width: '800px', top: '30%', left: '50%', marginLeft: '-400px', maxHeight: cardHeight }}
+      className="absolute text-4xl text-gray-200 bg-blue-600 "
+      style={{ width: '800px', top: '30%', left: '50%', marginLeft: '-400px', maxHeight: cardHeight + 50 }}
     >
-      <div className="flex flex-row items-center justify-between p-2">
+      <div className="flex flex-row items-center justify-between p-4 ">
         <h5 className="uppercase">{username}</h5>
         <div className="flex flex-row items-center mr-4">
           <button type="button" onClick={handleClose} className="focus:outline-none">
@@ -28,7 +29,10 @@ const InstanceModal = ({ handleClose, modalData, cardHeight, fetchEnvironments }
           </button>
         </div>
       </div>
-      {mappedData}
+      <div className="overflow-y-scroll fettScroll" style={{ maxHeight: cardHeight - 100 }}>
+        {mappedData}
+      </div>
+      <div />
     </div>
   );
 };
