@@ -109,18 +109,35 @@ def main ():
 	# Launch the processes that will collect data.
 	#	Here, I launch NUMBER_OF_RUNS sets of all n launch candidates,
 	#	DELAY_BETWEEN_INSTANCES seconds between launches to perform load balancing.
+	processes = []
 	for x in range (0, NUMBER_OF_RUNS):
 		for run_index in range (0, len(run_names)):
 			acct = accounts.pop()
 
-			cmd = "python3 timing-test-slave.py " + str(run_index) + " " + '-'.join(run_names[run_index][1:]) + " " + acct[0] + " '" + acct[1] + "' &"
+			cmd = ["python3", 
+					"timing-test-slave.py",
+					str(run_index),
+					'-'.join(run_names[run_index][1:]),
+					acct[0],
+					acct[1]]
 
 			print_and_log("command", 
 							"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
-							"[ Driver ] Calling a Child with Command: [" + cmd + "]")
+							"[ Driver ] Calling a Child with Command: [" + ' '.join(cmd) + "]")
 
-			proc = Popen([cmd], shell=True, stdin=None, stdout=None, stderr=None, close_fds=True)
+			proc = Popen(cmd, stdin=None, stdout=None, stderr=None, close_fds=True)
+			processes.append(proc)
 			time.sleep(DELAY_BETWEEN_INSTANCES)
+
+	print_and_log("message",
+					"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
+					"[ Driver ] Waiting for subprocesses to complete")
+
+	exit_codes = [p.wait() for p in processes]
+
+	print_and_log("message",
+					"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
+					"[ Driver ] Subprocesses finished. Closing driver.")
 
 	exit()
 
