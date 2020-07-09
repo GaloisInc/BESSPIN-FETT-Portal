@@ -23,7 +23,8 @@ This should be the same as csv layout, with the headings removed. This cannot be
 ## Functioning
 
 ```bash
-python3 timing-test-driver.py
+./install_requirements.sh
+python3 timing-test-driver.py [RUNS] [TIME_BETWEEN_INSTANCES]
 ```
 
 This will call children. These children have a high success rate, but might fail for these known reasons:
@@ -32,3 +33,7 @@ This will call children. These children have a high success rate, but might fail
 - stale element errors (unknown cause)
 - password passing errors (cause invalid login)
 
+To kill this program mid-execution:
+
+```bash
+pkill -f slave.py && pkill -f driver.py

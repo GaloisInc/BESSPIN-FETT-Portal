@@ -13,6 +13,8 @@ front-end/node_modules/
 /coverage
 tests/accts.txt
 tests/results.txt
+tests/__pycache__/
+tests/log.txt
 
 # production
 /build

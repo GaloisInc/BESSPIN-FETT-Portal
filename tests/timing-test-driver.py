@@ -1,28 +1,16 @@
 #!/usr/bin/python3
 
-# Selenium
-from selenium import webdriver
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-
-# Other
-import time
-import os
-import sys
-from subprocess import Popen
-from datetime import datetime
-
-# Return current time in printable format
-def ct():
-	now = datetime.now()
-	return now.strftime("%H:%M:%S")
+from testing_module import *
 
 def main ():
 
 	# Remove last results.
 	if os.path.exists("results.txt"):
 		os.remove("results.txt")
+
+	# Remove last log.
+	if os.path.exists("log.txt"):
+		os.remove("log.txt")
 
 	# Parse CLI Args / default
 	if (len(sys.argv) < 3):
@@ -35,7 +23,9 @@ def main ():
 	# Catch failures in the process of gathering targets. 
 	try:
 		# Assemble list of user accounts from file.
-		print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Started")
+		print_and_log("message", 
+						"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ", 
+						"[ Driver ] Started")
 		run_names = []
 
 		with open('accts.txt', 'r', encoding='utf-8-sig') as f:
@@ -44,17 +34,23 @@ def main ():
 
 		# Parse accounts into list
 		accounts = [[x.split(",")[0][1:-1], x.split(",")[1].strip()[1:-1]] for x in accounts]
-		print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Found", str(len(accounts)),"Accounts:")
+		print_and_log("message", 
+						"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
+						"[ Driver ] Found " + str(len(accounts)) + " Accounts")
 
 		# Open webpage and determine the combinations to run
 		# Requires a log in first
-		print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Logging In to Get Launch Candidates")
+		print_and_log("message", 
+						"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ", 
+						"[ Driver ] Logging In to Get Launch Candidates")
 		
 		try:
 			driver = webdriver.Chrome()
 			driver.get("https://fett.securehardware.org/")
 		except:
-			print("[", os.getpid(), "@", ct(), "]", "[ Driver ] ERROR: FCould not start driver.")
+			print_and_log("error", 
+						"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
+						"[ Driver ] ERROR: Could not start webdriver.")
 			exit()
 
 		username = driver.find_element_by_id("username")
@@ -69,7 +65,9 @@ def main ():
 
 		# Logged in OK, let's check the options for launches
 		# Click OK to the popup that appears
-		print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Closing Popup")
+		print_and_log("message", 
+						"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
+						"[ Driver ] Closing Popup")
 		WebDriverWait(driver,100).until(EC.presence_of_element_located((By.XPATH, '//*[@id="root"]/div/div/div[2]/div[2]/div/div/div[1]/div[1]/button')))
 		driver.find_element_by_xpath('//*[@id="root"]/div/div/div[2]/div[2]/div/div/div[1]/div[1]/button').click()
 
@@ -87,17 +85,25 @@ def main ():
 				tl.append(c.text)
 			run_names.append(tl)
 
-		print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Launch Candidates:")
-		[print("\t" + "- " + '-'.join(x)) for x in run_names]
+		print_and_log("message", 
+						"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
+						"[ Driver ] Launch Candidates:")
+		[print_and_log("message", '', "\t" + "- " + '-'.join(x)) for x in run_names]
 
 	except:
 
-		print("[", os.getpid(), "@", ct(), "]", "[ Driver ] ERROR: Failed to gather list of launch candidates.")
-		print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Closing Driver")
+		print_and_log("error", 
+						"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
+						"[ Driver ] ERROR: Failed to gather list of launch candidates.")
+		print_and_log("message", 
+						"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
+						"[ Driver ] Closing Driver")
 		driver.close()
 		exit()
 
-	print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Closing Driver")
+	print_and_log("message",
+					"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
+					"[ Driver ] Closing Driver")
 	driver.close()
 
 	# Launch the processes that will collect data.
@@ -109,7 +115,9 @@ def main ():
 
 			cmd = "python3 timing-test-slave.py " + str(run_index) + " " + '-'.join(run_names[run_index][1:]) + " " + acct[0] + " '" + acct[1] + "' &"
 
-			print("[", os.getpid(), "@", ct(), "]", "[ Driver ] Calling a Child with Command:", cmd)
+			print_and_log("command", 
+							"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
+							"[ Driver ] Calling a Child with Command: [" + cmd + "]")
 
 			proc = Popen([cmd], shell=True, stdin=None, stdout=None, stderr=None, close_fds=True)
 			time.sleep(DELAY_BETWEEN_INSTANCES)
