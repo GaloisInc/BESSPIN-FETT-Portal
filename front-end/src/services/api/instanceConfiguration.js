@@ -8,7 +8,7 @@ const makeHeaders = async () => {
   const idToken = sesh.getIdToken().getJwtToken();
   const issueTime = moment.unix(sesh.getIdToken().payload.auth_time);
   const seshTime = moment().diff(issueTime, 'hours');
-  if (seshTime >= 2) {
+  if (seshTime >= 24) {
     alert('Your session has ended.  To continue using the FETT Bug Bounty Portal please login again');
     Hub.dispatch('auth', { event: 'logout', data: {}, message: 'logout' });
   }
