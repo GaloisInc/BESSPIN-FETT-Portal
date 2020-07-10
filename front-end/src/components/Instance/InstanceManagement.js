@@ -37,7 +37,6 @@ export default function InstanceManagement() {
   useEffect(() => {
     fetchEnvironments();
     const interval = setInterval(() => {
-      console.log('This will run every second!');
       fetchEnvironments();
     }, 30000);
     return () => clearInterval(interval);
@@ -68,7 +67,6 @@ export default function InstanceManagement() {
   };
 
   const handleOpen = async data => {
-    console.log(data);
     setIsModalLoading(true);
     const teamData = environments.filter(env => env.CreatedBy_FK === data.CreatedBy_FK);
     setModalData(teamData);
@@ -142,7 +140,7 @@ export default function InstanceManagement() {
                   sorting: false,
                   width: '4em',
                   render: data => (
-                    <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none">
+                    <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none w-5">
                       <img src={settings} alt="" />
                     </button>
                   ),
