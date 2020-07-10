@@ -3,10 +3,15 @@
 ## Requirements
 
 - `pip3`
-    - `pip3 install selenium --user`
 - [chromedriver](https://sites.google.com/a/chromium.org/chromedriver/home) placed in `$PATH`
     - Requires Google Chrome installed too
 
+Once these are installed, run
+
+```bash
+./install_requirements.sh
+```
+    
 ## Accounts
 
 Compose the file `accts.txt` with structure: 
@@ -23,7 +28,6 @@ This should be the same as csv layout, with the headings removed. This cannot be
 ## Functioning
 
 ```bash
-./install_requirements.sh
 python3 timing-test-driver.py [RUNS] [TIME_BETWEEN_INSTANCES]
 ```
 
