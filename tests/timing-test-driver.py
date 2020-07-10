@@ -129,13 +129,13 @@ def main ():
 			processes.append(proc)
 			time.sleep(DELAY_BETWEEN_INSTANCES)
 
-	print_and_log("message",
+	print_and_log("special",
 					"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
 					"[ Driver ] Waiting for subprocesses to complete")
 
 	exit_codes = [p.wait() for p in processes]
 
-	print_and_log("message",
+	print_and_log("special",
 					"[ " + str(os.getpid()) + " @ " +  str(ct()) +  " ] ",
 					"[ Driver ] Subprocesses finished. Closing driver.")
 

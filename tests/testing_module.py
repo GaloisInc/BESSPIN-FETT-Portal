@@ -32,6 +32,8 @@ def print_and_log(type, header, text):
 		print(colored(header, "cyan") + text)
 	if type == 'warning':
 		print(colored(header, "yellow") + text)
+	if type == 'special':
+		print(colored(header, "blue") + text)
 
 def write_results(name, string):
 	with open("results.txt", 'a') as f:
