@@ -71,7 +71,7 @@ export default function History() {
 	
   return (
 	  <div className="relative overflow-y-scroll fettScroll" style={{ maxHeight: height - 340 }}>
-	  	{isLoading ? <Spinner /> : announcementDisplay};
+	  	{isLoading ? <Spinner /> : announcementDisplay}
 	  </div>
   );
 }
