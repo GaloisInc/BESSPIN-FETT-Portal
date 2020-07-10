@@ -28,16 +28,16 @@ This should be the same as csv layout, with the headings removed. This cannot be
 ## Functioning
 
 ```bash
-python3 timing-test-driver.py [RUNS] [TIME_BETWEEN_INSTANCES]
+./timing-test-driver.py [RUNS] [TIME_BETWEEN_INSTANCES]
 ```
 
-This will call children. These children have a high success rate, but might fail for these known reasons:
+This will call `RUNS * TARGETS` children at `TIME_BETWEEN_INSTANCES` intervals. These might fail for these known reasons:
 
-- timeout errors (infinite loading spin on launch)
-- stale element errors (unknown cause)
-- password passing errors (cause invalid login)
+- timeout errors (infinite loading spin on launch - a documented FETT Portal error)
+- password passing errors (because of invalid login creds recieved by child)
 
-To kill this program mid-execution:
+To kill this program mid-execution (not recommended):
 
 ```bash
 pkill -f slave.py && pkill -f driver.py
+```
