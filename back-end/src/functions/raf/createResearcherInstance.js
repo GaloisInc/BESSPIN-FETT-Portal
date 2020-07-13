@@ -68,7 +68,8 @@ const getUserData = (f1Config, iName) => {
     .filter(key => configOptions.indexOf(key) >= 0)
     .reduce((obj2, key) => Object.assign(obj2, { [key]: f1Config[key] }), {});
   // eslint-disable-next-line
-  const userdata = `#!/bin/bash
+  const userdata = `#cloud-boothook
+#!/bin/bash
 
 #iptables -F
 #service sshd restart
@@ -108,7 +109,7 @@ cd /home/centos/SSITH-FETT-Target
 nohup nix-shell --command "python fett.py -d -ep awsProd -job ${iName} -cjson '$OUT'" &
 EOF
 
-/bin/su -c "/home/centos/downloadAndStartFett.sh" - centos /dev/null &/dev/null &
+nohup /bin/su -c "/home/centos/downloadAndStartFett.sh" - centos &
 
 
 echo "Done with userdata script..."
