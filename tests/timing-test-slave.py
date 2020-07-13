@@ -3,28 +3,21 @@
 from testing_module import *
 
 
-def main():
+def main(index, name, un, pw):
 
-    print_and_log(
-        "command",
-        "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-        "Child Started with Arguments: " + str(sys.argv[1:5]),
-    )
-
-    # Parse Arguments
-    try:
-        index = int(sys.argv[1])
-        name = sys.argv[2]
-        un = sys.argv[3]
-        pw = sys.argv[4]
-    except:
-        print_and_log(
-            "error",
-            "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-            "ERROR: Invalid arguments provided to child.",
-        )
-        write_results(name, "FAILED: invalid arguments")
-        exit()
+    # try:
+    #     index = int(sys.argv[1])
+    #     name = sys.argv[2]
+    #     un = sys.argv[3]
+    #     pw = sys.argv[4]
+    # except:
+    #     print_and_log(
+    #         "error",
+    #         "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
+    #         "ERROR: Invalid arguments provided to child.",
+    #     )
+    #     write_results(name, "FAILED: invalid arguments")
+    #     exit()
 
     # Start Webdriver
     try:
@@ -297,4 +290,32 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+
+    print_and_log(
+        "command",
+        "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
+        "Child Started with Arguments: " + str(sys.argv[1:5]),
+    )
+
+    # Parse Arguments
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument(
+        "index",
+        type=int,
+        help="Index in list of launch candidates to run in this child.",
+    )
+
+    parser.add_argument("name", type=str, help="Name of this run's launch profile.")
+
+    parser.add_argument(
+        "username", type=str, help="Username of the account to log in to Portal with."
+    )
+
+    parser.add_argument(
+        "password", type=str, help="Password of the account to log in to Portal with."
+    )
+
+    args = parser.parse_args()
+
+    main(args.index, args.name, args.username, args.password)

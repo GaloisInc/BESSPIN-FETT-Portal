@@ -3,7 +3,7 @@
 from testing_module import *
 
 
-def main():
+def main(runs, instance_delay):
 
     # Remove last results.
     if os.path.exists("results.txt"):
@@ -13,13 +13,13 @@ def main():
     if os.path.exists("log.txt"):
         os.remove("log.txt")
 
-    # Parse CLI Args / default
-    if len(sys.argv) < 3:
-        NUMBER_OF_RUNS = 2
-        DELAY_BETWEEN_INSTANCES = 20
-    else:
-        NUMBER_OF_RUNS = int(sys.argv[1])
-        DELAY_BETWEEN_INSTANCES = int(sys.argv[2])
+    # # Parse CLI Args / default
+    # if len(sys.argv) < 3:
+    #     runs = 2
+    #     instance_delay = 20
+    # else:
+    #     runs = int(sys.argv[1])
+    #     instance_delay = int(sys.argv[2])
 
     # Catch failures in the process of gathering targets.
     try:
@@ -146,10 +146,10 @@ def main():
     driver.close()
 
     # Launch the processes that will collect data.
-    # 	Here, I launch NUMBER_OF_RUNS sets of all n launch candidates,
-    # 	DELAY_BETWEEN_INSTANCES seconds between launches to perform load balancing.
+    #   Here, I launch runs sets of all n launch candidates,
+    #   instance_delay seconds between launches to perform load balancing.
     processes = []
-    for x in range(0, NUMBER_OF_RUNS):
+    for x in range(0, runs):
         for run_index in range(0, len(run_names)):
             acct = accounts.pop()
 
@@ -170,7 +170,7 @@ def main():
 
             proc = Popen(cmd, stdin=None, stdout=None, stderr=None, close_fds=True)
             processes.append(proc)
-            time.sleep(DELAY_BETWEEN_INSTANCES)
+            time.sleep(instance_delay)
 
     print_and_log(
         "special",
@@ -190,4 +190,22 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+
+    # Parse Arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "runs",
+        type=int,
+        nargs="?",
+        default=1,
+        help="How many times each set of all launch candidates should be run.",
+    )
+    parser.add_argument(
+        "instance_delay",
+        type=int,
+        nargs="?",
+        default=10,
+        help="Number of seconds to wait before starting each instance.",
+    )
+    args = parser.parse_args()
+    main(args.runs, args.instance_delay)

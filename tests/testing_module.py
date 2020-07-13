@@ -11,6 +11,7 @@ import sys
 from subprocess import Popen
 from datetime import datetime
 from termcolor import colored
+import argparse
 
 # Return Current Time
 def ct():
@@ -34,7 +35,7 @@ def print_and_log(type, header, text):
     if type == "warning":
         print(colored(header, "yellow") + text)
     if type == "special":
-        print(colored(header, "blue") + text)
+        print(colored(header, "magenta") + text)
 
 
 def write_results(name, string):
