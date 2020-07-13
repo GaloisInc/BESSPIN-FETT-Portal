@@ -20,11 +20,13 @@ export default function InstanceManagement() {
   const [isLoading, setIsLoading] = useState(true);
   const [environments, setEnvironments] = useState([]);
   const [filteredEnvironments, setFilteredEnvironments] = useState([]);
+  const [updateTime, setUpdateTime] = useState('');
   const { height } = useWindowDimensions();
 
   const fetchEnvironments = async () => {
     try {
       const response = await getEnvironments();
+      setUpdateTime(new Date().toLocaleString());
       setEnvironments(response);
       setIsLoading(false);
     } catch (error) {
@@ -35,7 +37,6 @@ export default function InstanceManagement() {
   useEffect(() => {
     fetchEnvironments();
     const interval = setInterval(() => {
-      console.log('This will run every second!');
       fetchEnvironments();
     }, 30000);
     return () => clearInterval(interval);
@@ -66,7 +67,6 @@ export default function InstanceManagement() {
   };
 
   const handleOpen = async data => {
-    console.log(data);
     setIsModalLoading(true);
     const teamData = environments.filter(env => env.CreatedBy_FK === data.CreatedBy_FK);
     setModalData(teamData);
@@ -140,7 +140,7 @@ export default function InstanceManagement() {
                   sorting: false,
                   width: '4em',
                   render: data => (
-                    <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none">
+                    <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none w-5">
                       <img src={settings} alt="" />
                     </button>
                   ),
@@ -165,10 +165,14 @@ export default function InstanceManagement() {
                 search: false,
                 showTitle: false,
                 toolbar: false,
+                draggable: false,
               }}
               data={filteredEnvironments}
             />
           )}
+        </div>
+        <div className="flex flex-row justify-end p-1">
+          <p className="text-xs text-gray-500">Last Updated: {updateTime}</p>
         </div>
       </div>
       <Modal open={open} onClose={handleClose}>
