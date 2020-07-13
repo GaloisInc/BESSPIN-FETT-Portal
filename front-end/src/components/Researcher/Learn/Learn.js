@@ -4,6 +4,7 @@ import settings from '../../../assets/settings.svg';
 
 export default function Learn() {
   const [CVELink, setCVELink] = useState('');
+  const [VotingLink, setVotingLink] = useState('');
 
   const populatePSUrl = async (key, callback) => {
     const psUrl = await getPSUrl(key);
@@ -12,6 +13,7 @@ export default function Learn() {
 
   useEffect(() => {
     populatePSUrl('CVE_Coverage_FETT-Portal_07.07.20.xlsx', setCVELink);
+    populatePSUrl('FETT-Portal.Voter.application.LEARN.content.pdf', setVotingLink);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -372,6 +374,11 @@ export default function Learn() {
               encryption and key management associated with protecting the registration database at rest from such
               unrestricted access have significant overhead that is not reasonable for either the FPGA-based
               implementation platform or for the FETT competition.
+            </li>
+            <li>
+              <a href={VotingLink} className="text-teal-400 underline" rel="noopener noreferrer" download>
+                Design, Security and Threat Modeling for FETT Voter Registration System
+              </a>
             </li>
           </ul>
         </div>
