@@ -106,7 +106,7 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
             </div>
             <p className="text-base text-200-gray">
               {environment.Created &&
-                `${moment(environment.Created).format('L')}, ${moment(environment.Created).format('LTS')}`}
+                `${moment(environment.Created).format('l')}, ${moment(environment.Created).format('LTS')}`}
             </p>
           </div>
           {/* <div className="flex flex-row py-2 bg-blue-600">

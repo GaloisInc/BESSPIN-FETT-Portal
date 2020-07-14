@@ -39,7 +39,7 @@ const InstanceHistory = params => {
     if (load) setIsModalLoading(true);
     try {
       if (load) setIsLoading(true);
-      setUpdateTime(new Date().toLocaleString());
+      setUpdateTime(`${moment().format('l')}, ${moment().format('LTS')}`);
       const response = await getMyEnvironments();
       setEnvironments(response);
       if (load) {
@@ -120,7 +120,7 @@ const InstanceHistory = params => {
               {
                 title: 'Launched',
                 field: 'Created',
-                render: data => <p>{moment(data.Created).format('MM/DD/YY hh:mm A')}</p>,
+                render: data => <p>{`${moment(data.Created).format('l')}, ${moment(data.Created).format('LT')}`}</p>,
               },
               { title: 'Status', field: 'Status' },
               {

@@ -62,7 +62,7 @@ export default function History() {
 							<li className="mr-2"><img onClick={() => handleDisable(aId.Id)} src={deleteIcon} /></li>
 						</ul>
 					</div>
-					<p className="pt-2 text-sm leading-tight text-gray-200">{aId.Payload}</p>
+					<p className="pt-2 text-sm leading-tight text-gray-200 whitespace-pre-wrap">{aId.Payload}</p>
 				</div>
 			)
 		})

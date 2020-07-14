@@ -51,15 +51,16 @@ exports.handler = async (event, context) => {
     const terminationPromises = [];
 
     if (provisioningEnvironments.length > 0) {
-      provisioningEnvironments.forEach(async instance => {
+      for (const instance of provisioningEnvironments) {
         const data = await db.query(
           `UPDATE Environment set Status = "terminating" WHERE Id = :dbId`,
           { dbId: instance.Id }
         );
+        console.log('Data: ', data);
         if (data.changedRows === 1) {
           terminationPromises.push(terminateInstance(instance.F1EnvironmentId));
         }
-      });
+      }
 
       await Promise.all(terminationPromises);
     } else {

@@ -66,7 +66,7 @@ const LaunchTable = ({ history, handleOpen }) => {
   return (
     <>
       <div className="relative mb-4 bg-blue-600 table-card" style={{ width: '800px', minHeight: '400px' }}>
-        <div className="flex flex-row items-center justify-between pl-8 mt-2 mb-2">
+        <div className="flex flex-row items-center justify-between pl-2 mt-2 mb-2">
           <h5 className="text-gray-200 uppercase">instance configuration</h5>
         </div>
 
@@ -125,7 +125,7 @@ const LaunchTable = ({ history, handleOpen }) => {
           />
         )}
 
-        <p className="py-4 pl-2 ml-6 text-gray-200">
+        <p className="py-4 pl-2 text-gray-200">
           * Provisioned instances are limited to two (2) and will remain active for eight (8) hours before automatic
           instance shutdown. New instances may not be launched until prior instance has been fully terminated.
         </p>

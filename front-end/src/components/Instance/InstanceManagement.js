@@ -4,6 +4,7 @@
 import React, { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
 import { Modal, Paper } from '@material-ui/core';
+import moment from 'moment';
 import search from '../../assets/search.svg';
 import settings from '../../assets/settings.svg';
 import InstanceModal from './InstanceModal';
@@ -26,7 +27,7 @@ export default function InstanceManagement() {
   const fetchEnvironments = async () => {
     try {
       const response = await getEnvironments();
-      setUpdateTime(new Date().toLocaleString());
+      setUpdateTime(`${moment().format('l')}, ${moment().format('LTS')}`);
       setEnvironments(response);
       setIsLoading(false);
     } catch (error) {

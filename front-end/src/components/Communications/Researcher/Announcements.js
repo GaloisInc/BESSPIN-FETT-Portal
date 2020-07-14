@@ -35,7 +35,7 @@ export default function Announcement() {
           <span className="font-bold">Subject:</span> {aId.Type}
         </h6>
       </div>
-      <p className="pt-2 text-sm leading-tight text-gray-200">{aId.Payload}</p>
+      <p className="pt-2 text-sm leading-tight text-gray-200 whitespace-pre-wrap">{aId.Payload}</p>
     </div>
   ));
 
