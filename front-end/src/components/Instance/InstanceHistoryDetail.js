@@ -28,15 +28,13 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
         <div className="w-48 ml-8 mr-8 ">
           <p className="text-base text-teal-500 uppercase">Launched Date</p>
         </div>
-        <p className="text-base text-200-gray">
-          {environment.Created && moment(environment.Created).format('MM/DD/YY')}
-        </p>
+        <p className="text-base text-200-gray">{environment.Created && moment(environment.Created).format('l')}</p>
       </div>
       <div className="flex flex-row py-2 bg-blue-700">
         <div className="w-48 ml-8 mr-8 ">
           <p className="text-base text-teal-500 uppercase">Launched Time</p>
         </div>
-        <p className="text-base text-200-gray">{environment.Created && moment(environment.Created).format('HH:mm')}</p>
+        <p className="text-base text-200-gray">{environment.Created && moment(environment.Created).format('LTS')}</p>
       </div>
       <div className="flex flex-row py-2 bg-blue-600">
         <div className="w-48 ml-8 mr-8">
