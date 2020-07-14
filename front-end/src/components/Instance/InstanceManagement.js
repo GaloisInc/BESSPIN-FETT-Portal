@@ -68,7 +68,8 @@ export default function InstanceManagement() {
 
   const handleOpen = async data => {
     setIsModalLoading(true);
-    const teamData = environments.filter(env => env.CreatedBy_FK === data.CreatedBy_FK);
+    // const teamData = environments.filter(env => env.CreatedBy_FK === data.CreatedBy_FK);
+    const teamData = environments.filter(env => env.Id === data.Id);
     setModalData(teamData);
     setOpen(true);
   };
