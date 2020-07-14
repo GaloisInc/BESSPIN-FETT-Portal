@@ -195,8 +195,10 @@ const callStartInstance = async (f1Config, instanceName) => {
   await ec2.modifyInstanceAttribute(sgParams).promise();
   return new Promise(resolve => resolve(ec2Data));
 };
-const hashPassword = pw =>
-  Buffer.from(sha512crypt(pw, 'xcnc07LxM26Xq')).toString('base64');
+const hashPassword = async pw => {
+  const salt = await getParams(`/fettportal/salt`);
+  Buffer.from(sha512crypt(pw, salt)).toString('base64');
+};
 
 const mergeSSMparamsAndPortalParams = async f1Config => {
   const config = await getParams(
@@ -304,6 +306,8 @@ exports.handler = async event => {
     );
     console.log(reg);
 
+    const hash = await hashPassword(message.password);
+
     let f1Config = {
       region: reg[0].Region,
       osImage: message.OS,
@@ -313,7 +317,7 @@ exports.handler = async event => {
       useCustomCredentials: 'yes',
       rootUserAccess: 'yes',
       username: message.username,
-      userPasswordHash: hashPassword(message.password),
+      userPasswordHash: hash,
       jobId: `${message.creatorId}-${message.Id}`,
     };
 
