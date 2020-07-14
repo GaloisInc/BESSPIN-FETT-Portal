@@ -217,25 +217,37 @@ const mergeSSMparamsAndPortalParams = async f1Config => {
 };
 
 const startInstance = async (f1Config, instanceName) => {
-  if (f1Config.subnetIds.length < 1) {
-    f1Config.region =
-      f1Config.region === 'us-east-1' ? 'us-west-2' : 'us-east-1';
-    console.log('Changing Region to: ', f1Config.region);
-    // need to get other regions config values from SSM
-    // eslint-disable-next-line no-param-reassign
-    f1Config = await mergeSSMparamsAndPortalParams(f1Config);
+  try {
+    if (f1Config.subnetIds.length < 1) {
+      f1Config.region =
+        f1Config.region === 'us-east-1' ? 'us-west-2' : 'us-east-1';
+      console.log('Changing Region to: ', f1Config.region);
+      // need to get other regions config values from SSM
+      // eslint-disable-next-line no-param-reassign
+      f1Config = await mergeSSMparamsAndPortalParams(f1Config);
+    }
+    f1Config.subnetChoice = Math.floor(
+      Math.random() * f1Config.subnetIds.length
+    );
+
+    console.log('trying subnet: ', f1Config.subnetChoice);
+    const ec2Return = await callStartInstance(f1Config, instanceName);
+    console.log('ec2Return log: ', util.inspect(ec2Return, { depth: null }));
+    return ec2Return;
+  } catch (e) {
+    // handle retry? let lambda just auto-retry?
+    // put message back in the queue for retrying
+
+    console.log('Error Starting instance', e);
+    if (e.code === 'InsufficientInstanceCapacity') {
+      f1Config.subnetIds.splice(f1Config.subnetChoice - 1, 1);
+      console.log(
+        `Dropping ${f1Config.subnetChoice} new array ${f1Config.subnetIds}`
+      );
+      return startInstance(f1Config, instanceName);
+    }
+    throw e;
   }
-  f1Config.subnetChoice = Math.floor(Math.random() * f1Config.subnetIds.length);
-  const ec2Return = await callStartInstance(f1Config, instanceName);
-  console.log(util.inspect(ec2Return, { depth: null }));
-  if (
-    Object.prototype.hasOwnProperty.call(ec2Return, 'errorType') &&
-    ec2Return.errorType === 'InsufficientInstanceCapacity'
-  ) {
-    f1Config.subnetIds.splice(f1Config.subnetChoice - 1, 1);
-    await startInstance(f1Config, instanceName);
-  }
-  return ec2Return;
 };
 
 const deleteMessage = async msg => {
@@ -278,7 +290,7 @@ exports.handler = async event => {
     console.log(msg);
     const message = JSON.parse(msg.body);
 
-    if (parseInt(msg.attributes.ApproximateReceiveCount) > 5) {
+    if (parseInt(msg.attributes.ApproximateReceiveCount) > 10) {
       console.log('Stopping initiation after 5 failed tries');
       await handleFailure(message.Id);
       // shoulld probably alert someone here too.
