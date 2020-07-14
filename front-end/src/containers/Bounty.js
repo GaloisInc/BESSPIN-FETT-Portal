@@ -8,6 +8,7 @@ import Learn from '../components/Researcher/Learn/Learn';
 import Sidebar from '../components/Layout/Sidebar';
 import Header from '../components/Layout/Header';
 import close from '../assets/close.svg';
+import CrashReports from '../components/Researcher/Learn/CrashReports';
 
 const Bounty = props => {
   const { isLoggedIn, name } = props;
@@ -32,6 +33,7 @@ const Bounty = props => {
             <>
               <Route path="/bountyportal/dashboard" component={BountyDash} />
               <Route path="/bountyportal/launch" component={() => <BountyLaunch handleOpen={handleOpen} />} />
+              <Route path="/bountyportal/learn/crashreports" component={CrashReports} />
               <Route path="/bountyportal/learn" component={Learn} />
               <Route exact path="/bountyportal" render={() => <Redirect to="/bountyportal/dashboard" />} />
             </>
