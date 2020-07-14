@@ -456,6 +456,9 @@ functions:
   testSpinup:
     handler: src/functions/raf/testSpinup.handler
     timeout: 90
+  usersTest:
+    handler: src/functions/usersTest.handler
+    timeout: 90
   getLearnDoc:
     handler: src/functions/getLearnDoc.handler
     timeout: 30

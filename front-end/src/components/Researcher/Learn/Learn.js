@@ -4,7 +4,8 @@ import settings from '../../../assets/settings.svg';
 
 export default function Learn() {
   const [CVELink, setCVELink] = useState('');
-  const [VotingLink, setVotingLink] = useState('');
+  const [votingLink, setVotingLink] = useState('');
+  const [freeRTOSLink, setFreeRTOSLink] = useState('');
 
   const populatePSUrl = async (key, callback) => {
     const psUrl = await getPSUrl(key);
@@ -14,6 +15,7 @@ export default function Learn() {
   useEffect(() => {
     populatePSUrl('CVE_Coverage_FETT-Portal_07.07.20.xlsx', setCVELink);
     populatePSUrl('FETT-Portal.Voter.application.LEARN.content.pdf', setVotingLink);
+    populatePSUrl('FreeRTOS.OTA.Application.Description.pdf', setFreeRTOSLink);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -326,12 +328,13 @@ export default function Learn() {
               Documentation for this application is available here:
               <br />
               <a
-                href="https://www.freertos.org/ota/index.html"
+                href={freeRTOSLink}
                 className="text-teal-400 underline"
                 rel="noopener noreferrer"
                 download
+                target="_blank"
               >
-                https://www.freertos.org/ota/index.html
+                FreeRTOS OTA description
               </a>
             </li>
             <li>The OTA server uses Ed25519 for signing updates.</li>
@@ -376,7 +379,7 @@ export default function Learn() {
               implementation platform or for the FETT competition.
             </li>
             <li>
-              <a href={VotingLink} className="text-teal-400 underline" rel="noopener noreferrer" download>
+              <a href={votingLink} className="text-teal-400 underline" rel="noopener noreferrer" download>
                 Design, Security and Threat Modeling for FETT Voter Registration System
               </a>
             </li>
