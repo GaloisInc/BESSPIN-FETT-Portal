@@ -29,6 +29,8 @@ def main(index, name, un, pw):
         options = webdriver.ChromeOptions()
         options.add_argument("--start-maximized")
         driver = webdriver.Chrome(options=options)
+        driver.set_window_size(600, 600)
+        driver.maximize_window()
         driver.get("https://fett.securehardware.org/")
     except:
         print_and_log(
