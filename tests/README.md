@@ -4,7 +4,7 @@
 
 - `pip3`
 - [chromedriver](https://sites.google.com/a/chromium.org/chromedriver/home) placed in `$PATH`
-    - Requires Google Chrome installed too
+    - Requires Google Chrome of the same major version installed too
 
 Once these are installed, run
 
