@@ -39,7 +39,7 @@ const InstanceHistory = params => {
     if (load) setIsModalLoading(true);
     try {
       if (load) setIsLoading(true);
-      setUpdateTime(new Date().toLocaleString());
+      setUpdateTime(`${moment().format('l')}, ${moment().format('LTS')}`);
       const response = await getMyEnvironments();
       setEnvironments(response);
       if (load) {
