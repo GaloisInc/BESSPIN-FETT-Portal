@@ -29,7 +29,7 @@ exports.handler = async (event, context) => {
   users.forEach(user => {
     userPromises.push(checkSSM(user));
   });
-  await Promise.all(userPromises).then(res => console.log(res));
+  await Promise.all(userPromises).then(res => console.log(JSON.stringify(res)));
   console.log('TOTAL ACTIVE USERS', users.length);
   // await Promise.all(userPromises.map(prom => prom.catch(() => undefined)));
   // await Promise.all(initializerPromises).then(res => console.log(res));
