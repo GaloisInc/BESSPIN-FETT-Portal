@@ -42,10 +42,10 @@ You might see warnings related to:
 
 This is of unknown cause, but seems to be related to overall system load (higher load -> higher instance of these warnings). These do not affect functionality. This is only concerning when the same PID prints out one of these warnings every 2 seconds (the polling interval) - this means that the webdriver for that instance has crashed (unlikely) or been killed (more likely).
 
-## Slave Functioning
+## Child Functioning
 
 ```bash
-./timing-test-slave.py [-h] index name username password
+./timing-test-child.py [-h] index name username password
 ```
 
 This is to be used standalone when one individual target needs tested.
@@ -55,5 +55,5 @@ This is to be used standalone when one individual target needs tested.
 To kill this program mid-execution (not recommended):
 
 ```bash
-pkill -f slave.py && pkill -f driver.py
+pkill -f child.py && pkill -f driver.py
 ```

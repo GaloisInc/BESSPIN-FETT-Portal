@@ -157,7 +157,7 @@ def main(runs, instance_delay):
 
             cmd = [
                 "python3",
-                "timing-test-slave.py",
+                "timing-test-child.py",
                 str(run_index),
                 "-".join(run_names[run_index][1:]),
                 acct[0],
