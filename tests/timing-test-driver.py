@@ -5,9 +5,11 @@ from testing_module import *
 
 def main(runs, instance_delay):
 
-    # Remove last results.
-    if os.path.exists("results.txt"):
-        os.remove("results.txt")
+    # Add header to last results.
+    with open("results.txt", "a") as f:
+        now = datetime.now()
+        f.write("\n ===== NEW RUN AT [ " + now.strftime("%H:%M:%S") + "] =====\n\n")
+        f.close()
 
     # Remove last log.
     if os.path.exists("log.txt"):
