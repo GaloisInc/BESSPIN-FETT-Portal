@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { getPSUrl } from '../../../services/api/learn';
 import settings from '../../../assets/settings.svg';
 
@@ -53,6 +54,9 @@ export default function Learn() {
         <p className="pt-2 text-sm leading-tight text-gray-200">
           NOTE: Provisioning times for the various CPU types vary between ~8 minutes and ~16 minutes.
         </p>
+        <Link className="text-teal-400 underline" to="learn/crashreports">
+          Detecting crashed SSITH CPUs
+        </Link>
       </div>
 
       <div className="pt-6">
