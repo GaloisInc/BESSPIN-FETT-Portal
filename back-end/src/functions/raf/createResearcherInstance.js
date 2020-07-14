@@ -197,7 +197,7 @@ const callStartInstance = async (f1Config, instanceName) => {
 };
 const hashPassword = async pw => {
   const salt = await getParams(`/fettportal/salt`);
-  Buffer.from(sha512crypt(pw, salt)).toString('base64');
+  return Buffer.from(sha512crypt(pw, salt)).toString('base64');
 };
 
 const mergeSSMparamsAndPortalParams = async f1Config => {
