@@ -1,7 +1,6 @@
 import React from 'react';
 import '../styles/spinner.css';
 import PropTypes from 'prop-types';
-import Card from './Communications/Card';
 
 export default function Spinner({ relative }) {
   return (
