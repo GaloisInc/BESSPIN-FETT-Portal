@@ -21,7 +21,7 @@ export default function Learn() {
   }, []);
 
   return (
-    <div className="pt-6 pb-12 pl-12 pr-12" style={{ overflowY: 'scroll', height: '80vh' }}>
+    <div className="pt-6 pb-12 pl-12 pr-12" style={{ overflowY: 'scroll', height: '85vh' }}>
       <h3 className="text-gray-200 uppercase">Learn</h3>
       <p className="pt-4 text-gray-200">
         This information is provided to help set context and give focus to researchers participating in this bug bounty
