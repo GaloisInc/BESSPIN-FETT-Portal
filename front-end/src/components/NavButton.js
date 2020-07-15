@@ -1,12 +1,22 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
+import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 
 export default function NavButton({ icon, routeName, path, currentRoute }) {
   return (
-    <li className={`flex flex-row h-8 items-center hover:bg-blue-600 ${currentRoute.includes(routeName) && 'bg-blue-600'}`}>
+    <li
+      className={`flex flex-row h-8 pr-2 items-center hover:bg-blue-600 ${currentRoute.includes(routeName) &&
+        'bg-blue-600'}`}
+    >
       <div className={`w-1 h-8 ${currentRoute.includes(routeName) && 'bg-blue-300'}`} />
-      <img className="pr-3 ml-3 w-6" src={icon} alt="" />
+      {routeName === 'broadcast' ? (
+        <div className="pr-3 ml-3">
+          <ChatBubbleOutlineIcon style={{ fontSize: 15 }} />
+        </div>
+      ) : (
+        <img className="pr-3 ml-3 w-6" src={icon} alt="" />
+      )}
       <Link className="uppercase" to={path}>
         <h6>{routeName}</h6>
       </Link>

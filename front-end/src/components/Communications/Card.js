@@ -53,7 +53,7 @@ const Card = props => {
   const renderedContent = renderContent();
 
   return (
-    <div className="col-span-4 bg-blue-600" style={{ width: '500px' }}>
+    <div className="col-span-4 bg-blue-600" style={{ maxWidth: '500px' }}>
       <div className="flex flex-row items-center justify-between pl-4 mt-2 mb-4">
         <h5 className="ml-4 text-gray-200 uppercase">{renderedNav}</h5>
       </div>

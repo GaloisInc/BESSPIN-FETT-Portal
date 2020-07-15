@@ -24,11 +24,11 @@ const Bounty = props => {
   };
 
   return (
-    <div className="flex-col h-full portal-container">
+    <div className="inline-flex flex-col h-full portal-container" style={{ minWidth: '100%' }}>
       <Header name={name} />
       <div style={{ minHeight: 'calc(100vh - 6em)' }} className="flex flex-row">
         <Sidebar />
-        <div className="bg-blue-700" style={{ width: '90%' }}>
+        <div className="bg-blue-700 w-full" style={{ minWidth: '1px' }}>
           {checkAuth ? (
             <>
               <Route path="/bountyportal/dashboard" component={BountyDash} />
