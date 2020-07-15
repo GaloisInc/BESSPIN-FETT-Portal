@@ -33,7 +33,7 @@ const Bounty = props => {
             <>
               <Route path="/bountyportal/dashboard" component={BountyDash} />
               <Route path="/bountyportal/launch" component={() => <BountyLaunch handleOpen={handleOpen} />} />
-              <Route path="/bountyportal/learn/crashreports" component={CrashReports} />
+              <Route path="/bountyportal/crashreports" component={CrashReports} />
               <Route path="/bountyportal/learn" component={Learn} />
               <Route exact path="/bountyportal" render={() => <Redirect to="/bountyportal/dashboard" />} />
             </>
