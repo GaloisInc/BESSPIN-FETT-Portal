@@ -101,7 +101,7 @@ const InstanceHistory = params => {
                 width: '1em',
                 sorting: false,
                 render: data => (
-                  <div className="w-3">
+                  <div className="w-3" style={{ display: 'block', margin: 'auto' }}>
                     <Alert status={data.Status} />
                   </div>
                 ),
@@ -128,7 +128,12 @@ const InstanceHistory = params => {
                 field: 'launch',
                 sorting: false,
                 render: data => (
-                  <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none">
+                  <button
+                    type="button"
+                    onClick={() => handleOpen(data)}
+                    className="focus:outline-none"
+                    style={{ display: 'block', margin: 'auto' }}
+                  >
                     <img src={settings} alt="" />
                   </button>
                 ),
