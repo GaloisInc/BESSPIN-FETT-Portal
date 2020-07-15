@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Spinner from '../../Spinner.js';
 import { getAnnouncements } from '../../../services/api/announcements';
-import useWindowDimensions from '../../../services/useDimensions';
-import classes from '../../../styles/scrollbar.css';
+import '../../../styles/scrollbar.css';
 
 export default function Announcement() {
   const [announcements, setAnnouncements] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { height } = useWindowDimensions();
 
   const fetchAnnouncements = async () => {
     try {
@@ -36,10 +34,7 @@ export default function Announcement() {
   ));
 
   return (
-    <div
-      className="relative overflow-y-scroll fettScroll"
-      style={{ minHeight: '630px', maxHeight: height - 340, overflowX: 'hidden' }}
-    >
+    <div className="relative overflow-y-scroll fettScroll" style={{ height: '55vh', overflowX: 'hidden' }}>
       {isLoading ? <Spinner /> : announcementDisplay}
     </div>
   );
