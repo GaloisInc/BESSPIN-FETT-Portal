@@ -75,7 +75,7 @@ const InstanceHistory = params => {
 
   return (
     <>
-      <div className="relative mb-4 mr-6 bg-blue-600 table-card" style={{ width: '700px', minHeight: '' }}>
+      <div className="mb-4 bg-blue-600 table-card col-span-7">
         <div className="flex flex-row items-center justify-between w-full pl-2 pr-2 mt-2 mb-2">
           <h5 className="text-gray-200 uppercase">instance history</h5>
           <button
@@ -100,7 +100,7 @@ const InstanceHistory = params => {
               {
                 title: '',
                 field: 'alert',
-                width: '1em',
+                width: '10%',
                 sorting: false,
                 render: data => (
                   <div className="w-3" style={{ display: 'block', margin: 'auto' }}>
@@ -111,30 +111,32 @@ const InstanceHistory = params => {
               {
                 title: 'F1 Instance',
                 field: 'instance',
-                width: '14em',
+                width: '30%',
                 render: data => (
                   <p>
                     {data.Type} | {data.OS} | {data.Processor}
                   </p>
                 ),
               },
-              { title: 'CodeName', field: 'CodeName', width: '7em' },
+              { title: 'CodeName', field: 'CodeName', width: '10%' },
               {
                 title: 'Launched',
                 field: 'Created',
+                width: '30%',
                 render: data => <p>{`${moment(data.Created).format('l')}, ${moment(data.Created).format('LT')}`}</p>,
               },
-              { title: 'Status', field: 'Status' },
+              { title: 'Status', field: 'Status', width: '10%' },
               {
                 title: '',
                 field: 'launch',
                 sorting: false,
+                width: '10%',
                 render: data => (
                   <button
                     type="button"
                     onClick={() => handleOpen(data)}
                     className="focus:outline-none"
-                    style={{ display: 'block', margin: 'auto' }}
+                    style={{ display: 'block', margin: 'auto', width: '1rem' }}
                   >
                     <img src={settings} alt="" />
                   </button>
