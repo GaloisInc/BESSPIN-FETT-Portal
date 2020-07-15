@@ -55,8 +55,10 @@ export default function InstanceManagement() {
     );
     setFilteredEnvironments(filteredData);
     if (open) {
-      const { CreatedBy_FK } = modalData[0];
-      const teamData = environments.filter(env => env.CreatedBy_FK === CreatedBy_FK);
+      const { Id } = modalData[0];
+      // const teamData = environments.filter(env => env.CreatedBy_FK === CreatedBy_FK);
+      const teamData = environments.filter(env => env.Id === Id);
+
       setModalData(teamData);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

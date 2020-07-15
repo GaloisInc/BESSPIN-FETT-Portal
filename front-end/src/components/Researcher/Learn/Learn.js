@@ -54,7 +54,7 @@ export default function Learn() {
         <p className="pt-2 text-sm leading-tight text-gray-200">
           NOTE: Provisioning times for the various CPU types vary between ~8 minutes and ~16 minutes.
         </p>
-        <Link className="text-teal-400 underline" to="learn/crashreports">
+        <Link className="text-teal-400 underline" to="crashreports">
           Detecting crashed SSITH CPUs
         </Link>
       </div>
