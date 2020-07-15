@@ -88,7 +88,9 @@ const InstanceHistory = params => {
           </button>
         </div>
         {isLoading ? (
-          <Spinner />
+          <div className="mt-16 mb-12">
+            <Spinner relative />
+          </div>
         ) : (
           <MaterialTable
             components={{
