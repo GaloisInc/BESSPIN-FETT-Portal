@@ -11,15 +11,16 @@ export default function NavButton({ icon, routeName, path, currentRoute }) {
       }`}
     >
       <div className={`w-1 h-8 ${currentRoute.includes(routeName) && 'bg-blue-300'}`} />
-      {routeName === 'broadcast' ? (
-        <div className="pr-3 ml-3">
-          <ChatBubbleOutlineIcon style={{ fontSize: 15 }} />
-        </div>
-      ) : null}
-      <Link className="uppercase" to={path}>
+      <Link className="uppercase" to={path} style={{ width: '100%' }}>
         <div className="grid grid-cols-12 items-center">
           <div className="col-span-3">
-            <img className="pr-3 ml-3 w-6" src={icon} alt="" />
+            {routeName === 'broadcast' ? (
+              <div className="pr-3 ml-3">
+                <ChatBubbleOutlineIcon style={{ fontSize: 15 }} />
+              </div>
+            ) : (
+              <img className="pr-3 ml-3 w-6" src={icon} alt="" />
+            )}
           </div>
           <div className="col-span-9">
             <h6 style={{ fontSize: 'calc(10px + (20 - 10) * ((100vw - 600px) / (2560 - 600)))' }}>{routeName}</h6>
