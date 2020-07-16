@@ -6,7 +6,7 @@ import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 export default function NavButton({ icon, routeName, path, currentRoute }) {
   return (
     <li
-      className={`flex flex-row h-8 pr-2 items-center hover:bg-blue-600 ${
+      className={`flex flex-row h-8 items-center hover:bg-blue-600 ${
         currentRoute.includes(routeName) ? 'bg-blue-600' : ''
       }`}
     >
