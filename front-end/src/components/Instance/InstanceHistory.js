@@ -92,7 +92,7 @@ const InstanceHistory = params => {
             <Spinner relative />
           </div>
         ) : (
-          <div id="instance-history-wrapper">
+          <div id="instance-history-wrapper" className="relative overflow-y-scroll fettScroll">
             <MaterialTable
               components={{
                 Container: props => <Paper {...props} elevation={0} />,

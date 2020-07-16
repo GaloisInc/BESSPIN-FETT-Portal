@@ -52286,6 +52286,6 @@ th.MuiTableCell-root {
   }
 }
 
-#instance-history-wrapper > div > div > div {
+#instance-history-wrapper {
   height: 45vh;
 }
