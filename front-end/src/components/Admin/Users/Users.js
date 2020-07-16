@@ -31,7 +31,7 @@ export default function Users() {
       <p className="pt-4 text-gray-200">
         This interface may be used to generate new researcher and admin logins and to modify existing logins.
       </p>
-      <div className="relative flex flex-row content-start w-full mt-4">
+      <div className="relative flex flex-row inline-flex content-start w-full mt-4">
         <UserForm fetchUsers={fetchUsers} />
         {isLoading ? (
           <Spinner />

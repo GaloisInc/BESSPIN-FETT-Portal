@@ -12,13 +12,14 @@ const Sidebar = ({ isAdmin, history }) => {
   const { pathname } = history.location;
   return (
     <div
-      className="pt-6 text-gray-200 bg-blue-800"
-      style={{ backgroundImage: 'linear-gradient(#1E272F, #314457)', width: '10%' }}
+      className="pt-6 text-gray-200 bg-blue-800 flex-shrink-0"
+      style={{ backgroundImage: 'linear-gradient(#1E272F, #314457)' }}
     >
       {isAdmin ? (
         <ul>
           <NavButton currentRoute={pathname} icon={dashboard} routeName="dashboard" path="/adminportal/dashboard" />
           <NavButton currentRoute={pathname} icon={users} routeName="users" path="/adminportal/users" />
+          <NavButton currentRoute={pathname} routeName="broadcast" path="/adminportal/broadcast" />
         </ul>
       ) : (
         <ul>
