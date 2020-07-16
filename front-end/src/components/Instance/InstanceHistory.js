@@ -125,7 +125,12 @@ const InstanceHistory = params => {
                 width: '30%',
                 render: data => <p>{`${moment(data.Created).format('l')}, ${moment(data.Created).format('LT')}`}</p>,
               },
-              { title: 'Status', field: 'Status', width: '10%' },
+              {
+                title: 'Status',
+                field: 'Status',
+                width: '10%',
+                render: data => <span style={{ textTransform: 'capitalize' }}>{data.Status}</span>,
+              },
               {
                 title: '',
                 field: 'launch',
