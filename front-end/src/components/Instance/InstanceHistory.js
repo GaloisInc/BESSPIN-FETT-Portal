@@ -92,82 +92,84 @@ const InstanceHistory = params => {
             <Spinner relative />
           </div>
         ) : (
-          <MaterialTable
-            components={{
-              Container: props => <Paper {...props} elevation={0} />,
-            }}
-            columns={[
-              {
-                title: '',
-                field: 'alert',
-                width: '10%',
-                sorting: false,
-                render: data => (
-                  <div className="w-3" style={{ display: 'block', margin: 'auto' }}>
-                    <Alert status={data.Status} />
-                  </div>
-                ),
-              },
-              {
-                title: 'F1 Instance',
-                field: 'instance',
-                width: '30%',
-                render: data => (
-                  <p>
-                    {data.Type} | {data.OS} | {data.Processor}
-                  </p>
-                ),
-              },
-              { title: 'CodeName', field: 'CodeName', width: '10%' },
-              {
-                title: 'Launched',
-                field: 'Created',
-                width: '30%',
-                render: data => <p>{`${moment(data.Created).format('l')}, ${moment(data.Created).format('LT')}`}</p>,
-              },
-              {
-                title: 'Status',
-                field: 'Status',
-                width: '10%',
-                render: data => <span style={{ textTransform: 'capitalize' }}>{data.Status}</span>,
-              },
-              {
-                title: '',
-                field: 'launch',
-                sorting: false,
-                width: '10%',
-                render: data => (
-                  <button
-                    type="button"
-                    onClick={() => handleOpen(data)}
-                    className="focus:outline-none"
-                    style={{ display: 'block', margin: 'auto', width: '1rem' }}
-                  >
-                    <img src={settings} alt="" />
-                  </button>
-                ),
-              },
-            ]}
-            options={{
-              headerStyle: {
-                backgroundColor: '#1E2B34',
-                color: '#46878E',
-                fontWeight: '500',
-                fontSize: '1em',
-                textTransform: 'uppercase',
-              },
-              rowStyle: rowData => ({
-                backgroundColor: rowData.tableData.id % 2 ? '#26343E' : '#293A46',
-                color: '#F4F4F4',
-              }),
-              paging: false,
-              search: false,
-              showTitle: false,
-              toolbar: false,
-              draggable: false,
-            }}
-            data={environments}
-          />
+          <div id="instance-history-wrapper">
+            <MaterialTable
+              components={{
+                Container: props => <Paper {...props} elevation={0} />,
+              }}
+              columns={[
+                {
+                  title: '',
+                  field: 'alert',
+                  width: '10%',
+                  sorting: false,
+                  render: data => (
+                    <div className="w-3" style={{ display: 'block', margin: 'auto' }}>
+                      <Alert status={data.Status} />
+                    </div>
+                  ),
+                },
+                {
+                  title: 'F1 Instance',
+                  field: 'instance',
+                  width: '30%',
+                  render: data => (
+                    <p>
+                      {data.Type} | {data.OS} | {data.Processor}
+                    </p>
+                  ),
+                },
+                { title: 'CodeName', field: 'CodeName', width: '10%' },
+                {
+                  title: 'Launched',
+                  field: 'Created',
+                  width: '30%',
+                  render: data => <p>{`${moment(data.Created).format('l')}, ${moment(data.Created).format('LT')}`}</p>,
+                },
+                {
+                  title: 'Status',
+                  field: 'Status',
+                  width: '10%',
+                  render: data => <span style={{ textTransform: 'capitalize' }}>{data.Status}</span>,
+                },
+                {
+                  title: '',
+                  field: 'launch',
+                  sorting: false,
+                  width: '10%',
+                  render: data => (
+                    <button
+                      type="button"
+                      onClick={() => handleOpen(data)}
+                      className="focus:outline-none"
+                      style={{ display: 'block', margin: 'auto', width: '1rem' }}
+                    >
+                      <img src={settings} alt="" />
+                    </button>
+                  ),
+                },
+              ]}
+              options={{
+                headerStyle: {
+                  backgroundColor: '#1E2B34',
+                  color: '#46878E',
+                  fontWeight: '500',
+                  fontSize: '1em',
+                  textTransform: 'uppercase',
+                },
+                rowStyle: rowData => ({
+                  backgroundColor: rowData.tableData.id % 2 ? '#26343E' : '#293A46',
+                  color: '#F4F4F4',
+                }),
+                paging: false,
+                search: false,
+                showTitle: false,
+                toolbar: false,
+                draggable: false,
+              }}
+              data={environments}
+            />
+          </div>
         )}
         <div className="flex flex-row justify-end p-1">
           <p className="text-xs text-gray-500">Last Updated: {updateTime}</p>

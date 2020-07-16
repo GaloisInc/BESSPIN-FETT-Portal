@@ -52285,3 +52285,7 @@ th.MuiTableCell-root {
     transition-delay: 1000ms;
   }
 }
+
+#instance-history-wrapper > div > div > div {
+  height: 45vh;
+}
