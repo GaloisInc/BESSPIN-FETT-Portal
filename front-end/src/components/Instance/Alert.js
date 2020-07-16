@@ -7,17 +7,20 @@ import clock from '../../assets/clock.svg';
 
 const Alert = ({ status }) => {
   const statusColorSelect = () => {
-    if (status === 'running') {
-      return <img src={greenAlert} alt="green exclamation" />;
-    }
-    if (status === 'provisioning') {
-      return <img src={clock} alt="clock" />;
-    }
-    if (status === 'terminating' || status === 'queueing') {
-      return <img src={amberAlert} alt="amber exclamation" />;
-    }
-    if (status === 'terminated' || status === 'failed' || status === 'error') {
-      return <img src={alert} alt="red exclamation" />;
+    switch (status) {
+      case 'running':
+        return <img src={greenAlert} alt="green exclamation" />;
+      case 'provisioning':
+        return <img src={clock} alt="clock" />;
+      case 'terminating':
+      case 'queueing':
+        return <img src={amberAlert} alt="amber exclamation" />;
+      case 'terminated':
+      case 'failed':
+      case 'error':
+        return <img src={alert} alt="red exclamation" />;
+      default:
+        return null;
     }
   };
 
