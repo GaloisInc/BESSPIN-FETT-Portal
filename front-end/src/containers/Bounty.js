@@ -24,7 +24,7 @@ const Bounty = props => {
   };
 
   return (
-    <div className="flex-col h-full portal-container">
+    <div className="inline-flex flex-col h-full portal-container" style={{ minWidth: '100%' }}>
       <Header name={name} />
       <div style={{ minHeight: 'calc(100vh - 6em)' }} className="flex flex-row">
         <Sidebar />
