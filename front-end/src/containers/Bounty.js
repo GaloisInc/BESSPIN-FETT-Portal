@@ -43,7 +43,7 @@ const Bounty = props => {
         </div>
         <Modal open={open} handleClose={handleClose}>
           <div
-            className="absolute h-56 p-8 text-4xl text-gray-200 bg-blue-600 outline-none"
+            className="absolute p-8 text-4xl text-gray-200 bg-blue-600 outline-none"
             style={{ width: '800px', top: '30%', left: '50%', marginLeft: '-400px' }}
           >
             <div className="grid grid-cols-12 items-center pb-4">
