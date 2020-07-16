@@ -4,7 +4,7 @@ import Comms from '../Communications/Card';
 
 export default function BountyDash() {
   return (
-    <div className="pt-6 container mx-auto px-12">
+    <div className="pt-6 container mx-auto px-8">
       <h3 className="text-gray-200 uppercase">dashboard</h3>
       <p className="pt-4 text-gray-200">
         Use the interface below to understand the status of any instances you have launched, and to manipulate them.

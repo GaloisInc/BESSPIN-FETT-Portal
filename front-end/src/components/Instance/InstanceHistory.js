@@ -77,7 +77,7 @@ const InstanceHistory = params => {
     <>
       <div className="mb-4 bg-blue-600 table-card col-span-7">
         <div className="flex flex-row items-center justify-between w-full pl-2 pr-2 mt-2 mb-2">
-          <h5 className="text-gray-200 uppercase">instance history</h5>
+          <h5 className="text-gray-200 uppercase pl-4">instance history</h5>
           <button
             className="flex flex-row items-center justify-around whitespace-no-wrap pl-4 pr-4 pt-1 pb-1 selected:outline-none btn-gray hover:bg-teal-500 hover:text-gray-200"
             type="button"
