@@ -83,10 +83,7 @@ export default function InstanceManagement() {
 
   return (
     <>
-      <div
-        className="relative mr-6 bg-blue-600 table-card w-full"
-        style={{ maxWidth: '1400px', minHeight: '630px', maxHeight: height - 340 }}
-      >
+      <div className="mr-6 bg-blue-600 table-card">
         <div className="flex flex-row items-center justify-between pl-4 mt-4 mb-2">
           <h5 className="font-medium text-gray-200 uppercase">environment management</h5>
           <div className="flex flex-row items-center mr-4">
@@ -383,7 +380,7 @@ export default function InstanceManagement() {
             />
           )}
         </div>
-        <div className="flex flex-row justify-end p-1">
+        <div className="flex flex-row justify-end p-4">
           <p className="text-xs text-gray-500">Last Updated: {updateTime}</p>
         </div>
       </div>
