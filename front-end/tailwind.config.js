@@ -51,6 +51,19 @@ module.exports = {
         '72': '300px',
       },
     },
+    screens: {
+      'sm': '640px',
+      // => @media (min-width: 640px) { ... }
+
+      'md': '768px',
+      // => @media (min-width: 768px) { ... }
+
+      'lg': '1024px',
+      // => @media (min-width: 1024px) { ... }
+
+      'xl': '1441px',
+      // => @media (min-width: 1441px) { ... }
+    }
   },
   variants: {
     backgroundColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
@@ -60,5 +73,5 @@ module.exports = {
     textColor: ['responsive', 'hover', 'focus', 'active', 'disabled'],
     transform: ['responsive', 'hover', 'focus', 'active', 'disabled'],
   },
-  plugins: [],
+  plugins: []
 };
