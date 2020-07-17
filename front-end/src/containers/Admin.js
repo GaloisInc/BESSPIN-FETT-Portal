@@ -13,7 +13,7 @@ const Admin = props => {
   const checkAuth = isLoggedIn && isAdmin;
 
   return (
-    <div className="inline-flex flex-col h-full portal-container" style={{ minWidth: '100%' }}>
+    <div className="inline-flex flex-col h-full portal-container">
       <Header isAdmin={isAdmin} name={name} />
       <div style={{ minHeight: 'calc(100vh - 6em)' }} className="flex flex-row">
         <Sidebar isAdmin={isAdmin} />
