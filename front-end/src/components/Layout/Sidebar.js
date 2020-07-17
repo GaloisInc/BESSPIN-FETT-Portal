@@ -20,6 +20,7 @@ const Sidebar = ({ isAdmin, history }) => {
           <NavButton currentRoute={pathname} icon={dashboard} routeName="dashboard" path="/adminportal/dashboard" />
           <NavButton currentRoute={pathname} icon={users} routeName="users" path="/adminportal/users" />
           <NavButton currentRoute={pathname} routeName="broadcast" path="/adminportal/broadcast" />
+          <NavButton currentRoute={pathname} routeName="metrics" path="/adminportal/metrics" />
         </ul>
       ) : (
         <ul>

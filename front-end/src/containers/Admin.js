@@ -6,6 +6,7 @@ import Users from '../components/Admin/Users/Users';
 import Sidebar from '../components/Layout/Sidebar';
 import Header from '../components/Layout/Header';
 import AdminBroadcast from '../components/Admin/AdminBroadcast';
+import AdminMetrics from '../components/Admin/AdminMetrics';
 
 const Admin = props => {
   const { isAdmin, isLoggedIn, name } = props;
@@ -22,6 +23,7 @@ const Admin = props => {
               <Route path="/adminportal/dashboard" component={AdminDash} />
               <Route path="/adminportal/users" component={Users} />
               <Route path="/adminportal/broadcast" component={AdminBroadcast} />
+              <Route path="/adminportal/metrics" component={AdminMetrics} />
               <Route exact path="/adminportal" render={() => <Redirect to="adminportal/dashboard" />} />
             </>
           ) : (
