@@ -130,7 +130,18 @@ const InstanceHistory = params => {
                   title: 'Status',
                   field: 'Status',
                   width: '10%',
-                  render: data => <span style={{ textTransform: 'capitalize' }}>{data.Status}</span>,
+                  render: data => (
+                    <span style={{ textTransform: 'capitalize' }}>
+                      {data.Status}
+                      {data.Status === 'running' ? (
+                        <>
+                          <br />({modalData.FPGAIp})
+                        </>
+                      ) : (
+                        ''
+                      )}
+                    </span>
+                  ),
                 },
                 {
                   title: '',
