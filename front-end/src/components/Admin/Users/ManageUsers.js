@@ -47,7 +47,7 @@ const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => 
 
   return (
     <div className="bg-blue-600 table-card h-full">
-      <div className="flex flex-row items-center justify-between pl-8 flex-wrap pt-8">
+      <div className="flex flex-row items-center justify-between pl-8 flex-wrap pt-8 pb-4">
         <h5 className="text-gray-200 uppercase">current teams/ users</h5>
         <div className="flex flex-row items-center mr-4">
           <form className="relative" onSubmit={event => handleSearch(event)}>
