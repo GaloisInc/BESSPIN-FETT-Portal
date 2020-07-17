@@ -1,3 +1,5 @@
+// import moment from 'moment';
+
 const aws = require('aws-sdk');
 const { Response, Database } = require('../helpers');
 
@@ -8,12 +10,14 @@ aws.config.apiVersions = {
 
 const getCosts = () =>
   new Promise((resolve, reject) => {
-    const startDate = new Date('15 July 2020 17:00 UTC').toISOString();
-    const endDate = new Date().toISOString();
+    // const startDate = moment('15 July 2020 17:00 UTC').format(
+    //   'yyyy-MM-ddThh:mm:ssZ'
+    // );
+    // const endDate = moment().format('yyyy-MM-ddThh:mm:ssZ');
     const ceParams = {
       TimePeriod: {
-        End: endDate,
-        Start: startDate,
+        // End: endDate,
+        // Start: startDate,
       },
       Granularity: 'HOURLY',
       Metrics: ['BlendedCost'],
@@ -123,16 +127,9 @@ exports.handler = async (event, context) => {
       )}`
     );
     results.terminationsTotal = terminationsTotal[0].Terminations;
-    // const ceData = await getCosts();
-    // console.log(ceData);
+    const ceData = await getCosts();
+    console.log(ceData);
 
-    // ce.getCostAndUsage(ceParams, function(err, results) {
-    //   if (err) console.log(err, err.stack);
-    //   // an error occurred
-    //   else console.log(results); // successful response
-    // });
-    // const data = ce.getCostAndUsage(ceParams).promise();
-    // console.log('Cost Explorer -->', JSON.stringify(data));
     return new Response(results).success();
   } catch (err) {
     console.log(err);
