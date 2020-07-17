@@ -41,7 +41,9 @@ export default function AdminDash() {
       <div className="w-full mt-4">
         <div className="relative mr-6 bg-blue-600 table-card w-full">
           {isLoading ? (
-            <Spinner />
+            <div className="p-12">
+              <Spinner />
+            </div>
           ) : (
             <>
               <div className="flex flex-row items-center justify-between pl-4 mt-4 mb-2">
