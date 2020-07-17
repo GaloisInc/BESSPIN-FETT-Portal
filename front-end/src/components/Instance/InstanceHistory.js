@@ -92,7 +92,7 @@ const InstanceHistory = params => {
             <Spinner relative />
           </div>
         ) : (
-          <div id="instance-history-wrapper" className="relative overflow-y-scroll fettScroll">
+          <div className="relative overflow-y-scroll fettScroll" style={{ height: '45vh' }}>
             <MaterialTable
               components={{
                 Container: props => <Paper {...props} elevation={0} />,
@@ -130,7 +130,18 @@ const InstanceHistory = params => {
                   title: 'Status',
                   field: 'Status',
                   width: '10%',
-                  render: data => <span style={{ textTransform: 'capitalize' }}>{data.Status}</span>,
+                  render: data => (
+                    <span style={{ textTransform: 'capitalize' }}>
+                      {data.Status}
+                      {data.Status === 'running' ? (
+                        <>
+                          <br />({modalData.FPGAIp})
+                        </>
+                      ) : (
+                        ''
+                      )}
+                    </span>
+                  ),
                 },
                 {
                   title: '',

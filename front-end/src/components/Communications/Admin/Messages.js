@@ -26,7 +26,7 @@ export default function Messages() {
 			const response = await getConversations();
 			setConversations(response);
 			setFilteredConversations(response);
-      		setIsLoading(false);
+			setIsLoading(false);
 			const researchers = await getTeams();
 			setTeams(researchers);
 			console.log(response)
@@ -102,30 +102,32 @@ export default function Messages() {
 	}) : '';
 
   return (
-
 	  <>
-		<div className="relative h-20 bg-blue-900">
-			{selectedResearcher && (
-				<button className="pl-4 mt-8 focus:outline-none" type="button" onClick={() => setSelectedResearcher(null)}>
-					<img className="h-4 transform rotate-180" src={arrowRight} alt=""/>
-				</button>)
-			}
-			{!selectedResearcher && (
-				<>
-					<input
-						className="pl-4 mt-6 ml-8 text-gray-200 bg-blue-900 border border-gray-200 border-solid rounded focus:outline-none"
-						type="text"
-						value={searchTerm}
-						name="name"
-						onChange={event => handleSearch(event)}
-					/>
-					<img style={{marginTop: '28px', marginLeft: '200px'}} className="absolute top-0 left-0" src={search} alt="" />
-				</>
+			<div className="relative h-20 bg-blue-900">
+				{selectedResearcher && (
+					<button className="pl-4 mt-8 focus:outline-none" type="button" onClick={() => setSelectedResearcher(null)}>
+						<img className="h-4 transform rotate-180" src={arrowRight} alt=""/>
+					</button>)
+				}
+				{!selectedResearcher && (
+					<>
+						<input
+							className="pl-4 mt-6 ml-8 text-gray-200 bg-blue-900 border border-gray-200 border-solid rounded focus:outline-none"
+							type="text"
+							value={searchTerm}
+							name="name"
+							onChange={event => handleSearch(event)}
+						/>
+						<img style={{marginTop: '28px', marginLeft: '200px'}} className="absolute top-0 left-0" src={search} alt="" />
+					</>
+				)}
+			</div>
+			{!isLoading && selectedResearcher ? <MessagesChat researcherId={selectedResearcher}/> : <>{renderedConversations}{renderedTeams}</>}
+			{isLoading && (
+				<div className="p-12">
+					<Spinner relative />
+				</div>
 			)}
-		</div>
-	{!isLoading && selectedResearcher ? <MessagesChat researcherId={selectedResearcher}/> : <>{renderedConversations}{renderedTeams}</>}
-	{isLoading && <div className="relative"><Spinner /></div>}
 	  </>
-
   );
 }

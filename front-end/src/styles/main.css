@@ -600,9 +600,9 @@ video {
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1441px) {
   .container {
-    max-width: 1280px;
+    max-width: 1441px;
   }
 }
 
@@ -5625,7 +5625,7 @@ video {
 }
 
 .max-w-screen-xl {
-  max-width: 1280px;
+  max-width: 1441px;
 }
 
 .min-h-0 {
@@ -16030,7 +16030,7 @@ th.MuiTableCell-root {
   }
 
   .sm\:max-w-screen-xl {
-    max-width: 1280px;
+    max-width: 1441px;
   }
 
   .sm\:min-h-0 {
@@ -26349,7 +26349,7 @@ th.MuiTableCell-root {
   }
 
   .md\:max-w-screen-xl {
-    max-width: 1280px;
+    max-width: 1441px;
   }
 
   .md\:min-h-0 {
@@ -36668,7 +36668,7 @@ th.MuiTableCell-root {
   }
 
   .lg\:max-w-screen-xl {
-    max-width: 1280px;
+    max-width: 1441px;
   }
 
   .lg\:min-h-0 {
@@ -41967,7 +41967,7 @@ th.MuiTableCell-root {
   }
 }
 
-@media (min-width: 1280px) {
+@media (min-width: 1441px) {
   .xl\:space-y-0 > :not(template) ~ :not(template) {
     --space-y-reverse: 0;
     margin-top: calc(0px * calc(1 - var(--space-y-reverse)));
@@ -46987,7 +46987,7 @@ th.MuiTableCell-root {
   }
 
   .xl\:max-w-screen-xl {
-    max-width: 1280px;
+    max-width: 1441px;
   }
 
   .xl\:min-h-0 {
@@ -52284,8 +52284,4 @@ th.MuiTableCell-root {
   .xl\:delay-1000 {
     transition-delay: 1000ms;
   }
-}
-
-#instance-history-wrapper {
-  height: 45vh;
 }
