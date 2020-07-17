@@ -1,13 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import Spinner from '../../Spinner.js';
 import { getAnnouncements } from '../../../services/api/announcements';
-import useWindowDimensions from '../../../services/useDimensions';
-import classes from '../../../styles/scrollbar.css';
+import '../../../styles/scrollbar.css';
 
 export default function Announcement() {
   const [announcements, setAnnouncements] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const { height } = useWindowDimensions();
 
   const fetchAnnouncements = async () => {
     try {
@@ -25,11 +23,7 @@ export default function Announcement() {
   }, []);
 
   const announcementDisplay = announcements.map((aId, index) => (
-    <div
-      className="p-4 pr-6 text-teal-500 mr-4"
-      key={index}
-      style={{ backgroundColor: index % 2 ? '#1E2B34' : '#26343E' }}
-    >
+    <div className="p-4 text-teal-500" key={index} style={{ backgroundColor: index % 2 ? '#1E2B34' : '#26343E' }}>
       <div className="flex justify-between flex-column">
         <h6 className="uppercase">
           <span className="font-bold">Subject:</span> {aId.Type}
@@ -40,7 +34,7 @@ export default function Announcement() {
   ));
 
   return (
-    <div className="relative overflow-y-scroll fettScroll" style={{ minHeight: '630px', maxHeight: height - 340 }}>
+    <div className="relative overflow-y-scroll fettScroll" style={{ height: '55vh', overflowX: 'hidden' }}>
       {isLoading ? <Spinner /> : announcementDisplay}
     </div>
   );

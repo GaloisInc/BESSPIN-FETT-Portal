@@ -1,9 +1,10 @@
 import React from 'react';
-import classes from '../styles/spinner.css';
+import '../styles/spinner.css';
+import PropTypes from 'prop-types';
 
-export default function Spinner() {
+export default function Spinner({ relative }) {
   return (
-    <div className="loader">
+    <div className="loader" style={relative ? { position: 'relative' } : {}}>
       <div className="h-15 w-15">
         <svg id="arcs" viewBox="0 0 100 100">
           <path
@@ -41,3 +42,7 @@ export default function Spinner() {
     </div>
   );
 }
+
+Spinner.propTypes = {
+  relative: PropTypes.bool,
+};

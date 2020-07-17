@@ -75,12 +75,9 @@ const InstanceHistory = params => {
 
   return (
     <>
-      <div
-        className="relative mb-4 mr-6 bg-blue-600 table-card w-full"
-        style={{ minWidth: '1px', maxWidth: '900px', minHeight: '' }}
-      >
+      <div className="mb-4 bg-blue-600 table-card col-span-7">
         <div className="flex flex-row items-center justify-between w-full pl-2 pr-2 mt-2 mb-2">
-          <h5 className="text-gray-200 uppercase">instance history</h5>
+          <h5 className="text-gray-200 uppercase pl-4">instance history</h5>
           <button
             className="flex flex-row items-center justify-around whitespace-no-wrap pl-4 pr-4 pt-1 pb-1 selected:outline-none btn-gray hover:bg-teal-500 hover:text-gray-200"
             type="button"
@@ -90,10 +87,12 @@ const InstanceHistory = params => {
             <p className="self-center text-sm font-medium text-blue-900 uppercase">launch instance</p>
           </button>
         </div>
-        <div className="relative overflow-y-scroll fettScroll" style={{ height: '55vh' }}>
-          {isLoading ? (
-            <Spinner />
-          ) : (
+        {isLoading ? (
+          <div className="mt-16 mb-12">
+            <Spinner relative />
+          </div>
+        ) : (
+          <div id="instance-history-wrapper" className="relative overflow-y-scroll fettScroll">
             <MaterialTable
               components={{
                 Container: props => <Paper {...props} elevation={0} />,
@@ -102,10 +101,10 @@ const InstanceHistory = params => {
                 {
                   title: '',
                   field: 'alert',
-                  width: '1em',
+                  width: '10%',
                   sorting: false,
                   render: data => (
-                    <div className="w-3">
+                    <div className="w-3" style={{ display: 'block', margin: 'auto' }}>
                       <Alert status={data.Status} />
                     </div>
                   ),
@@ -113,26 +112,38 @@ const InstanceHistory = params => {
                 {
                   title: 'F1 Instance',
                   field: 'instance',
-                  width: '14em',
+                  width: '30%',
                   render: data => (
                     <p>
                       {data.Type} | {data.OS} | {data.Processor}
                     </p>
                   ),
                 },
-                { title: 'CodeName', field: 'CodeName', width: '7em' },
+                { title: 'CodeName', field: 'CodeName', width: '10%' },
                 {
                   title: 'Launched',
                   field: 'Created',
+                  width: '30%',
                   render: data => <p>{`${moment(data.Created).format('l')}, ${moment(data.Created).format('LT')}`}</p>,
                 },
-                { title: 'Status', field: 'Status' },
+                {
+                  title: 'Status',
+                  field: 'Status',
+                  width: '10%',
+                  render: data => <span style={{ textTransform: 'capitalize' }}>{data.Status}</span>,
+                },
                 {
                   title: '',
                   field: 'launch',
                   sorting: false,
+                  width: '10%',
                   render: data => (
-                    <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none w-5">
+                    <button
+                      type="button"
+                      onClick={() => handleOpen(data)}
+                      className="focus:outline-none"
+                      style={{ display: 'block', margin: 'auto', width: '1rem' }}
+                    >
                       <img src={settings} alt="" />
                     </button>
                   ),
@@ -158,8 +169,8 @@ const InstanceHistory = params => {
               }}
               data={environments}
             />
-          )}
-        </div>
+          </div>
+        )}
         <div className="flex flex-row justify-end p-1">
           <p className="text-xs text-gray-500">Last Updated: {updateTime}</p>
         </div>

@@ -114,7 +114,7 @@ export default function Messages() {
 
     // <div className="relative overflow-y-scroll fettScroll" style={{ minHeight: '630px', maxHeight: height - 340 }}>
 
-    <div className="flex flex-col" style={{ minHeight: '630px', maxHeight: height - 340 }}>
+    <div className="flex flex-col" style={{ height: '55vh' }}>
       <p className="self-center text-base text-red-500 uppercase">The messages feature is currently not available</p>
     </div>
   );

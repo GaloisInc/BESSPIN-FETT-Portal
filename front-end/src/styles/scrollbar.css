@@ -2,13 +2,12 @@
 {
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
     border-radius: 10px;
-    background-color: #CFD1CS
 }
 
 .fettScroll::-webkit-scrollbar
 {
     width: 12px;
-    background-color:#CFD1CS;
+    height: 12px;
     border: 1px solid #ccc;
     border-radius: 6px;
 }
@@ -19,4 +18,5 @@
     -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
     background-color: #ccc;
     max-height: 15px;
+    max-width: 15px;
 }
