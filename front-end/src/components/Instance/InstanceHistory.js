@@ -135,7 +135,7 @@ const InstanceHistory = params => {
                       {data.Status}
                       {data.Status === 'running' ? (
                         <>
-                          <br />({modalData.FPGAIp})
+                          <br />({data.FPGAIp})
                         </>
                       ) : (
                         ''
