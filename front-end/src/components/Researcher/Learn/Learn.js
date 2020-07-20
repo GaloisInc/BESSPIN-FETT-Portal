@@ -108,7 +108,7 @@ export default function Learn() {
                   <li>Researcher-provided and compiled vulnerable applications</li>
                 </ul>
               </li>
-              <li>Security researchers are given access to a root shell to interact with custom applications</li>
+              <li>Security researchers are given access to a root shell to interact with custom applications via "su -"</li>
             </ul>
           </li>
           <li>
@@ -158,7 +158,7 @@ export default function Learn() {
                   <li>Researcher-provided and compiled vulnerable applications</li>
                 </ul>
               </li>
-              <li>Security researchers given access to a root shell to interact with custom applications</li>
+              <li>Security researchers given access to a root shell to interact with custom applications via "su -"</li>
             </ul>
           </li>
           <li>
@@ -219,10 +219,12 @@ export default function Learn() {
                   <li>SSH Daemon (OpenSSH v7.3)</li>
                   <li>Protected AES engine</li>
                   <li>Protected Password Authentication Module</li>
-                  <li>Protected nginx authentication module</li>
                 </ul>
               </li>
-              <li>Security researchers given access to a root shell on system</li>
+              <li>Security researchers given access to a root shell on system via "su -"</li>
+              <li>From a root shell, run "./install-enclaves.sh"</li>
+              <li>AES enclave is exercised via "/ssith/aes-main option infile outfile" with option "-e" for encrypt and "-d" for decrypt.</li>
+              <li>Test PAM enclave via "pamtester testing <username> authenticate."</li>
             </ul>
           </li>
           <li>
