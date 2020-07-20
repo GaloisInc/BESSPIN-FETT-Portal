@@ -4,7 +4,6 @@ import alert from '../../assets/alert.svg';
 import greenAlert from '../../assets/greenAlert.png';
 import amberAlert from '../../assets/amberAlert.png';
 import clock from '../../assets/clock.svg';
-import stop from '../../assets/stop.svg';
 
 const Alert = ({ status }) => {
   const statusColorSelect = () => {
@@ -17,7 +16,6 @@ const Alert = ({ status }) => {
       case 'terminating':
         return <img src={amberAlert} alt="amber exclamation" />;
       case 'terminated':
-        return <img src={stop} alt="stop" />;
       case 'failed':
       case 'error':
         return <img src={alert} alt="red exclamation" />;
