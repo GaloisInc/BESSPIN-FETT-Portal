@@ -80,11 +80,9 @@ const getHours = () =>
       costexplorer.getCostAndUsage(ceParams, function(err, data) {
         if (err) console.log(err, err.stack);
         // an error occurred
-        console.log(JSON.stringify(data));
         const realData = data.ResultsByTime.filter(
           item => parseFloat(item.Total.UsageQuantity.Amount) > 0
         );
-        console.log(JSON.stringify(realData));
         const hoursTotal = realData.reduce(function(acc, curr) {
           return acc + parseFloat(curr.Total.UsageQuantity.Amount);
         }, 0);
