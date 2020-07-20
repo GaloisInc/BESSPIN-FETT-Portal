@@ -5616,10 +5616,6 @@ video {
   max-width: 640px;
 }
 
-.max-w-screen-md {
-  max-width: 768px;
-}
-
 .max-w-screen-lg {
   max-width: 1024px;
 }
@@ -16021,10 +16017,6 @@ th.MuiTableCell-root {
     max-width: 640px;
   }
 
-  .sm\:max-w-screen-md {
-    max-width: 768px;
-  }
-
   .sm\:max-w-screen-lg {
     max-width: 1024px;
   }
@@ -21329,7 +21321,7 @@ th.MuiTableCell-root {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 768px) and (max-width: 1023px) {
   .md\:space-y-0 > :not(template) ~ :not(template) {
     --space-y-reverse: 0;
     margin-top: calc(0px * calc(1 - var(--space-y-reverse)));
@@ -26338,10 +26330,6 @@ th.MuiTableCell-root {
 
   .md\:max-w-screen-sm {
     max-width: 640px;
-  }
-
-  .md\:max-w-screen-md {
-    max-width: 768px;
   }
 
   .md\:max-w-screen-lg {
@@ -36659,10 +36647,6 @@ th.MuiTableCell-root {
     max-width: 640px;
   }
 
-  .lg\:max-w-screen-md {
-    max-width: 768px;
-  }
-
   .lg\:max-w-screen-lg {
     max-width: 1024px;
   }
@@ -46976,10 +46960,6 @@ th.MuiTableCell-root {
 
   .xl\:max-w-screen-sm {
     max-width: 640px;
-  }
-
-  .xl\:max-w-screen-md {
-    max-width: 768px;
   }
 
   .xl\:max-w-screen-lg {
