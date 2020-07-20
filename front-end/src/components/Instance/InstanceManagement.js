@@ -17,7 +17,7 @@ export default function InstanceManagement() {
   const [searchTerm, setSearchTerm] = useState('');
   const [modalData, setModalData] = useState([]);
   const [open, setOpen] = useState(false);
-  // const [isModalLoading, setIsModalLoading] = useState(false);
+  const [isModalLoading, setIsModalLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [environments, setEnvironments] = useState([]);
   const [filteredEnvironments, setFilteredEnvironments] = useState([]);
@@ -69,17 +69,17 @@ export default function InstanceManagement() {
     setSearchTerm(event.target.value);
   };
 
-  // const handleOpen = async data => {
-  //   setIsModalLoading(true);
-  //   // const teamData = environments.filter(env => env.CreatedBy_FK === data.CreatedBy_FK);
-  //   const teamData = environments.filter(env => env.Id === data.Id);
-  //   setModalData(teamData);
-  //   setOpen(true);
-  // };
+  const handleOpen = async data => {
+    setIsModalLoading(true);
+    // const teamData = environments.filter(env => env.CreatedBy_FK === data.CreatedBy_FK);
+    const teamData = environments.filter(env => env.Id === data.Id);
+    setModalData(teamData);
+    setOpen(true);
+  };
 
-  // const handleClose = () => {
-  //   setOpen(false);
-  // };
+  const handleClose = () => {
+    setOpen(false);
+  };
 
   return (
     <>
@@ -343,17 +343,17 @@ export default function InstanceManagement() {
                   ),
                 },
 
-                // {
-                //   title: '',
-                //   field: 'detailsView',
-                //   sorting: false,
-                //   width: '4em',
-                //   render: data => (
-                //     <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none w-5">
-                //       <img src={settings} alt="" />
-                //     </button>
-                //   ),
-                // },
+                {
+                  title: '',
+                  field: 'detailsView',
+                  sorting: false,
+                  width: '4em',
+                  render: data => (
+                    <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none w-5">
+                      <img src={settings} alt="" />
+                    </button>
+                  ),
+                },
               ]}
               options={{
                 headerStyle: {
@@ -384,7 +384,7 @@ export default function InstanceManagement() {
           <p className="text-xs text-gray-500">Last Updated: {updateTime}</p>
         </div>
       </div>
-      {/* <Modal open={open} onClose={handleClose}>
+      <Modal open={open} onClose={handleClose}>
         <InstanceModal
           cardHeight={height - 400}
           handleClose={handleClose}
@@ -392,7 +392,7 @@ export default function InstanceManagement() {
           modalData={modalData}
           fetchEnvironments={fetchEnvironments}
         />
-      </Modal> */}
+      </Modal>
     </>
   );
 }
