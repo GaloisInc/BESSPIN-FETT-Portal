@@ -36,7 +36,7 @@ export default function NavButton({ icon, routeName, path, currentRoute }) {
             <Icon />
           </div>
           <div className="col-span-9 xl:col-span-10">
-            <h6 style={{ fontSize: 'calc(10px + (20 - 10) * ((100vw - 600px) / (2560 - 600)))' }}>{routeName}</h6>
+            <h6 style={{ fontSize: 'calc(10px + (15 - 10) * ((100vw - 600px) / (2560 - 600)))' }}>{routeName}</h6>
           </div>
         </div>
       </Link>
