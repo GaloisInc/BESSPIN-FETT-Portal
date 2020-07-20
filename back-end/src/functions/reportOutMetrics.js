@@ -1,4 +1,4 @@
-// import moment from 'moment';
+const moment = require('moment');
 
 const aws = require('aws-sdk');
 const { Response, Database } = require('../helpers');
@@ -8,33 +8,95 @@ aws.config.apiVersions = {
   // other service API versions
 };
 
+const endDate = `${moment()
+  .toISOString()
+  .slice(0, -5)}Z`;
+const startDate = `${moment('15 July 2020 17:00 UTC')
+  .toISOString()
+  .slice(0, -5)}Z`;
+
+const costexplorer = new aws.CostExplorer({
+  apiVersion: '2017-10-25',
+  region: 'us-east-1',
+});
+
 const getCosts = () =>
   new Promise((resolve, reject) => {
-    // const startDate = moment('15 July 2020 17:00 UTC').format(
-    //   'yyyy-MM-ddThh:mm:ssZ'
-    // );
-    // const endDate = moment().format('yyyy-MM-ddThh:mm:ssZ');
     const ceParams = {
       TimePeriod: {
-        // End: endDate,
-        // Start: startDate,
+        End: endDate,
+        Start: startDate,
       },
       Granularity: 'HOURLY',
       Metrics: ['BlendedCost'],
     };
     console.log('calling cost explorer', ceParams);
 
-    const costexplorer = new aws.CostExplorer({
-      apiVersion: '2017-10-25',
-      region: 'us-east-1',
-    });
-
     costexplorer.getCostAndUsage(ceParams, function(err, data) {
       if (err) console.log(err, err.stack);
       // an error occurred
-      else console.log(data); // successful response
-      resolve(data);
+      const realData = data.ResultsByTime.filter(
+        item => parseFloat(item.Total.BlendedCost.Amount) > 0
+      );
+      const costTotal = realData.reduce(function(acc, curr) {
+        return acc + parseFloat(curr.Total.BlendedCost.Amount);
+      }, 0);
+      const periodEnd = realData.pop().TimePeriod.End;
+      const result = { costTotal, periodEnd };
+      // successful response
+      resolve(result);
     });
+  });
+
+const getHours = () =>
+  new Promise((resolve, reject) => {
+    try {
+      const ceParams = {
+        TimePeriod: {
+          End: endDate,
+          Start: startDate,
+        },
+        Filter: {
+          And: [
+            {
+              Dimensions: {
+                Key: 'INSTANCE_TYPE',
+                Values: ['f1.2xlarge'],
+              },
+            },
+            {
+              Dimensions: {
+                Key: 'USAGE_TYPE_GROUP',
+                Values: ['EC2: Running Hours'],
+              },
+            },
+          ],
+        },
+        Granularity: 'HOURLY',
+        Metrics: ['UsageQuantity'],
+      };
+      console.log('calling cost explorer', ceParams);
+
+      costexplorer.getCostAndUsage(ceParams, function(err, data) {
+        if (err) console.log(err, err.stack);
+        // an error occurred
+        console.log(JSON.stringify(data));
+        const realData = data.ResultsByTime.filter(
+          item => parseFloat(item.Total.UsageQuantity.Amount) > 0
+        );
+        console.log(JSON.stringify(realData));
+        const hoursTotal = realData.reduce(function(acc, curr) {
+          return acc + parseFloat(curr.Total.UsageQuantity.Amount);
+        }, 0);
+        const periodEnd = realData.pop().TimePeriod.End;
+        const result = { hoursTotal, periodEnd };
+        // // successful response
+        resolve(result);
+      });
+    } catch (error) {
+      reject(error);
+    }
+    // const startDate = moment(new Date()).toISOString()
   });
 
 const db = new Database();
@@ -127,8 +189,13 @@ exports.handler = async (event, context) => {
       )}`
     );
     results.terminationsTotal = terminationsTotal[0].Terminations;
-    const ceData = await getCosts();
-    console.log(ceData);
+    const costData = await getCosts();
+    console.log('COSTS', costData);
+    results.costData = costData;
+
+    const f1Hours = await getHours();
+    console.log('F1HOURS', f1Hours);
+    results.f1Hours = f1Hours;
 
     return new Response(results).success();
   } catch (err) {
