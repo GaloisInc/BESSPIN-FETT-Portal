@@ -65,7 +65,7 @@ const LaunchTable = ({ history, handleOpen }) => {
 
   return (
     <>
-      <div className="relative mb-4 bg-blue-600 table-card" style={{ width: '800px', minHeight: '400px' }}>
+      <div className="relative mb-4 bg-blue-600 table-card container" style={{ minHeight: '400px' }}>
         <div className="flex flex-row items-center justify-between pl-2 mt-2 mb-2">
           <h5 className="text-gray-200 uppercase">instance configuration</h5>
         </div>
