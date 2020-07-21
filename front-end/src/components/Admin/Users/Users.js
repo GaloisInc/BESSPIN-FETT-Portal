@@ -25,8 +25,15 @@ export default function Users() {
     fetchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  const handleScroll = e => e.target.classList.add('fettScroll');
+
   return (
-    <div className="pt-6 pl-12" style={{ height: '85vh', display: 'flex', flexDirection: 'column' }}>
+    <div
+      className="pt-6 pl-12 overflow-y-scroll"
+      style={{ height: '85vh', display: 'flex', flexDirection: 'column' }}
+      onScroll={handleScroll}
+    >
       <h3 className="text-gray-200 uppercase">manage users</h3>
       <p className="pt-4 text-gray-200">
         This interface may be used to generate new researcher and admin logins and to modify existing logins.
