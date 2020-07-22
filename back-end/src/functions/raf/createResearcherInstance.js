@@ -73,17 +73,17 @@ const getUserData = (f1Config, iName) => {
   chmod 400 /home/centos/.ssh/config
   
   
-  pushd SSITH-FETT-Target/ 
-  echo "setting up git repo..."	
-  git pull	
-  git checkout develop	
-  git submodule init	
-  git submodule update --init --recursive	
-  pushd SSITH-FETT-Binaries	
-  echo "Pulling binaries...."	
-  git lfs pull	
-  echo "Running fett command..."	
-  popd
+  // pushd SSITH-FETT-Target/ 
+  // echo "setting up git repo..."	
+  // git pull	
+  // git checkout develop	
+  // git submodule init	
+  // git submodule update --init --recursive	
+  // pushd SSITH-FETT-Binaries	
+  // echo "Pulling binaries...."	
+  // git lfs pull	
+  // echo "Running fett command..."	
+  // popd
 
   `;
 
