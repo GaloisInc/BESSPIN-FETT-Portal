@@ -2,22 +2,34 @@ const aws = require('aws-sdk');
 const util = require('util');
 const { Response, Database } = require('../../helpers');
 
+const sqs = new aws.SQS();
 const db = new Database();
-const s3 = new aws.S3();
 
-const sendFile = async instanceId => {
-  console.log(process.env.CURRENT_STAGE);
-  const params = {
-    Bucket: `${
-      process.env.CURRENT_STAGE === 'develop' ? 'develop' : 'master'
-    }-ssith-fett-target-researcher-artifacts`,
-    Key: `fett-target/production/communication/termination/${instanceId}`,
-    Body: 'Terminated!',
+const sendMessage = async instanceId => {
+  // console.log(instanceId);
+  let messageAttrs = {
+    REPLACE_ME: {
+      DataType: 'String',
+      StringValue: String(instanceId),
+    },
   };
-  console.log(params);
-  return s3.putObject(params).promise();
-};
+  let messageAttrsJson = JSON.stringify(messageAttrs);
+  console.log('start', messageAttrsJson);
 
+  messageAttrsJson = messageAttrsJson.replace('REPLACE_ME', instanceId);
+  console.log('messageJson', messageAttrsJson);
+
+  messageAttrs = JSON.parse(messageAttrsJson);
+  console.log('done', messageAttrs);
+
+  const params = {
+    QueueUrl: process.env.PORTAL_TO_INSTANCE_TERMINATION_QUEUE_URL,
+    MessageBody: 'terminate',
+    MessageAttributes: messageAttrs,
+  };
+  console.log('msg: ', params);
+  return sqs.sendMessage(params).promise();
+};
 const updateStatusToDB = async dbId => {
   await db.makeConnection();
   const data = await db.query(
@@ -39,6 +51,7 @@ const updateDBForTermined = async instanceId =>
     { instanceId }
   );
 const checkInstanceStatus = async (instanceId, region) => {
+  // console.log('region', region);
   const ec2 = new aws.EC2({ region });
   return ec2
     .describeInstanceStatus({
@@ -97,11 +110,11 @@ exports.handler = async event => {
         await stopInstance(payload.InstanceId);
         await updateDBForTermined(payload.InstanceId, region);
       } else {
-        // send file to s3 to signal fett to stop instance
-        await sendFile(payload.InstanceId);
+        // send message to fett to stop instance
+        await sendMessage(payload.InstanceId);
       }
     } else if (running && running === 'pending') {
-      // force an instance to stop with sdk
+      // force an instance to stop
       await stopInstance(payload.InstanceId);
     } else {
       // just update the DB
