@@ -32,8 +32,10 @@ export default function AdminDash() {
       </div>
     ));
 
+  const handleScroll = e => e.target.classList.add('fettScroll');
+
   return (
-    <div className="h-full pt-6 pl-12 pr-12">
+    <div className="h-full pt-6 pl-12 pr-12 overflow-y-scroll" style={{ height: '85vh' }} onScroll={handleScroll}>
       <h3 className="text-gray-200 uppercase">metrics</h3>
       <p className="pt-4 text-gray-200">
         This interface may be used to view all instances provisioned by any research team as well as to connect to AWS
