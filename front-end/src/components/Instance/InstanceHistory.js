@@ -75,9 +75,9 @@ const InstanceHistory = params => {
 
   return (
     <>
-      <div className="relative mb-4 mr-6 bg-blue-600 table-card" style={{ width: '700px', minHeight: '' }}>
+      <div className="mb-4 bg-blue-600 table-card col-span-7">
         <div className="flex flex-row items-center justify-between w-full pl-2 pr-2 mt-2 mb-2">
-          <h5 className="text-gray-200 uppercase">instance history</h5>
+          <h5 className="text-gray-200 uppercase pl-4">instance history</h5>
           <button
             className="flex flex-row items-center justify-around whitespace-no-wrap pl-4 pr-4 pt-1 pb-1 selected:outline-none btn-gray hover:bg-teal-500 hover:text-gray-200"
             type="button"
@@ -88,72 +88,88 @@ const InstanceHistory = params => {
           </button>
         </div>
         {isLoading ? (
-          <Spinner />
+          <div className="mt-16 mb-12">
+            <Spinner relative />
+          </div>
         ) : (
-          <MaterialTable
-            components={{
-              Container: props => <Paper {...props} elevation={0} />,
-            }}
-            columns={[
-              {
-                title: '',
-                field: 'alert',
-                width: '1em',
-                sorting: false,
-                render: data => (
-                  <div className="w-3">
-                    <Alert status={data.Status} />
-                  </div>
-                ),
-              },
-              {
-                title: 'F1 Instance',
-                field: 'instance',
-                width: '14em',
-                render: data => (
-                  <p>
-                    {data.Type} | {data.OS} | {data.Processor}
-                  </p>
-                ),
-              },
-              { title: 'CodeName', field: 'CodeName', width: '7em' },
-              {
-                title: 'Launched',
-                field: 'Created',
-                render: data => <p>{`${moment(data.Created).format('l')}, ${moment(data.Created).format('LT')}`}</p>,
-              },
-              { title: 'Status', field: 'Status' },
-              {
-                title: '',
-                field: 'launch',
-                sorting: false,
-                render: data => (
-                  <button type="button" onClick={() => handleOpen(data)} className="focus:outline-none">
-                    <img src={settings} alt="" />
-                  </button>
-                ),
-              },
-            ]}
-            options={{
-              headerStyle: {
-                backgroundColor: '#1E2B34',
-                color: '#46878E',
-                fontWeight: '500',
-                fontSize: '1em',
-                textTransform: 'uppercase',
-              },
-              rowStyle: rowData => ({
-                backgroundColor: rowData.tableData.id % 2 ? '#26343E' : '#293A46',
-                color: '#F4F4F4',
-              }),
-              paging: false,
-              search: false,
-              showTitle: false,
-              toolbar: false,
-              draggable: false,
-            }}
-            data={environments}
-          />
+          <div className="relative overflow-y-scroll fettScroll" style={{ height: '45vh' }}>
+            <MaterialTable
+              components={{
+                Container: props => <Paper {...props} elevation={0} />,
+              }}
+              columns={[
+                {
+                  title: '',
+                  field: 'alert',
+                  width: '10%',
+                  sorting: false,
+                  render: data => (
+                    <div className="w-3" style={{ display: 'block', margin: 'auto' }}>
+                      <Alert status={data.Status} />
+                    </div>
+                  ),
+                },
+                {
+                  title: 'F1 Instance',
+                  field: 'instance',
+                  width: '30%',
+                  render: data => (
+                    <p>
+                      {data.Type} | {data.OS} | {data.Processor}
+                    </p>
+                  ),
+                },
+                { title: 'CodeName', field: 'CodeName', width: '10%' },
+                {
+                  title: 'Launched',
+                  field: 'Created',
+                  width: '30%',
+                  render: data => <p>{`${moment(data.Created).format('l')}, ${moment(data.Created).format('LT')}`}</p>,
+                },
+                {
+                  title: 'Status',
+                  field: 'Status',
+                  width: '10%',
+                  render: data => <span style={{ textTransform: 'capitalize' }}>{data.Status}</span>,
+                },
+                {
+                  title: '',
+                  field: 'launch',
+                  sorting: false,
+                  width: '10%',
+                  render: data => (
+                    <button
+                      type="button"
+                      onClick={() => handleOpen(data)}
+                      className="focus:outline-none"
+                      style={{ display: 'block', margin: 'auto', width: '1rem' }}
+                    >
+                      <img src={settings} alt="" />
+                    </button>
+                  ),
+                },
+              ]}
+              options={{
+                headerStyle: {
+                  backgroundColor: '#1E2B34',
+                  color: '#46878E',
+                  fontWeight: '500',
+                  fontSize: '1em',
+                  textTransform: 'uppercase',
+                },
+                rowStyle: rowData => ({
+                  backgroundColor: rowData.tableData.id % 2 ? '#26343E' : '#293A46',
+                  color: '#F4F4F4',
+                }),
+                paging: false,
+                search: false,
+                showTitle: false,
+                toolbar: false,
+                draggable: false,
+              }}
+              data={environments}
+            />
+          </div>
         )}
         <div className="flex flex-row justify-end p-1">
           <p className="text-xs text-gray-500">Last Updated: {updateTime}</p>

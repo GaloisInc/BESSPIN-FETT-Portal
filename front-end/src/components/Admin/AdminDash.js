@@ -1,18 +1,17 @@
 import React from 'react';
 import InstanceManagement from '../Instance/InstanceManagement';
-import Comms from '../Communications/Card';
 
 export default function AdminDash() {
+  const handleScroll = e => e.target.classList.add('fettScroll');
   return (
-    <div className="h-full pt-6 pl-12">
+    <div className="pt-6 pl-12 overflow-y-scroll" style={{ height: '85vh', maxWidth: 1440 }} onScroll={handleScroll}>
       <h3 className="text-gray-200 uppercase">dashboard</h3>
       <p className="pt-4 text-gray-200">
-        This interface may be used to view all instances provisioned by any research team, and to broadcast messages
-        visible within the FETT-Portal interface to logged in research teams.
+        This interface may be used to view all instances provisioned by any research team as well as to connect to AWS
+        logs/metrics for specific instances.
       </p>
-      <div className="flex flex-row w-full mt-4">
+      <div className="mt-8 grid grid-cols-1 pr-8">
         <InstanceManagement />
-        <Comms userType="admin" />
       </div>
     </div>
   );

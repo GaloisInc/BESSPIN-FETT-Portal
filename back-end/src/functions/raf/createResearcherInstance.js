@@ -55,6 +55,40 @@ const getParams = async name =>
     });
 
 const getUserData = (f1Config, iName) => {
+  const devGitPull =
+    process.env.stage === 'master'
+      ? ''
+      : `
+  cd /home/centos
+  echo "Retrieving SSH key..."
+  aws secretsmanager get-secret-value --secret-id githubAccess --region us-west-2 | jq '.SecretString | fromjson' | jq '.gitHubSSHKey' -r | base64 -d > /home/centos/.ssh/github
+  echo "Setting up github ssh..."
+  ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+  echo "Host github.com
+  HostName github.com
+  PreferredAuthentications publickey
+  IdentityFile /home/centos/.ssh/github
+  User git" > /home/centos/.ssh/config
+  chmod 400 /home/centos/.ssh/github
+  chmod 400 /home/centos/.ssh/config
+  
+  
+  // pushd SSITH-FETT-Target/ 
+  // echo "setting up git repo..."	
+  // git pull	
+  // git checkout develop	
+  // git submodule init	
+  // git submodule update --init --recursive	
+  // pushd SSITH-FETT-Binaries	
+  // echo "Pulling binaries...."	
+  // git lfs pull	
+  // echo "Running fett command..."	
+  // popd
+
+  `;
+
+  const fettAwsCall = process.env.stage === 'master' ? 'awsProd' : 'awsDev';
+
   const configOptions = [
     'username',
     'osImage',
@@ -68,8 +102,7 @@ const getUserData = (f1Config, iName) => {
     .filter(key => configOptions.indexOf(key) >= 0)
     .reduce((obj2, key) => Object.assign(obj2, { [key]: f1Config[key] }), {});
   // eslint-disable-next-line
-  const userdata = `#cloud-boothook
-#!/bin/bash
+  const userdata = `#!/bin/bash
 
 #iptables -F
 #service sshd restart
@@ -87,6 +120,8 @@ echo "running sub script as u centos..."
 touch /home/centos/downloadAndStartFett.sh
 chmod +x /home/centos/downloadAndStartFett.sh
 chown centos:centos /home/centos/downloadAndStartFett.sh
+
+
 JSON='${JSON.stringify(subset)}'
 echo $JSON
 IP=$(aws ec2 describe-instances --instance-ids \`curl -s http://169.254.169.254/latest/meta-data/instance-id\` --region ${
@@ -96,17 +131,17 @@ echo $IP
 OUT=$(jq -SRn $JSON | jq --arg ip "$IP" ' . + {"productionTargetIp": $ip}|tostring' | sed -e 's/^"//' -e 's/"$//' -e 's/"/\\"/' )
 echo $OUT
 
-#systemctl status amazon-ssm-agent
-#systemctl enable amazon-ssm-agent
-#systemctl start amazon-ssm-agent
-
 echo "running sed"
 sudo sed -i "/^[1:]/ s/$/ \${HOSTNAME}/" /etc/hosts
 
 
+
 tee /home/centos/downloadAndStartFett.sh << EOF
+${devGitPull}
 cd /home/centos/SSITH-FETT-Target
-nohup nix-shell --command "python fett.py -d -ep awsProd -job ${iName} -cjson '$OUT'" &
+
+
+nohup nix-shell --command "python fett.py -d -ep ${fettAwsCall} -job ${iName} -cjson '$OUT'" &
 EOF
 
 nohup /bin/su -c "/home/centos/downloadAndStartFett.sh" - centos &
