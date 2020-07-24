@@ -3,8 +3,9 @@ import PropTypes from 'prop-types';
 import LaunchTable from './LaunchTable';
 
 export default function BountyLaunch({ handleOpen }) {
+  const handleScroll = e => e.target.classList.add('fettScroll');
   return (
-    <div className="h-full pt-6 pl-12">
+    <div className="h-full pt-6 pl-12 pr-4 overflow-y-scroll" style={{ height: '85vh' }} onScroll={handleScroll}>
       <h3 className="text-gray-200 uppercase">launch instance</h3>
       <p className="pt-4 text-gray-200">
         This interface may be used to launch new instances. Select the desired Type/Processor/OS combination and click

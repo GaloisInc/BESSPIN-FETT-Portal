@@ -105,25 +105,10 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
               <p className="text-base text-teal-500 uppercase">Start of Engagment</p>
             </div>
             <p className="text-base text-200-gray">
-              {environment.Created && moment(environment.Created).format('MM/DD/YY hh:mm A')}
+              {environment.Created &&
+                `${moment(environment.Created).format('l')}, ${moment(environment.Created).format('LTS')}`}
             </p>
           </div>
-          {/* <div className="flex flex-row py-2 bg-blue-600">
-            <div className="w-48 ml-8 mr-8">
-              <p className="text-base text-teal-500 uppercase">Idle Time</p>
-            </div>
-            <p className="text-base text-200-gray">
-              {environment.IdleTime && moment(environment.IdleTime).format('HH:mm')}
-            </p>
-          </div>
-          <div className="flex flex-row py-2 bg-blue-700">
-            <div className="w-48 ml-8 mr-8">
-              <p className="text-base text-teal-500 uppercase">Total Compute Time</p>
-            </div>
-            <p className="text-base text-200-gray">
-              {environment.IdleTime && moment(environment.IdleTime).format('HH:mm')}
-            </p>
-          </div> */}
           <div className="flex flex-row py-2 bg-blue-600">
             <div className="w-48 ml-8 mr-8">
               <p className="text-base text-teal-500 uppercase">Status</p>
@@ -151,9 +136,9 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
             </div>
             <p className="text-base text-200-gray">{environment.CodeName}</p>
           </div>
-          <div className="flex flex-row justify-end">
+          <div className="flex flex-row justify-end bg-blue-600">
             <button
-              className={` px-2 mr-10 mt-4 mb-4 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded w-56 ${
+              className={` px-2 mr-10 mt-4 mb-4 text-sm font-medium font-body text-blue-700 uppercase bg-gray-200 rounded w-56 ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               } ${
                 isDisabled ||
@@ -178,7 +163,7 @@ const InstanceDetail = ({ environment, index, fetchEnvironments }) => {
               {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Terminate Instance'}
             </button>
             <button
-              className={` px-2 mr-10 mt-4 mb-4 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded w-56 ${
+              className={` px-2 mr-10 mt-4 mb-4 text-sm font-medium font-body text-blue-700 uppercase bg-gray-200 rounded w-56 ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               } ${
                 isForceDisabled || environment.Status === 'terminated' || environment.Status === 'queueing'

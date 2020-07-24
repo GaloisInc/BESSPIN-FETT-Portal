@@ -65,8 +65,8 @@ const LaunchTable = ({ history, handleOpen }) => {
 
   return (
     <>
-      <div className="relative mb-4 bg-blue-600 table-card" style={{ width: '800px', minHeight: '400px' }}>
-        <div className="flex flex-row items-center justify-between pl-8 mt-2 mb-2">
+      <div className="relative mb-4 bg-blue-600 table-card container" style={{ minHeight: '400px' }}>
+        <div className="flex flex-row items-center justify-between pl-2 mt-2 mb-2">
           <h5 className="text-gray-200 uppercase">instance configuration</h5>
         </div>
 
@@ -87,7 +87,7 @@ const LaunchTable = ({ history, handleOpen }) => {
                 field: 'Launch',
                 render: data => (
                   <button
-                    className={`flex flex-row items-center justify-around w-24 pr-4 selected:outline-none ${
+                    className={`flex flex-row items-center justify-around whitespace-no-wrap w-24 px-4 selected:outline-none rounded ${
                       typeof count === 'number' && count > 1
                         ? 'bg-gray-600 cursor-default'
                         : 'btn-gray hover:bg-teal-500 hover:text-gray-200'
@@ -96,7 +96,7 @@ const LaunchTable = ({ history, handleOpen }) => {
                     onClick={event => handleLaunch(event, data)}
                     disabled={count > 1}
                   >
-                    <img src={rocketDark} alt="" className="w-3" />
+                    <img src={rocketDark} alt="" className="w-3 mr-2" />
                     <p className="self-center text-sm font-medium text-blue-900 uppercase">launch</p>
                   </button>
                 ),
@@ -119,12 +119,13 @@ const LaunchTable = ({ history, handleOpen }) => {
               showTitle: false,
               toolbar: false,
               sorting: false,
+              draggable: false,
             }}
             data={instanceConfigurations}
           />
         )}
 
-        <p className="py-4 pl-2 ml-6 text-gray-200">
+        <p className="py-4 pl-2 text-gray-200">
           * Provisioned instances are limited to two (2) and will remain active for eight (8) hours before automatic
           instance shutdown. New instances may not be launched until prior instance has been fully terminated.
         </p>

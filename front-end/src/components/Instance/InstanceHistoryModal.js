@@ -11,7 +11,7 @@ const InstanceHistoryModal = ({ handleClose, modalData, fetchEnvironments }) => 
       style={{ width: '800px', top: '30%', left: '50%', marginLeft: '-400px' }}
     >
       <div className="flex flex-row items-center justify-between p-2">
-        <h5 className="uppercase">
+        <h5 className="uppercase pt-4 pl-4 pb-8">
           {modalData.Type} | {modalData.Processor} | {modalData.OS}
         </h5>
         <div className="flex flex-row items-center mr-4">

@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import ReactRouterPropTypes from 'react-router-prop-types';
 import { hot } from 'react-hot-loader/root';
-import { Auth } from 'aws-amplify';
+import { Auth, Hub } from 'aws-amplify';
 import { withRouter } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/styles';
 import { withStyles, createMuiTheme, mergeClasses } from '@material-ui/core/styles';
@@ -49,6 +49,12 @@ class App extends React.Component {
       isAuthenticating: false,
       name: '',
     };
+
+    Hub.listen('auth', data => {
+      const { payload } = data;
+      this.onAuthEvent(payload);
+      // console.log('A new auth event has happened: ', `${data.payload.data.username} has ${data.payload.event}`);
+    });
   }
 
   async componentDidMount() {
@@ -62,6 +68,13 @@ class App extends React.Component {
     }
     this.login();
   }
+
+  onAuthEvent = payload => {
+    // ... your implementation
+    if (payload.message === 'logout') {
+      this.logout();
+    }
+  };
 
   login = async () => {
     const { history } = this.props;

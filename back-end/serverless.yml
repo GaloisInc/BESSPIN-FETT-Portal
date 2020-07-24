@@ -1,3 +1,29 @@
+#                          $$$$$$$$                          
+#                  ./$$$$$$$$$$$$$$$$$$$$$,                  
+#              $$$$$$$$$$$/       \$$$$$$$$$$$$              
+#           $$$$$$$$$$$$,           ,$$$$$$$$$$$$           
+#         $$$$$$$$$$$$$,              ,$$$$$$$$$$$$$         
+#       $$$$$$$$$$$$$$$               ,$$$$$$$$$$$$$$$       
+#      $$$$$$$$$$$$$$$,              ,$$$$$$$$$$$$$$$$$,     
+#    .$$$$$$$$$$$$$$,              .$$$$$$$$$$$$$$$$$$$$,    
+#    $$$$$$$,               $$$$$$$$$$$$$$$$     .$$$$$$$.   
+#   $$$$$.               $$$$$$$$$$$$$$$,            $$$$$   
+#   $$$$               .$$$$$$$$$$$$$$$               $$$$   
+#   $$$$               /$$$$$$$$$$$$$$$               ,$$$   
+#   $$$$                $$$$$$$$$$$$$$.               $$$$   
+#   $$$$$$               ,$$$$$$$$$$$               ,$$$$/   
+#    $$$$$$$$$$,.             ..             .,$$$$$$$$$$    
+#     $$$$$$$$$$$$$$$                    $$$$$$$$$$$$$$$.    
+#      $$$$$$$$$$$$$$$$                $$$$$$$$$$$$$$$$      
+#       .$$$$$$$$$$$$$$                $$$$$$$$$$$$$$$       
+#         ,$$$$$$$$$$$$$               $$$$$$$$$$$$$         
+#            $$$$$$$$$$$$            ,$$$$$$$$$$$.           
+#               $$$$$$$$$$$$      $$$$$$$$$$$/               
+#                    $$$$$$$$$$$$$$$$$$$$.
+#                          $$$$$$$$
+#
+#   Created By: Five Talent Software
+
 service:
   name: fettportal
 plugins:
@@ -28,6 +54,7 @@ provider:
         - "sqs:*"
         - "iam:*"
         - "s3:*"
+        - "ce:*"
         - "CloudWatch:PutDashboard"
         - "CloudWatch:DeleteDashboards"
       Resource: '*'
@@ -430,6 +457,20 @@ functions:
   testSpinup:
     handler: src/functions/raf/testSpinup.handler
     timeout: 90
+  usersTest:
+    handler: src/functions/usersTest.handler
+    timeout: 90
+  reportOutMetrics:
+    handler: src/functions/reportOutMetrics.handler
+    timeout: 120
+    events:
+    - http:
+        path: reportOutMetrics
+        method: get
+        cors: true
+        authorizer:
+          name: authorizer
+          arn: ${self:custom.authorizerPool.${self:provider.stage}}
   getLearnDoc:
     handler: src/functions/getLearnDoc.handler
     timeout: 30

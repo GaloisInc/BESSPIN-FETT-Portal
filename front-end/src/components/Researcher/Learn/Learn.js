@@ -1,9 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { getPSUrl } from '../../../services/api/learn';
 import settings from '../../../assets/settings.svg';
 
 export default function Learn() {
   const [CVELink, setCVELink] = useState('');
+  const [votingLink, setVotingLink] = useState('');
+  const [freeRTOSLink, setFreeRTOSLink] = useState('');
 
   const populatePSUrl = async (key, callback) => {
     const psUrl = await getPSUrl(key);
@@ -12,11 +15,13 @@ export default function Learn() {
 
   useEffect(() => {
     populatePSUrl('CVE_Coverage_FETT-Portal_07.07.20.xlsx', setCVELink);
+    populatePSUrl('FETT-Portal.Voter.application.LEARN.content.pdf', setVotingLink);
+    populatePSUrl('FreeRTOS.OTA.Application.Description.pdf', setFreeRTOSLink);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
-    <div className="h-full pt-6 pb-12 pl-12 pr-12">
+    <div className="pt-6 pb-12 pl-12 pr-12 fettScroll" style={{ overflowY: 'scroll', height: '85vh' }}>
       <h3 className="text-gray-200 uppercase">Learn</h3>
       <p className="pt-4 text-gray-200">
         This information is provided to help set context and give focus to researchers participating in this bug bounty
@@ -49,6 +54,9 @@ export default function Learn() {
         <p className="pt-2 text-sm leading-tight text-gray-200">
           NOTE: Provisioning times for the various CPU types vary between ~8 minutes and ~16 minutes.
         </p>
+        <Link className="text-teal-400 underline" to="crashreports">
+          Detecting crashed SSITH CPUs
+        </Link>
       </div>
 
       <div className="pt-6">
@@ -100,7 +108,9 @@ export default function Learn() {
                   <li>Researcher-provided and compiled vulnerable applications</li>
                 </ul>
               </li>
-              <li>Security researchers are given access to a root shell to interact with custom applications</li>
+              <li>
+                Security researchers are given access to a root shell to interact with custom applications via "su -"
+              </li>
             </ul>
           </li>
           <li>
@@ -150,7 +160,7 @@ export default function Learn() {
                   <li>Researcher-provided and compiled vulnerable applications</li>
                 </ul>
               </li>
-              <li>Security researchers given access to a root shell to interact with custom applications</li>
+              <li>Security researchers given access to a root shell to interact with custom applications via "su -"</li>
             </ul>
           </li>
           <li>
@@ -211,10 +221,15 @@ export default function Learn() {
                   <li>SSH Daemon (OpenSSH v7.3)</li>
                   <li>Protected AES engine</li>
                   <li>Protected Password Authentication Module</li>
-                  <li>Protected nginx authentication module</li>
                 </ul>
               </li>
-              <li>Security researchers given access to a root shell on system</li>
+              <li>Security researchers given access to a root shell on system via "su -"</li>
+              <li>From a root shell, run "./install-enclaves.sh"</li>
+              <li>
+                AES enclave is exercised via "/ssith/aes-main option infile outfile" with option "-e" for encrypt and
+                "-d" for decrypt.
+              </li>
+              <li>{'Test PAM enclave via "pamtester testing <username> authenticate."'}</li>
             </ul>
           </li>
           <li>
@@ -324,12 +339,13 @@ export default function Learn() {
               Documentation for this application is available here:
               <br />
               <a
-                href="https://www.freertos.org/ota/index.html"
+                href={freeRTOSLink}
                 className="text-teal-400 underline"
                 rel="noopener noreferrer"
                 download
+                target="_blank"
               >
-                https://www.freertos.org/ota/index.html
+                FreeRTOS OTA description
               </a>
             </li>
             <li>The OTA server uses Ed25519 for signing updates.</li>
@@ -372,6 +388,11 @@ export default function Learn() {
               encryption and key management associated with protecting the registration database at rest from such
               unrestricted access have significant overhead that is not reasonable for either the FPGA-based
               implementation platform or for the FETT competition.
+            </li>
+            <li>
+              <a href={votingLink} className="text-teal-400 underline" rel="noopener noreferrer" download>
+                Design, Security and Threat Modeling for FETT Voter Registration System
+              </a>
             </li>
           </ul>
         </div>

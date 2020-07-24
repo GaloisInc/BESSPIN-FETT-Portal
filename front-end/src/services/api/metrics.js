@@ -5,7 +5,7 @@ const BASE_API = process.env.REACT_APP_BASE_API_URI;
 
 const makeHeaders = async () => {
   const sesh = await Auth.currentSession();
-  const idToken = sesh.getIdToken().getJwtToken();
+  const idToken = await sesh.getIdToken().getJwtToken();
   const issueTime = moment.unix(sesh.getIdToken().payload.auth_time);
   const seshTime = moment().diff(issueTime, 'hours');
   if (seshTime >= 24) {
@@ -26,16 +26,14 @@ function handleErrors(response) {
   return response;
 }
 
-export const getInstanceConfigurations = () =>
+export const getMetrics = () =>
   new Promise(async (resolve, reject) => {
-    fetch(`${BASE_API}/getInstanceConfigurations`, {
+    fetch(`${BASE_API}/reportOutMetrics`, {
       headers: await makeHeaders(),
     })
       .then(handleErrors)
       .then(response => response.json())
-      .then(body => {
-        resolve(body.items);
-      })
+      .then(body => resolve(body))
       .catch(response => {
         reject(response.json());
       });

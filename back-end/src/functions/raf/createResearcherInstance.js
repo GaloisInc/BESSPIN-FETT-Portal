@@ -55,6 +55,43 @@ const getParams = async name =>
     });
 
 const getUserData = (f1Config, iName) => {
+  const devGitPull =
+    process.env.CURRENT_STAGE && process.env.CURRENT_STAGE === 'develop'
+      ? `
+  cd /home/centos
+  echo "Retrieving SSH key..."
+  aws secretsmanager get-secret-value --secret-id githubAccess --region us-west-2 | jq '.SecretString | fromjson' | jq '.gitHubSSHKey' -r | base64 -d > /home/centos/.ssh/github
+  echo "Setting up github ssh..."
+  ssh-keyscan -H github.com >> ~/.ssh/known_hosts
+  echo "Host github.com
+  HostName github.com
+  PreferredAuthentications publickey
+  IdentityFile /home/centos/.ssh/github
+  User git" > /home/centos/.ssh/config
+  chmod 400 /home/centos/.ssh/github
+  chmod 400 /home/centos/.ssh/config
+  
+  
+  pushd SSITH-FETT-Target/ 
+  echo "setting up git repo..."	
+  git pull	
+  git checkout develop	
+  git submodule init	
+  git submodule update --init --recursive	
+  pushd SSITH-FETT-Binaries	
+  echo "Pulling binaries...."	
+  git lfs pull	
+  echo "Running fett command..."	
+  popd
+
+  `
+      : '';
+
+  const fettAwsCall =
+    process.env.CURRENT_STAGE && process.env.CURRENT_STAGE === 'develop'
+      ? 'awsDev'
+      : 'awsProd';
+
   const configOptions = [
     'username',
     'osImage',
@@ -68,15 +105,15 @@ const getUserData = (f1Config, iName) => {
     .filter(key => configOptions.indexOf(key) >= 0)
     .reduce((obj2, key) => Object.assign(obj2, { [key]: f1Config[key] }), {});
   // eslint-disable-next-line
-  const userdata = `#cloud-boothook
-#!/bin/bash
+  const userdata = `#!/bin/bash
 
 #iptables -F
 #service sshd restart
 
 exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
 echo "Installing packages..."
-sudo yum install -y jq git-lfs
+
+yum install -y jq git-lfs
 echo "Setting up ssh files"
 touch /home/centos/.ssh/config
 touch /home/centos/.ssh/github
@@ -86,6 +123,8 @@ echo "running sub script as u centos..."
 touch /home/centos/downloadAndStartFett.sh
 chmod +x /home/centos/downloadAndStartFett.sh
 chown centos:centos /home/centos/downloadAndStartFett.sh
+
+
 JSON='${JSON.stringify(subset)}'
 echo $JSON
 IP=$(aws ec2 describe-instances --instance-ids \`curl -s http://169.254.169.254/latest/meta-data/instance-id\` --region ${
@@ -94,40 +133,23 @@ IP=$(aws ec2 describe-instances --instance-ids \`curl -s http://169.254.169.254/
 echo $IP
 OUT=$(jq -SRn $JSON | jq --arg ip "$IP" ' . + {"productionTargetIp": $ip}|tostring' | sed -e 's/^"//' -e 's/"$//' -e 's/"/\\"/' )
 echo $OUT
-tee /home/centos/downloadAndStartFett.sh << EOF
-cd /home/centos
-echo "Retrieving SSH key..."
-aws secretsmanager get-secret-value --secret-id githubAccess --region us-west-2 | jq '.SecretString | fromjson' | jq '.gitHubSSHKey' -r | base64 -d > /home/centos/.ssh/github
-echo "Setting up github ssh..."
-ssh-keyscan -H github.com >> ~/.ssh/known_hosts
-echo "Host github.com
-HostName github.com
-PreferredAuthentications publickey
-IdentityFile /home/centos/.ssh/github
-User git" > /home/centos/.ssh/config
-chmod 400 /home/centos/.ssh/github
-chmod 400 /home/centos/.ssh/config
-
-
-pushd SSITH-FETT-Target/ 
-#echo "setting up git repo..."	
-#git pull	
-#git checkout master	
-#git submodule init	
-#git submodule update --init --recursive	
-#pushd SSITH-FETT-Binaries	
-#echo "Pulling binaries...."	
-#git lfs pull	
-#echo "Running fett command..."	
-#popd
 
 echo "running sed"
 sudo sed -i "/^[1:]/ s/$/ \${HOSTNAME}/" /etc/hosts
 
-nohup nix-shell --command "python fett.py -d -ep awsProd -job ${iName} -cjson '$OUT'" &
 
+
+tee /home/centos/downloadAndStartFett.sh << EOF
+${devGitPull}
+cd /home/centos/SSITH-FETT-Target
+
+
+nohup nix-shell --command "python fett.py -d -ep ${fettAwsCall} -job ${iName} -cjson '$OUT'" &
 EOF
-/bin/su -c "/home/centos/downloadAndStartFett.sh" - centos /dev/null &/dev/null &
+
+nohup /bin/su -c "/home/centos/downloadAndStartFett.sh" - centos &
+
+
 echo "Done with userdata script..."
 `;
 
@@ -211,8 +233,10 @@ const callStartInstance = async (f1Config, instanceName) => {
   await ec2.modifyInstanceAttribute(sgParams).promise();
   return new Promise(resolve => resolve(ec2Data));
 };
-const hashPassword = pw =>
-  Buffer.from(sha512crypt(pw, 'xcnc07LxM26Xq')).toString('base64');
+const hashPassword = async pw => {
+  const salt = await getParams(`/fettportal/salt`);
+  return Buffer.from(sha512crypt(pw, salt)).toString('base64');
+};
 
 const mergeSSMparamsAndPortalParams = async f1Config => {
   const config = await getParams(
@@ -233,25 +257,37 @@ const mergeSSMparamsAndPortalParams = async f1Config => {
 };
 
 const startInstance = async (f1Config, instanceName) => {
-  if (f1Config.subnetIds.length < 1) {
-    f1Config.region =
-      f1Config.region === 'us-east-1' ? 'us-west-2' : 'us-east-1';
-    console.log('Changing Region to: ', f1Config.region);
-    // need to get other regions config values from SSM
-    // eslint-disable-next-line no-param-reassign
-    f1Config = await mergeSSMparamsAndPortalParams(f1Config);
+  try {
+    if (f1Config.subnetIds.length < 1) {
+      f1Config.region =
+        f1Config.region === 'us-east-1' ? 'us-west-2' : 'us-east-1';
+      console.log('Changing Region to: ', f1Config.region);
+      // need to get other regions config values from SSM
+      // eslint-disable-next-line no-param-reassign
+      f1Config = await mergeSSMparamsAndPortalParams(f1Config);
+    }
+    f1Config.subnetChoice = Math.floor(
+      Math.random() * f1Config.subnetIds.length
+    );
+
+    console.log('trying subnet: ', f1Config.subnetChoice);
+    const ec2Return = await callStartInstance(f1Config, instanceName);
+    console.log('ec2Return log: ', util.inspect(ec2Return, { depth: null }));
+    return ec2Return;
+  } catch (e) {
+    // handle retry? let lambda just auto-retry?
+    // put message back in the queue for retrying
+
+    console.log('Error Starting instance', e);
+    if (e.code === 'InsufficientInstanceCapacity') {
+      f1Config.subnetIds.splice(f1Config.subnetChoice - 1, 1);
+      console.log(
+        `Dropping ${f1Config.subnetChoice} new array ${f1Config.subnetIds}`
+      );
+      return startInstance(f1Config, instanceName);
+    }
+    throw e;
   }
-  f1Config.subnetChoice = Math.floor(Math.random() * f1Config.subnetIds.length);
-  const ec2Return = await callStartInstance(f1Config, instanceName);
-  console.log(util.inspect(ec2Return, { depth: null }));
-  if (
-    Object.prototype.hasOwnProperty.call(ec2Return, 'errorType') &&
-    ec2Return.errorType === 'InsufficientInstanceCapacity'
-  ) {
-    f1Config.subnetIds.splice(f1Config.subnetChoice - 1, 1);
-    await startInstance(f1Config, instanceName);
-  }
-  return ec2Return;
 };
 
 const deleteMessage = async msg => {
@@ -294,7 +330,7 @@ exports.handler = async event => {
     console.log(msg);
     const message = JSON.parse(msg.body);
 
-    if (parseInt(msg.attributes.ApproximateReceiveCount) > 5) {
+    if (parseInt(msg.attributes.ApproximateReceiveCount) > 10) {
       console.log('Stopping initiation after 5 failed tries');
       await handleFailure(message.Id);
       // shoulld probably alert someone here too.
@@ -308,6 +344,8 @@ exports.handler = async event => {
     );
     console.log(reg);
 
+    const hash = await hashPassword(message.password);
+
     let f1Config = {
       region: reg[0].Region,
       osImage: message.OS,
@@ -317,7 +355,7 @@ exports.handler = async event => {
       useCustomCredentials: 'yes',
       rootUserAccess: 'yes',
       username: message.username,
-      userPasswordHash: hashPassword(message.password),
+      userPasswordHash: hash,
       jobId: `${message.creatorId}-${message.Id}`,
     };
 
