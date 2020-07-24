@@ -56,9 +56,8 @@ const getParams = async name =>
 
 const getUserData = (f1Config, iName) => {
   const devGitPull =
-    process.env.stage === 'master'
-      ? ''
-      : `
+    process.env.CURRENT_STAGE && process.env.CURRENT_STAGE === 'develop'
+      ? `
   cd /home/centos
   echo "Retrieving SSH key..."
   aws secretsmanager get-secret-value --secret-id githubAccess --region us-west-2 | jq '.SecretString | fromjson' | jq '.gitHubSSHKey' -r | base64 -d > /home/centos/.ssh/github
@@ -73,21 +72,25 @@ const getUserData = (f1Config, iName) => {
   chmod 400 /home/centos/.ssh/config
   
   
-  // pushd SSITH-FETT-Target/ 
-  // echo "setting up git repo..."	
-  // git pull	
-  // git checkout develop	
-  // git submodule init	
-  // git submodule update --init --recursive	
-  // pushd SSITH-FETT-Binaries	
-  // echo "Pulling binaries...."	
-  // git lfs pull	
-  // echo "Running fett command..."	
-  // popd
+  pushd SSITH-FETT-Target/ 
+  echo "setting up git repo..."	
+  git pull	
+  git checkout develop	
+  git submodule init	
+  git submodule update --init --recursive	
+  pushd SSITH-FETT-Binaries	
+  echo "Pulling binaries...."	
+  git lfs pull	
+  echo "Running fett command..."	
+  popd
 
-  `;
+  `
+      : '';
 
-  const fettAwsCall = process.env.stage === 'master' ? 'awsProd' : 'awsDev';
+  const fettAwsCall =
+    process.env.CURRENT_STAGE && process.env.CURRENT_STAGE === 'develop'
+      ? 'awsDev'
+      : 'awsProd';
 
   const configOptions = [
     'username',
