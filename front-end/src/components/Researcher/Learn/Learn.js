@@ -5,6 +5,7 @@ import settings from '../../../assets/settings.svg';
 
 export default function Learn() {
   const [CVELink, setCVELink] = useState('');
+  const [UARTLink, setUARTLink] = useState('');
   const [votingLink, setVotingLink] = useState('');
   const [freeRTOSLink, setFreeRTOSLink] = useState('');
 
@@ -15,6 +16,7 @@ export default function Learn() {
 
   useEffect(() => {
     populatePSUrl('CVE_Coverage_FETT-Portal_07.07.20.xlsx', setCVELink);
+    populatePSUrl('UART piping.docx', setUARTLink);
     populatePSUrl('FETT-Portal.Voter.application.LEARN.content.pdf', setVotingLink);
     populatePSUrl('FreeRTOS.OTA.Application.Description.pdf', setFreeRTOSLink);
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -75,6 +77,12 @@ export default function Learn() {
             http://fett.securehardware.org
           </a>{' '}
           can be used to authenticate to the SSH server on your instance.
+        </p>
+        <p className="pt-2 text-sm leading-tight text-gray-200">
+          Notice: Access to UART on all instances is outlined{' '}
+          <a href={UARTLink} target="_blank" className="text-teal-400 underline" rel="noopener noreferrer">
+            here
+          </a>
         </p>
       </div>
 
