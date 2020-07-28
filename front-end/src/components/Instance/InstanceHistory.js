@@ -63,8 +63,8 @@ const InstanceHistory = params => {
   }, []);
 
   useEffect(() => {
-    console.log(environments);
-    console.log(modalData);
+    // console.log(environments);
+    // console.log(modalData);
     if (environments && environments.length > 0 && modalData && Object.keys(modalData).length > 0) {
       const newModalData = environments.filter(env => env.F1EnvironmentId === modalData.F1EnvironmentId);
       console.log(newModalData);

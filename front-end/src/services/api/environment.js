@@ -125,3 +125,19 @@ export const forceTerminateEnvironment = async record =>
         reject(response);
       });
   });
+
+export const rebootTarget = async record =>
+  new Promise(async (resolve, reject) => {
+    console.log('rebooting2', record);
+    fetch(`${BASE_API}/rebootTarget`, {
+      headers: await makeHeaders(),
+      body: JSON.stringify({ Id: record.Id, Status: record.Status, InstanceId: record.F1EnvironmentId }),
+      method: 'PUT',
+    })
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(body => resolve(body))
+      .catch(response => {
+        reject(response);
+      });
+  });

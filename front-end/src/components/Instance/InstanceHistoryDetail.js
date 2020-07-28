@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import moment from 'moment';
 import { CircularProgress } from '@material-ui/core';
@@ -7,20 +7,29 @@ import Alert from './Alert';
 
 const InstanceDetail = ({ environment, fetchEnvironments }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const [isRebootDisabled, setIsRebootDisabled] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const updateInstanceStatus = async (event, newStatus) => {
     event.preventDefault();
     setIsDisabled(true);
+    setIsRebootDisabled(true);
     setIsLoading(true);
     try {
       await ec2StatusUpdate(environment, newStatus);
       fetchEnvironments();
       setIsLoading(false);
+      if (newStatus === 'rebooting') setIsDisabled(false);
     } catch (error) {
       console.log(`Error updating instance${error}`);
       setIsLoading(false);
     }
   };
+
+  useEffect(() => {
+    const { Status } = environment;
+    if (Status === 'running') setIsRebootDisabled(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [environment.Status]);
 
   return (
     <>
@@ -45,26 +54,6 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
           <Alert status={environment.Status} />
         </div>
       </div>
-      {/* <div className="flex flex-row py-2 bg-blue-700">
-        <div className="w-48 ml-8 mr-8">
-          <p className="text-base text-teal-500 uppercase">Idle Time</p>
-        </div>
-        <p className="text-base text-200-gray">
-          {environment.IdleTime && moment(environment.IdleTime).format('HH:mm')}
-        </p>
-      </div> */}
-      {/* <div className="flex flex-row py-2 bg-blue-600">
-        <div className="w-48 ml-8 mr-8">
-          <p className="text-base text-teal-500 uppercase">Elapsed Time</p>
-        </div>
-        <p className="text-base uppercase text-200-gray" />
-      </div> */}
-      {/* <div className="flex flex-row py-2 bg-blue-700">
-        <div className="w-48 ml-8 mr-8">
-          <p className="text-base text-teal-500 uppercase">Researchers Using</p>
-        </div>
-        <p className="text-base text-200-gray" />
-      </div> */}
       <div className="flex flex-row py-2 bg-blue-700">
         <div className="w-48 ml-8 mr-8">
           <p className="text-base text-teal-500 uppercase">Environment ID</p>
@@ -78,6 +67,20 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
         <p className="text-base text-200-gray">{environment.FPGAIp}</p>
       </div>
       <div className="flex flex-row items-center justify-end py-2 my-10 bg-blue-600">
+        <button
+          className={`w-48 px-2 py-1 mr-10 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded ${
+            isLoading || isDisabled || isRebootDisabled ? 'opacity-50 cursor-not-allowed' : ''
+          } ${
+            environment.Status !== 'running'
+              ? 'bg-gray-600 cursor-default'
+              : 'bg-gray-200 hover:bg-teal-500 hover:text-gray-200'
+          }`}
+          type="submit"
+          onClick={event => updateInstanceStatus(event, 'rebooting')}
+          disabled={isLoading || isRebootDisabled || isDisabled || environment.Status !== 'running'}
+        >
+          {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Reboot Instance'}
+        </button>
         <button
           className={`w-48 px-2 py-1 mr-10 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded ${
             isLoading || isDisabled ? 'opacity-50 cursor-not-allowed' : ''
