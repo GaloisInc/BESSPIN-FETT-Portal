@@ -18,16 +18,16 @@ const sendFile = async instanceId => {
   return s3.putObject(params).promise();
 };
 
-const updateStatusToDB = async dbId => {
+const updateStatusToDB = async instanceId => {
   await db.makeConnection();
   const data = await db.query(
-    `UPDATE Environment set Status = "terminating" WHERE Id = :dbId`,
-    { dbId }
+    `UPDATE Environment set Status = "terminating" WHERE F1EnvironmentId = :instanceId`,
+    { instanceId }
   );
   if (data.changedRows === 1) {
     const rowData = await db.query(
-      `SELECT * FROM Environment WHERE Id = :dbId`,
-      { dbId }
+      `SELECT * FROM Environment WHERE F1Environment = :instanceId`,
+      { instanceId }
     );
     return rowData;
   }
