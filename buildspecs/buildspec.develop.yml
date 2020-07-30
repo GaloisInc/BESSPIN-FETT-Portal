@@ -38,7 +38,5 @@ phases:
   post_build:
     commands:
       - aws s3 sync --only-show-errors ${CODEBUILD_SRC_DIR}/front-end/build s3://${S3_HOSTING_BUCKET}
-      - aws s3 sync S3://${CURRENT_STAGE}-ssith-fett-target-learn-docs/staging/GFE_FreeRTOS.elf S3://${CURRENT_STAGE}-ssith-fett-target-learn-docs/live/GFE_FreeRTOS.elf
-      - aws s3 sync S3://${CURRENT_STAGE}-ssith-fett-target-learn-docs/staging/LMCO_FreeRTOS.elf S3://${CURRENT_STAGE}-ssith-fett-target-learn-docs/live/LMCO_FreeRTOS.elf
-      - aws s3 sync S3://${CURRENT_STAGE}-ssith-fett-target-learn-docs/staging/Michigan_FreeRTOS.elf S3://${CURRENT_STAGE}-ssith-fett-target-learn-docs/live/Michigan_FreeRTOS.elf
+      - aws s3 sync s3://${CURRENT_STAGE}-ssith-fett-target-learn-docs/staging/ s3://${CURRENT_STAGE}-ssith-fett-target-learn-docs/live/
       - aws cloudfront create-invalidation --distribution-id ${CLOUDFRONT_DISTRO} --paths '/*'
