@@ -69,6 +69,7 @@ exports.handler = async (event, context) => {
         Type: body.Type,
         OS: body.OS,
         Processor: body.Processor,
+        Variant: body.Variant,
         ConfigurationKey: body.Configuration,
         Region: region,
         username,
