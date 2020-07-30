@@ -8,12 +8,8 @@ aws.config.apiVersions = {
   // other service API versions
 };
 
-const endDate = `${moment()
-  .toISOString()
-  .slice(0, -5)}Z`;
-const startDate = `${moment('15 July 2020 17:00 UTC')
-  .toISOString()
-  .slice(0, -5)}Z`;
+const endDate = `${moment().format('yyyy-MM-DD')}`;
+const startDate = `${moment('15 July 2020').format('yyyy-MM-DD')}`;
 
 const costexplorer = new aws.CostExplorer({
   apiVersion: '2017-10-25',
@@ -27,20 +23,23 @@ const getCosts = () =>
         End: endDate,
         Start: startDate,
       },
-      Granularity: 'HOURLY',
+      Granularity: 'DAILY',
       Metrics: ['BlendedCost'],
     };
     console.log('calling cost explorer', ceParams);
 
     costexplorer.getCostAndUsage(ceParams, function(err, data) {
       if (err) console.log(err, err.stack);
+      const offset = 769.67; // costs between 0:00 and 17:00 UTC prior to launch on 07/15
       // an error occurred
       const realData = data.ResultsByTime.filter(
         item => parseFloat(item.Total.BlendedCost.Amount) > 0
       );
-      const costTotal = realData.reduce(function(acc, curr) {
+      realData.pop();
+      let costTotal = realData.reduce(function(acc, curr) {
         return acc + parseFloat(curr.Total.BlendedCost.Amount);
       }, 0);
+      costTotal -= offset;
       const periodEnd = realData.pop().TimePeriod.End;
       const result = { costTotal, periodEnd };
       // successful response
@@ -72,20 +71,23 @@ const getHours = () =>
             },
           ],
         },
-        Granularity: 'HOURLY',
+        Granularity: 'DAILY',
         Metrics: ['UsageQuantity'],
       };
       console.log('calling cost explorer', ceParams);
 
       costexplorer.getCostAndUsage(ceParams, function(err, data) {
         if (err) console.log(err, err.stack);
+        const offset = 258.41; // f1 hours between 0:00 and 17:00 UTC prior to launch on 07/15
         // an error occurred
         const realData = data.ResultsByTime.filter(
           item => parseFloat(item.Total.UsageQuantity.Amount) > 0
         );
-        const hoursTotal = realData.reduce(function(acc, curr) {
+        realData.pop();
+        let hoursTotal = realData.reduce(function(acc, curr) {
           return acc + parseFloat(curr.Total.UsageQuantity.Amount);
         }, 0);
+        hoursTotal -= offset;
         const periodEnd = realData.pop().TimePeriod.End;
         const result = { hoursTotal, periodEnd };
         // // successful response
@@ -98,6 +100,7 @@ const getHours = () =>
   });
 
 const db = new Database();
+
 exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false; /* eslint no-param-reassign: 0 */
   try {
@@ -187,6 +190,8 @@ exports.handler = async (event, context) => {
       )}`
     );
     results.terminationsTotal = terminationsTotal[0].Terminations;
+
+    // NOTE: costs and hours are daily and remove the offset from 0:00 to 17:00 UTC on 07/15 when portal went live.
     const costData = await getCosts();
     console.log('COSTS', costData);
     results.costData = costData;
