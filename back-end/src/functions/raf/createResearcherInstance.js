@@ -100,6 +100,7 @@ const getUserData = (f1Config, iName) => {
     'useCustomCredentials',
     'userPasswordHash',
     'processor',
+    'sourceVariant',
   ];
   const subset = Object.keys(f1Config)
     .filter(key => configOptions.indexOf(key) >= 0)
@@ -351,6 +352,7 @@ exports.handler = async event => {
       osImage: message.OS,
       processor: message.Processor,
       ConfigurationKey: message.ConfigurationKey,
+      sourceVariant: message.Variant,
       binarySource: message.Type,
       useCustomCredentials: 'yes',
       rootUserAccess: 'yes',
