@@ -1,5 +1,4 @@
 const aws = require('aws-sdk');
-const util = require('util');
 const { Response, Database } = require('../../helpers');
 
 const db = new Database();
@@ -11,8 +10,8 @@ const sendFile = async instanceId => {
     Bucket: `${
       process.env.CURRENT_STAGE === 'develop' ? 'develop' : 'master'
     }-ssith-fett-target-researcher-artifacts`,
-    Key: `fett-target/production/communication/rebooting/${instanceId}`,
-    Body: 'Rebooted!',
+    Key: `fett-target/production/communication/reset/${instanceId}`,
+    Body: 'Reset!',
   };
   console.log(params);
   return s3.putObject(params).promise();
@@ -21,7 +20,7 @@ const sendFile = async instanceId => {
 const updateStatusToDB = async instanceId => {
   await db.makeConnection();
   const data = await db.query(
-    `UPDATE Environment set Status = "rebooting" WHERE F1EnvironmentId = :instanceId`,
+    `UPDATE Environment set Status = "resetting" WHERE F1EnvironmentId = :instanceId`,
     { instanceId }
   );
   if (data.changedRows === 1) {
@@ -48,16 +47,6 @@ const checkInstanceStatus = async (instanceId, region) => {
       InstanceIds: [instanceId],
     })
     .promise();
-};
-
-const stopInstance = async (instanceId, region) => {
-  const ec2 = new aws.EC2({ region });
-  const params = {
-    InstanceIds: [instanceId],
-    DryRun: false,
-    Force: false,
-  };
-  return ec2.stopInstances(params).promise();
 };
 
 exports.handler = async event => {
@@ -90,7 +79,7 @@ exports.handler = async event => {
       }
     }
     if (running) {
-      // send file to s3 to signal fett to reboot instance
+      // send file to s3 to signal fett to reset target
       await sendFile(payload.InstanceId);
     } else {
       // just update the DB

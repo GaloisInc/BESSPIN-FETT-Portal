@@ -531,12 +531,12 @@ functions:
           authorizer:
             name: authorizer
             arn: ${self:custom.authorizerPool.${self:provider.stage}}
-  rebootTarget:
-    handler: src/functions/raf/rebootTarget.handler
+  resetTarget:
+    handler: src/functions/raf/resetTarget.handler
     timeout: 60
     events:
       - http:
-          path: rebootTarget
+          path: resetTarget
           method: put
           cors: true
           authorizer:
