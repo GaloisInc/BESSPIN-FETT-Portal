@@ -8,6 +8,9 @@ export default function Learn() {
   const [UARTLink, setUARTLink] = useState('');
   const [votingLink, setVotingLink] = useState('');
   const [freeRTOSLink, setFreeRTOSLink] = useState('');
+  const [LMCOELFLink, setLMCOELFLink] = useState('');
+  const [MichELFLink, setMichELFLink] = useState('');
+  const [GFEELFLink, setGFEELFLink] = useState('');
 
   const populatePSUrl = async (key, callback) => {
     const psUrl = await getPSUrl(key);
@@ -19,6 +22,9 @@ export default function Learn() {
     populatePSUrl('UART piping.docx', setUARTLink);
     populatePSUrl('FETT-Portal.Voter.application.LEARN.content.pdf', setVotingLink);
     populatePSUrl('FreeRTOS.OTA.Application.Description.pdf', setFreeRTOSLink);
+    populatePSUrl('live/GFE_FreeRTOS.elf', setGFEELFLink);
+    populatePSUrl('live/LMCO_FreeRTOS.elf', setLMCOELFLink);
+    populatePSUrl('live/Michigan_FreeRTOS.elf', setMichELFLink);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -149,6 +155,29 @@ export default function Learn() {
                 <ul className="pl-8 list-disc list-inside">
                   <li>HTTP Server (running on Port 81)</li>
                   <li>OTA update server (see notes below)</li>
+                </ul>
+              </li>
+              <li>
+                ELF Binaries:
+                <ul className="pl-8 list-disc list-inside">
+                  <li>
+                    {' '}
+                    <a href={LMCOELFLink} download className="text-teal-400 underline" rel="noopener noreferrer">
+                      LMCO P1 ELF binaries
+                    </a>
+                  </li>
+                  <li>
+                    {' '}
+                    <a href={GFEELFLink} download className="text-teal-400 underline" rel="noopener noreferrer">
+                      GFE P1 ELF binaries
+                    </a>
+                  </li>
+                  <li>
+                    {' '}
+                    <a href={MichELFLink} download className="text-teal-400 underline" rel="noopener noreferrer">
+                      Michigan P1 ELF binaries
+                    </a>
+                  </li>
                 </ul>
               </li>
             </ul>
