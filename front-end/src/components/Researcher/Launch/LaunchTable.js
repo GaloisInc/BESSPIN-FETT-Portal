@@ -82,6 +82,7 @@ const LaunchTable = ({ history, handleOpen }) => {
               { title: 'Type', field: 'Type', cellStyle: { paddingLeft: '2em' }, headerStyle: { paddingLeft: '2em' } },
               { title: 'Processor', field: 'Processor' },
               { title: 'OS', field: 'OS' },
+              { title: 'Variant', field: 'Variant' },
               {
                 title: '',
                 field: 'Launch',

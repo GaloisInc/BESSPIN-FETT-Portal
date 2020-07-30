@@ -14,6 +14,7 @@ export const ec2Launcher = async configuration =>
         Type: configuration.Type,
         Processor: configuration.Processor,
         OS: configuration.OS,
+        Variant: configuration.Variant,
       };
       const response = await createEnvironmentRecord(environmentRecord);
       resolve(response);
