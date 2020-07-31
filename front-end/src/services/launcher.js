@@ -1,4 +1,9 @@
-import { createEnvironmentRecord, terminateEnvironment, forceTerminateEnvironment } from './api/environment';
+import {
+  createEnvironmentRecord,
+  terminateEnvironment,
+  forceTerminateEnvironment,
+  resetTarget,
+} from './api/environment';
 
 export const ec2Launcher = async configuration =>
   new Promise(async (resolve, reject) => {
@@ -32,6 +37,10 @@ export const ec2StatusUpdate = async (configuration, newStatus) =>
         resolve(response);
       } else if (newStatus === 'terminating') {
         const response = await terminateEnvironment(environmentRecord);
+        resolve(response);
+      } else if (newStatus === 'resetting') {
+        console.log('resetting');
+        const response = await resetTarget(environmentRecord);
         resolve(response);
       }
     } catch (error) {

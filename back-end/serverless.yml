@@ -530,7 +530,18 @@ functions:
           cors: true
           authorizer:
             name: authorizer
-            arn: ${self:custom.authorizerPool.${self:provider.stage}}      
+            arn: ${self:custom.authorizerPool.${self:provider.stage}}
+  resetTarget:
+    handler: src/functions/raf/resetTarget.handler
+    timeout: 60
+    events:
+      - http:
+          path: resetTarget
+          method: put
+          cors: true
+          authorizer:
+            name: authorizer
+            arn: ${self:custom.authorizerPool.${self:provider.stage}}          
   scheduledCleanup:
     handler: src/functions/raf/scheduledCleanup.handler
     timeout: 60
