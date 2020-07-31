@@ -10,7 +10,7 @@ const Alert = ({ status }) => {
     switch (status) {
       case 'running':
         return <img src={greenAlert} alt="green exclamation" />;
-      case 'rebooting':
+      case 'resetting':
       case 'queueing':
       case 'provisioning':
         return <img src={clock} alt="clock" />;

@@ -7,18 +7,18 @@ import Alert from './Alert';
 
 const InstanceDetail = ({ environment, fetchEnvironments }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isRebootDisabled, setIsRebootDisabled] = useState(false);
+  const [isResetDisabled, setIsResetDisabled] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
   const updateInstanceStatus = async (event, newStatus) => {
     event.preventDefault();
     setIsDisabled(true);
-    setIsRebootDisabled(true);
+    setIsResetDisabled(true);
     setIsLoading(true);
     try {
       await ec2StatusUpdate(environment, newStatus);
       fetchEnvironments();
       setIsLoading(false);
-      if (newStatus === 'rebooting') setIsDisabled(false);
+      if (newStatus === 'resetting') setIsDisabled(false);
     } catch (error) {
       console.log(`Error updating instance${error}`);
       setIsLoading(false);
@@ -27,7 +27,7 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
 
   useEffect(() => {
     const { Status } = environment;
-    if (Status === 'running') setIsRebootDisabled(false);
+    if (Status === 'running') setIsResetDisabled(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [environment.Status]);
 
@@ -69,17 +69,17 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
       <div className="flex flex-row items-center justify-end py-2 my-10 bg-blue-600">
         <button
           className={`w-48 px-2 py-1 mr-10 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded ${
-            isLoading || isDisabled || isRebootDisabled ? 'opacity-50 cursor-not-allowed' : ''
+            isLoading || isDisabled || isResetDisabled ? 'opacity-50 cursor-not-allowed' : ''
           } ${
             environment.Status !== 'running'
               ? 'bg-gray-600 cursor-default'
               : 'bg-gray-200 hover:bg-teal-500 hover:text-gray-200'
           }`}
           type="submit"
-          onClick={event => updateInstanceStatus(event, 'rebooting')}
-          disabled={isLoading || isRebootDisabled || isDisabled || environment.Status !== 'running'}
+          onClick={event => updateInstanceStatus(event, 'resetting')}
+          disabled={isLoading || isResetDisabled || isDisabled || environment.Status !== 'running'}
         >
-          {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Reboot Instance'}
+          {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Reset Target'}
         </button>
         <button
           className={`w-48 px-2 py-1 mr-10 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded ${

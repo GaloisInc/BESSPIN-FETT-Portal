@@ -2,7 +2,7 @@ import {
   createEnvironmentRecord,
   terminateEnvironment,
   forceTerminateEnvironment,
-  rebootTarget,
+  resetTarget,
 } from './api/environment';
 
 export const ec2Launcher = async configuration =>
@@ -38,9 +38,9 @@ export const ec2StatusUpdate = async (configuration, newStatus) =>
       } else if (newStatus === 'terminating') {
         const response = await terminateEnvironment(environmentRecord);
         resolve(response);
-      } else if (newStatus === 'rebooting') {
-        console.log('rebooting');
-        const response = await rebootTarget(environmentRecord);
+      } else if (newStatus === 'resetting') {
+        console.log('resetting');
+        const response = await resetTarget(environmentRecord);
         resolve(response);
       }
     } catch (error) {
