@@ -235,11 +235,6 @@ export default function Learn() {
           </li>
           FAQ:
           <ul className="pl-8 list-disc list-inside">
-            <li>
-              NOTE: Currently, there is a defect in this target platform that can cause it to go offline. Specifically,
-              probing port 9443 with an HTTPS request can cause system instability. A fix is being produced for this
-              issue, though in the meantime, please do not probe this system type on port 9443.
-            </li>
             <li>More FAQ content forthcoming if required based on contest activity.</li>
           </ul>
         </ul>
