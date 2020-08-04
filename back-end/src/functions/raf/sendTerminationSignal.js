@@ -26,7 +26,7 @@ const updateStatusToDB = async instanceId => {
   );
   if (data.changedRows === 1) {
     const rowData = await db.query(
-      `SELECT * FROM Environment WHERE F1Environment = :instanceId`,
+      `SELECT * FROM Environment WHERE F1EnvironmentId = :instanceId`,
       { instanceId }
     );
     return rowData;
@@ -64,7 +64,8 @@ exports.handler = async event => {
   }
   try {
     const payload = JSON.parse(event.body);
-    const dbData = await updateStatusToDB(payload.Id);
+    console.log(payload);
+    const dbData = await updateStatusToDB(payload.InstanceId);
     console.log(dbData);
     const region = dbData[0].Region;
     // first need to check region from Environment Table
