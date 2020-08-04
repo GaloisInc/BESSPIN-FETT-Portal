@@ -81,3 +81,7 @@ th.MuiTableCell-root {
   @apply rounded;
   @apply uppercase;
 }
+
+code {
+  font-size: 80%;
+}
