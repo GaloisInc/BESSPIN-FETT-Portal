@@ -331,7 +331,9 @@ export default function InstanceManagement() {
                           's3 Logs'
                         ) : (
                           <a
-                            href="https://s3.console.aws.amazon.com/s3/buckets/master-ssith-fett-target-researcher-artifacts/fett-target/production/artifacts/?region=us-west-2&tab=overview"
+                            href={`https://s3.console.aws.amazon.com/s3/buckets/${
+                              process.env.NODE_ENV === 'development' ? 'develop' : 'master'
+                            }-ssith-fett-target-researcher-artifacts/fett-target/production/artifacts/?region=us-west-2&tab=overview`}
                             target="_blank"
                             rel="noopener noreferrer"
                           >
