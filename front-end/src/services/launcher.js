@@ -27,12 +27,12 @@ export const ec2StatusUpdate = async (configuration, newStatus) =>
   new Promise(async (resolve, reject) => {
     const environmentRecord = {
       Id: configuration.Id,
-      Status: newStatus,
+      Status: configuration.Status,
       F1EnvironmentId: configuration.F1EnvironmentId,
     };
     console.log(environmentRecord);
     try {
-      if (newStatus === 'forcing') {
+      if (newStatus === 'forcing' || configuration.Status === 'provisioning') {
         const response = await forceTerminateEnvironment(environmentRecord);
         resolve(response);
       } else if (newStatus === 'terminating') {
