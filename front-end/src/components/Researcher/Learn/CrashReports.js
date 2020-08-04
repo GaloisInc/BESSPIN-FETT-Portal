@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function CrashReports() {
   return (
-    <div className="h-full pt-6 pb-12 pl-12 pr-12">
+    <div className="pt-6 pb-12 pl-12 pr-12 overflow-y-scroll fettScroll" style={{ height: '85vh' }}>
       <h3 className="text-gray-200 uppercase">Crash Reports</h3>
       <p className="pt-4 text-gray-200 ">
         The purpose of this document is to give explicit criteria to help researchers understand when one of the SSITH
