@@ -63,8 +63,8 @@ const InstanceHistory = params => {
   }, []);
 
   useEffect(() => {
-    console.log(environments);
-    console.log(modalData);
+    // console.log(environments);
+    // console.log(modalData);
     if (environments && environments.length > 0 && modalData && Object.keys(modalData).length > 0) {
       const newModalData = environments.filter(env => env.F1EnvironmentId === modalData.F1EnvironmentId);
       console.log(newModalData);
@@ -101,7 +101,7 @@ const InstanceHistory = params => {
                 {
                   title: '',
                   field: 'alert',
-                  width: '10%',
+                  width: '5%',
                   sorting: false,
                   render: data => (
                     <div className="w-3" style={{ display: 'block', margin: 'auto' }}>
@@ -120,6 +120,7 @@ const InstanceHistory = params => {
                   ),
                 },
                 { title: 'CodeName', field: 'CodeName', width: '10%' },
+                { title: 'Variant', field: 'Variant', width: '7%' },
                 {
                   title: 'Launched',
                   field: 'Created',
@@ -136,7 +137,7 @@ const InstanceHistory = params => {
                   title: '',
                   field: 'launch',
                   sorting: false,
-                  width: '10%',
+                  width: '8%',
                   render: data => (
                     <button
                       type="button"

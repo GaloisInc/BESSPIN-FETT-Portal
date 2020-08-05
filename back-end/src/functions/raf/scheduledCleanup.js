@@ -3,31 +3,22 @@ const aws = require('aws-sdk');
 const { Database } = require('../../helpers');
 
 const db = new Database();
-
-const sqs = new aws.SQS();
+const s3 = new aws.S3();
 
 const terminateInstance = Id =>
   new Promise(async (resolve, reject) => {
     try {
       console.log(`terminating id: ${Id}`);
-      let messageAttrs = {
-        REPLACE_ME: {
-          DataType: 'String',
-          StringValue: String(Id),
-        },
-      };
-
-      let messageAttrsJson = JSON.stringify(messageAttrs);
-      messageAttrsJson = messageAttrsJson.replace('REPLACE_ME', Id);
-      messageAttrs = JSON.parse(messageAttrsJson);
-
       const params = {
-        QueueUrl: process.env.PORTAL_TO_INSTANCE_TERMINATION_QUEUE_URL,
-        MessageBody: 'terminate',
-        MessageAttributes: messageAttrs,
+        Bucket: `${
+          process.env.CURRENT_STAGE === 'develop' ? 'develop' : 'master'
+        }-ssith-fett-target-researcher-artifacts`,
+        Key: `fett-target/production/communication/termination/${Id}`,
+        Body: 'Terminated!',
       };
-      sqs
-        .sendMessage(params)
+      console.log(params);
+      return s3
+        .putObject(params)
         .promise()
         .then(() => resolve(true));
     } catch (error) {

@@ -72,16 +72,18 @@ const getUserData = (f1Config, iName) => {
   chmod 400 /home/centos/.ssh/config
   
   
-  pushd SSITH-FETT-Target/ 
-  echo "setting up git repo..."	
-  git pull	
-  git checkout develop	
-  git submodule init	
-  git submodule update --init --recursive	
-  pushd SSITH-FETT-Binaries	
-  echo "Pulling binaries...."	
-  git lfs pull	
-  echo "Running fett command..."	
+  echo "setting up git repo..."
+  pushd SSITH-FETT-Target
+  pushd SSITH-FETT-Binaries
+  git stash
+  popd    
+  git checkout develop
+  git pull        
+  git submodule update --init --recursive    
+  pushd SSITH-FETT-Binaries    
+  echo "Pulling binaries...."    
+  git lfs pull    
+  echo "Running fett command..."    
   popd
 
   `
@@ -100,6 +102,7 @@ const getUserData = (f1Config, iName) => {
     'useCustomCredentials',
     'userPasswordHash',
     'processor',
+    'sourceVariant',
   ];
   const subset = Object.keys(f1Config)
     .filter(key => configOptions.indexOf(key) >= 0)
@@ -133,7 +136,10 @@ IP=$(aws ec2 describe-instances --instance-ids \`curl -s http://169.254.169.254/
 echo $IP
 OUT=$(jq -SRn $JSON | jq --arg ip "$IP" ' . + {"productionTargetIp": $ip}|tostring' | sed -e 's/^"//' -e 's/"$//' -e 's/"/\\"/' )
 echo $OUT
-
+INSTANCEID=$(aws ec2 describe-instances --instance-ids \`curl -s http://169.254.169.254/latest/meta-data/instance-id\` --region ${
+    f1Config.region
+  } | jq -r '.Reservations[0].Instances[0].InstanceId')
+echo $INSTANCEID
 echo "running sed"
 sudo sed -i "/^[1:]/ s/$/ \${HOSTNAME}/" /etc/hosts
 
@@ -144,7 +150,7 @@ ${devGitPull}
 cd /home/centos/SSITH-FETT-Target
 
 
-nohup nix-shell --command "python fett.py -d -ep ${fettAwsCall} -job ${iName} -cjson '$OUT'" &
+nohup nix-shell --command "python fett.py -d -ep ${fettAwsCall} -job ${iName}-$INSTANCEID -cjson '$OUT'" &
 EOF
 
 nohup /bin/su -c "/home/centos/downloadAndStartFett.sh" - centos &
@@ -351,6 +357,7 @@ exports.handler = async event => {
       osImage: message.OS,
       processor: message.Processor,
       ConfigurationKey: message.ConfigurationKey,
+      sourceVariant: message.Variant,
       binarySource: message.Type,
       useCustomCredentials: 'yes',
       rootUserAccess: 'yes',
