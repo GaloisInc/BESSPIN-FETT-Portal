@@ -125,3 +125,18 @@ export const forceTerminateEnvironment = async record =>
         reject(response);
       });
   });
+
+export const resetTarget = async record =>
+  new Promise(async (resolve, reject) => {
+    fetch(`${BASE_API}/resetTarget`, {
+      headers: await makeHeaders(),
+      body: JSON.stringify({ Id: record.Id, Status: record.Status, InstanceId: record.F1EnvironmentId }),
+      method: 'PUT',
+    })
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(body => resolve(body))
+      .catch(response => {
+        reject(response);
+      });
+  });

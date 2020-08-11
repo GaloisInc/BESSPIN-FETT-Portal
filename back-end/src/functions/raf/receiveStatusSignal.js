@@ -26,6 +26,15 @@ const updateDBForStarted = async (instanceId, instanceIp, fpgaIp) => {
     { instanceId, instanceIp, fpgaIp }
   );
 };
+
+const updateDBForReset = async instanceId => {
+  console.log('updating for started');
+  return db.query(
+    `UPDATE Environment SET Status = "running" WHERE F1EnvironmentId = :instanceId`,
+    { instanceId }
+  );
+};
+
 const getEnvironmentConfig = async instanceId =>
   db.query(`SELECT * FROM Environment WHERE F1EnvironmentId = :instanceId`, {
     instanceId,
@@ -112,6 +121,10 @@ exports.handler = async event => {
       };
       await sqs.sendMessage(msgParams).promise();
       await CloudWatch.deleteDashboards(message.instance.id);
+    }
+    if (signal === 'reset' && message.job.status === 'success') {
+      const instanceId = message.instance.id;
+      await updateDBForReset(instanceId);
     }
   }
 };
