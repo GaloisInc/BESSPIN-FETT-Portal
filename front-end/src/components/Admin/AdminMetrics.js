@@ -96,10 +96,30 @@ export default function AdminDash() {
               </div>
               <div className="flex flex-row py-2 bg-blue-600">
                 <div className="w-full ml-8 mr-8 ">
+                  <p className="text-base text-teal-500 uppercase">F1 Running Hours (MTD)**</p>
+                </div>
+                <p className="text-base pr-16 text-gray-200">
+                  {metrics && metrics.monthlyHours && metrics.monthlyHours.hoursTotal > 0
+                    ? metrics.monthlyHours.hoursTotal.toFixed(2)
+                    : 'N/A'}
+                </p>
+              </div>
+              <div className="flex flex-row py-2 bg-blue-700">
+                <div className="w-full ml-8 mr-8 ">
                   <p className="text-base text-teal-500 uppercase">Account Costs ***</p>
                 </div>
                 <p className="text-base pr-16 text-gray-200">
                   {metrics && metrics.costData && metrics.costData.costTotal.toFixed(2)}
+                </p>
+              </div>
+              <div className="flex flex-row py-2 bg-blue-600">
+                <div className="w-full ml-8 mr-8 ">
+                  <p className="text-base text-teal-500 uppercase">Account Costs (MTD)***</p>
+                </div>
+                <p className="text-base pr-16 text-gray-200">
+                  {metrics && metrics.monthlyCosts && metrics.monthlyCosts.costTotal > 0
+                    ? metrics.monthlyCosts.costTotal.toFixed(2)
+                    : 'N/A'}
                 </p>
               </div>
               <p className="text-xs pr-16 pl-4  pb-2 text-gray-500">

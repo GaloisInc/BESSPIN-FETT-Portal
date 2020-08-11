@@ -7,9 +7,12 @@ aws.config.apiVersions = {
   costexplorer: '2017-10-25',
   // other service API versions
 };
-
+const today = new Date();
+const thisMonth = today.getMonth() + 1;
 const endDate = `${moment().format('yyyy-MM-DD')}`;
 const startDate = `${moment('15 July 2020').format('yyyy-MM-DD')}`;
+const monthStart = moment(`${thisMonth}/1/2020`).format('yyyy-MM-DD');
+console.log(monthStart, thisMonth);
 
 const costexplorer = new aws.CostExplorer({
   apiVersion: '2017-10-25',
@@ -44,6 +47,42 @@ const getCosts = () =>
       const result = { costTotal, periodEnd };
       // successful response
       resolve(result);
+    });
+  });
+
+const getMonthlyCosts = () =>
+  new Promise((resolve, reject) => {
+    const ceParams = {
+      TimePeriod: {
+        End: endDate,
+        Start: monthStart,
+      },
+      Granularity: 'DAILY',
+      Metrics: ['BlendedCost'],
+    };
+    console.log('calling cost explorer', ceParams);
+
+    costexplorer.getCostAndUsage(ceParams, function(err, data) {
+      if (err) console.log(err, err.stack);
+      // an error occurred
+      const realData = data.ResultsByTime.filter(
+        item => parseFloat(item.Total.BlendedCost.Amount) > 0
+      );
+      realData.pop();
+      if (Array.from(realData) && realData.length > 0) {
+        const costTotal = realData.reduce(function(acc, curr) {
+          return acc + parseFloat(curr.Total.BlendedCost.Amount);
+        }, 0);
+        const periodEnd = realData.pop().TimePeriod.End;
+        const result = { costTotal, periodEnd };
+        // successful response
+        console.log('monthly results costs', result);
+
+        resolve(result);
+      } else {
+        const result = { costTotal: 0 };
+        resolve(result);
+      }
     });
   });
 
@@ -92,6 +131,63 @@ const getHours = () =>
         const result = { hoursTotal, periodEnd };
         // // successful response
         resolve(result);
+      });
+    } catch (error) {
+      reject(error);
+    }
+    // const startDate = moment(new Date()).toISOString()
+  });
+
+const getMonthlyHours = () =>
+  new Promise((resolve, reject) => {
+    try {
+      const ceParams = {
+        TimePeriod: {
+          End: endDate,
+          Start: monthStart,
+        },
+        Filter: {
+          And: [
+            {
+              Dimensions: {
+                Key: 'INSTANCE_TYPE',
+                Values: ['f1.2xlarge'],
+              },
+            },
+            {
+              Dimensions: {
+                Key: 'USAGE_TYPE_GROUP',
+                Values: ['EC2: Running Hours'],
+              },
+            },
+          ],
+        },
+        Granularity: 'DAILY',
+        Metrics: ['UsageQuantity'],
+      };
+      console.log('calling cost explorer monthly hours', ceParams);
+
+      costexplorer.getCostAndUsage(ceParams, function(err, data) {
+        if (err) console.log(err, err.stack);
+        // an error occurred
+        const realData = data.ResultsByTime.filter(
+          item => parseFloat(item.Total.UsageQuantity.Amount) > 0
+        );
+        realData.pop();
+        console.log(realData);
+        if (Array.from(realData) && realData.length > 0) {
+          const hoursTotal = realData.reduce(function(acc, curr) {
+            return acc + parseFloat(curr.Total.UsageQuantity.Amount);
+          }, 0);
+          const periodEnd = realData.pop().TimePeriod.End;
+          const result = { hoursTotal, periodEnd };
+          // // successful response
+          console.log('monthly results hours', result);
+          resolve(result);
+        } else {
+          const result = { hoursTotal: 0 };
+          resolve(result);
+        }
       });
     } catch (error) {
       reject(error);
@@ -199,6 +295,14 @@ exports.handler = async (event, context) => {
     const f1Hours = await getHours();
     console.log('F1HOURS', f1Hours);
     results.f1Hours = f1Hours;
+
+    const monthlyCosts = await getMonthlyCosts();
+    console.log('monthly', monthlyCosts);
+    results.monthlyCosts = monthlyCosts;
+
+    const monthlyHours = await getMonthlyHours();
+    console.log('monthly', monthlyHours);
+    results.monthlyHours = monthlyHours;
 
     return new Response(results).success();
   } catch (err) {
