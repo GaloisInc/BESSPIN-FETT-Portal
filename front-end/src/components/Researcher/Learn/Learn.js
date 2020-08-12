@@ -11,6 +11,7 @@ export default function Learn() {
   const [LMCOELFLink, setLMCOELFLink] = useState('');
   const [MichELFLink, setMichELFLink] = useState('');
   const [GFEELFLink, setGFEELFLink] = useState('');
+  const [vulnExamLink, setVulnExamLink] = useState('');
 
   const populatePSUrl = async (key, callback) => {
     const psUrl = await getPSUrl(key);
@@ -25,6 +26,7 @@ export default function Learn() {
     populatePSUrl('live/GFE_FreeRTOS.elf', setGFEELFLink);
     populatePSUrl('live/LMCO_FreeRTOS.elf', setLMCOELFLink);
     populatePSUrl('live/Michigan_FreeRTOS.elf', setMichELFLink);
+    populatePSUrl('LMCO_P1_ExampleVulnerability.zip', setVulnExamLink);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -237,7 +239,63 @@ export default function Learn() {
           <li>
             FAQ:
             <ul className="pl-8 list-disc list-inside">
-              <li>Content forthcoming if required based on contest activity.</li>
+              <li>
+                The proper compiler to use on this platform is located within the toolchain docker container and is
+                riscv64-unknown-elf-gcc. Use of the local compiler (riscv64-linux-gnu-gcc) is not supported.
+              </li>
+              <li>
+                Viewing H.A.R.D. pipeline reporting
+                <ul className="pl-8 list-disc list-inside">
+                  <li>
+                    P1 platform
+                    <ul className="pl-8 list-disc list-inside">
+                      <li>
+                        The exception handler for illegal instructions dumps the exception register state over the UART
+                        interface. Researchers can use the provided UART->network bridge to see this output at runtime,
+                        and can view results after the fact in the tty.out file.
+                      </li>
+                      <li>
+                        Output will resemble:
+                        <p className="pl-4">LMCO SSITH CPU Pipeline exception</p>
+                        <p className="pl-4">mcause: 0x00000002</p>
+                        <p className="pl-4">mepc: 0xDEADBEEF</p>
+                        <p className="pl-4">mstatus: 0xYYYYYYYY</p>
+                      </li>
+                      <li>
+                        where "DEADBEEF" is the hex address of the corrupt return address that caused the exception.
+                      </li>
+                    </ul>
+                  </li>
+                  <li>
+                    P2 platform
+                    <ul className="pl-8 list-disc list-inside">
+                      <li>
+                        The H.A.R.D. pipeline on this platform will respond with an illegal instruction and the process
+                        will terminate.
+                      </li>
+                      <li>dmesg will list exception information with scause: 0000000000000002</li>
+                      <li>No further information is encoded in the illegal instruction response.</li>
+                      <li>The registers output will be within 5-10 cycles of the detected fault.</li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li>
+                H.A.R.D. P1 example vulnerability
+                <ul className="pl-8 list-disc list-inside">
+                  <li>
+                    The ELF and source in the ZIP file linked below demonstrates a Return Address Overwrite
+                    vulnerability when exercising the mod010a pipeline on FreeRTOS on this target type.
+                  </li>
+                  <li>LMCO_P1_ExampleVulnerability</li>
+                  <li>
+                    {' '}
+                    <a href={vulnExamLink} download className="text-teal-400 underline" rel="noopener noreferrer">
+                      LMCO_P1_ExampleVulnerability
+                    </a>
+                  </li>
+                </ul>
+              </li>
             </ul>
           </li>
         </ul>
