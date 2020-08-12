@@ -8,11 +8,9 @@ import { getMetricsByType } from '../../services/api/metrics';
 const MetricsTypeModal = ({ handleClose, configuration }) => {
   const [isLoading, setIsLoading] = useState(false);
   const [metricsByType, setmetricsByType] = useState([]);
-  console.log(configuration);
 
   const fetchMetricsByType = async () => {
     const modalMetrics = await getMetricsByType(configuration.Configuration_FK);
-    console.log(modalMetrics);
     setmetricsByType(modalMetrics.spinupsTotalByUser);
     setIsLoading(false);
   };
@@ -35,7 +33,6 @@ const MetricsTypeModal = ({ handleClose, configuration }) => {
     </div>
   ));
 
-  console.log(configuration);
   return (
     <div
       className="absolute text-4xl text-gray-200 bg-blue-600"

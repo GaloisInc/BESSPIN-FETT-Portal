@@ -15,7 +15,6 @@ export default function AdminDash() {
   const fetchMetrics = async () => {
     const results = await getMetrics();
     setMetrics(results);
-    console.log(results);
     setIsLoading(false);
   };
 
