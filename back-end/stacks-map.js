@@ -1,0 +1,30 @@
+module.exports = (resource, logicalId) => {
+  // if (logicalId.includes("Pool")) return { destination: 'Auth' };
+  // if (logicalId.includes("Cognito")) return { destination: 'Auth' };
+  // if (logicalId.includes("RDS")) return { destination: 'RDS' };
+  // if (logicalId.includes("DBSubnetGroup")) return { destination: 'RDS' };
+  // if (logicalId.includes("AuroraSecurityGroup")) return { destination: 'RDS' };
+  if (logicalId.includes("Cloud")) return { destination: 'Hosting' };
+  if (logicalId.includes("Bucket")) return { destination: 'Hosting' };
+  if (logicalId.includes("Get")) return { destination: 'Get' };
+  if (logicalId.includes("Update")) return { destination: 'Update' };
+  if (logicalId.includes("Post")) return { destination: 'Post' };
+  if (logicalId.includes("React")) return { destination: 'React' };
+  if (logicalId.includes("SSM")) return { destination: 'SSM' };
+  if (logicalId.includes("LogGroup")) return { destination: 'Log' };
+  if (logicalId.includes("Topic")) return { destination: 'SNS' };
+  if (logicalId.includes("SNS")) return { destination: 'SNS' };
+  if (logicalId.includes("Sns")) return { destination: 'SNS' };
+  if (logicalId.includes("ApiGatewayResource")) return { destination: 'API' };
+  if (logicalId.includes("ApiGatewayMethod")) return { destination: 'API' };
+  if (logicalId.startsWith("Authorizer")) return { destination: 'API' };
+  // if (logicalId.includes("ApiGatewayApi")) return { destination: 'API' };
+  // if (logicalId.includes("ApiGatewayRest")) return { destination: 'API' };
+  // if (logicalId.includes("ApiGatewayDep")) return { destination: 'API' };
+  // if (logicalId.includes("ApiGatewayUsage")) return { destination: 'API' };
+  // if (logicalId.includes("ApiGatewayMethod")) return { destination: 'API' };
+  if (logicalId.includes("Schedule")) return { destination: 'Lambda' };
+  if (logicalId.includes("Lambda")) return { destination: 'Lambda' };
+  console.log(logicalId);
+  // Falls back to default
+};

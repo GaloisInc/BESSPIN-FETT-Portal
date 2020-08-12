@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
+import { Modal } from '@material-ui/core';
 import InstanceManagement from '../Instance/InstanceManagement';
 import { getMetrics } from '../../services/api/metrics';
 import Spinner from '../Spinner';
+import MetricsTypeModal from './MetricsTypeModal';
 
 export default function AdminDash() {
+  const [open, setOpen] = React.useState(false);
   const [metrics, setMetrics] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [modalConfiguration, setModalConfiguration] = useState('');
 
   const fetchMetrics = async () => {
     const results = await getMetrics();
@@ -21,21 +25,41 @@ export default function AdminDash() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  const handleOpen = async configuration => {
+    await setModalConfiguration(configuration);
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+  };
+
   const spinupsByType =
     metrics.spinupsTotalByType &&
     metrics.spinupsTotalByType.map((type, index) => (
-      <div key={index} className={`flex flex-row py-2 pl-4 ${index % 2 === 0 ? 'bg-blue-700' : 'bg-blue-600'}`}>
+      <button
+        key={index}
+        className={`flex flex-row text-left py-2 pl-4 w-full ${index % 2 === 0 ? 'bg-blue-700' : 'bg-blue-600'}`}
+        onClick={() => handleOpen(type)}
+        type="button"
+      >
         <div className="w-full ml-8 mr-8 ">
-          <p className="text-base text-teal-500 uppercase">{`${type.Type} | ${type.Processor} | ${type.OS}`}</p>
+          <p className="text-base text-teal-500 uppercase">{`${type.Type} | ${type.Processor} | ${type.OS} | ${
+            type.Variant
+          }`}</p>
         </div>
         <p className="text-base text-gray-200 pr-16">{type.Count}</p>
-      </div>
+      </button>
     ));
 
   const handleScroll = e => e.target.classList.add('fettScroll');
 
   return (
-    <div className="h-full pt-6 pl-12 pr-12 overflow-y-scroll" style={{ height: '85vh' }} onScroll={handleScroll}>
+    <div
+      className="h-full pt-6 pl-12 pr-12 overflow-y-scroll"
+      style={{ height: '85vh', maxWidth: '900px' }}
+      onScroll={handleScroll}
+    >
       <h3 className="text-gray-200 uppercase">metrics</h3>
       <p className="pt-4 text-gray-200">
         This interface may be used to view all instances provisioned by any research team as well as to connect to AWS
@@ -142,6 +166,10 @@ export default function AdminDash() {
           )}
         </div>
       </div>
+      <Modal open={open} onClose={handleClose}>
+        {/* <UserModal handleClose={handleClose} sealectedUser={selectedUser} fetchUsers={fetchUsers} /> */}
+        <MetricsTypeModal handleClose={handleClose} configuration={modalConfiguration} />
+      </Modal>
     </div>
   );
 }
