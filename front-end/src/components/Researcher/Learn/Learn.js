@@ -110,6 +110,11 @@ export default function Learn() {
                   CheriBSD
                 </a>
                 {` (CHERI-extended FreeBSD)`}
+                <ul className="pl-8 list-disc list-inside">
+                  <li>
+                    Enhanced with a pure-capability kernel providing protection from many spatial memory-safety issues
+                  </li>
+                </ul>
               </li>
               <li>
                 Applications:
@@ -120,6 +125,32 @@ export default function Learn() {
                   <li>FETT-Voting voter registration application</li>
                   <li>Additional applications modified to incorporate CHERI protections</li>
                   <li>Researcher-provided and compiled vulnerable applications</li>
+                  <li>NFS v4 server exporting /</li>
+                </ul>
+              </li>
+              <li>
+                Reintroduced kernel vulnerabilities (known to be exploitable on a conventional RISC-V kernel)::
+                <ul className="pl-8 list-disc list-inside">
+                  <li>
+                    <a
+                      href="https://www.freebsd.org/security/advisories/FreeBSD-SA-18:13.nfs.asc"
+                      target="_blank"
+                      className="text-teal-400 underline"
+                      rel="noopener noreferrer"
+                    >
+                      FreeBSD-SA-18:13.nfs
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="https://www.freebsd.org/security/advisories/FreeBSD-SA-09%3A06.ktimer.asc"
+                      target="_blank"
+                      className="text-teal-400 underline"
+                      rel="noopener noreferrer"
+                    >
+                      FreeBSD-SA-09:06.ktimer
+                    </a>
+                  </li>
                 </ul>
               </li>
               <li>
@@ -130,7 +161,16 @@ export default function Learn() {
           <li>
             FAQ:
             <ul className="pl-8 list-disc list-inside">
-              <li>Content forthcoming if required based on contest activity.</li>
+              <li>
+                You can reboot this instance type with one of the following procedures:
+                <ul className="pl-8 list-disc list-inside">
+                  <li>Through the ssh connection: Invoke su, then invoke reboot. [Recommended]</li>
+                  <li>
+                    Through the piped UART on port 8278, Ctrl-a + r may also be used for a hard reset. [Advised to use
+                    only when the target is non-responsive.]
+                  </li>
+                </ul>
+              </li>
             </ul>
           </li>
         </ul>
@@ -170,12 +210,6 @@ export default function Learn() {
                     {' '}
                     <a href={GFEELFLink} download className="text-teal-400 underline" rel="noopener noreferrer">
                       GFE P1 ELF binaries
-                    </a>
-                  </li>
-                  <li>
-                    {' '}
-                    <a href={MichELFLink} download className="text-teal-400 underline" rel="noopener noreferrer">
-                      Michigan P1 ELF binaries
                     </a>
                   </li>
                 </ul>
@@ -229,6 +263,23 @@ export default function Learn() {
                 <ul className="pl-8 list-disc list-inside">
                   <li>Database (SQLite v3.31.1)</li>
                   <li>Medical database application (uses SQLite v3.31.1 and latest FreeRTOS + modified TCP stack)</li>
+                </ul>
+              </li>
+              <li>
+                ELF Binaries:
+                <ul className="pl-8 list-disc list-inside">
+                  <li>
+                    {' '}
+                    <a href={MichELFLink} download className="text-teal-400 underline" rel="noopener noreferrer">
+                      Michigan P1 ELF binaries
+                    </a>
+                  </li>
+                  <li>
+                    {' '}
+                    <a href={GFEELFLink} download className="text-teal-400 underline" rel="noopener noreferrer">
+                      GFE P1 ELF binaries
+                    </a>
+                  </li>
                 </ul>
               </li>
             </ul>
