@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import close from '../../assets/close.svg';
 import { getMetricsByType } from '../../services/api/metrics';
+import Spinner from '../Spinner';
 
 const MetricsTypeModal = ({ handleClose, configuration }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -44,7 +45,7 @@ const MetricsTypeModal = ({ handleClose, configuration }) => {
           <img src={close} alt="" />
         </button>
       </div>
-      {countsByUser}
+      {isLoading ? <Spinner /> : countsByUser}
     </div>
   );
 };
