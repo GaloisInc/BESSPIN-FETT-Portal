@@ -202,15 +202,7 @@ exports.handler = async (event, context) => {
   try {
     await db.makeConnection();
     const results = {};
-    // const spinups = await db.query(
-    //   `SELECT COUNT(DISTINCT(Id)) AS DailySpinup FROM Environment WHERE Created > NOW() - INTERVAL 24 HOUR AND CreatedBy_FK <> 2`
-    // );
-    // console.log(
-    //   `Total number of instances launched in the last 24 hours: ${JSON.stringify(
-    //     spinups[0]
-    //   )}`
-    // );
-    // results.spinups = spinups[0];
+
     const spinupsTotal = await db.query(
       `SELECT COUNT(DISTINCT(Id)) AS Spinups FROM Environment WHERE Created > '2020-07-15 10:00 am' AND CreatedBy_FK <> 2`
     );
@@ -221,28 +213,17 @@ exports.handler = async (event, context) => {
     );
     results.spinups = spinupsTotal[0].Spinups;
 
-    // const spinupsByType = await db.query(
-    //   `SELECT e.Configuration_FK, count(Configuration_FK) AS Count, ic.Type, ic.Processor, ic.OS
-    //     FROM Environment as e
-    //       JOIN InstanceConfiguration as ic
-    //         ON ic.Id = e.Configuration_Fk
-    //     WHERE Created > NOW() - INTERVAL 24 HOUR
-    //       AND CreatedBy_FK <> 2 group by Configuration_FK;`
-    // );
-    // console.log(
-    //   `Total number of instances by type spinning up in the last 24 hours: ${JSON.stringify(
-    //     spinupsByType
-    //   )}`
-    // );
-    // results.spinupsByType = spinupsByType;
-
     const spinupsTotalByType = await db.query(
-      `SELECT e.Configuration_FK, count(Configuration_FK) AS Count, ic.Type, ic.Processor, ic.OS 
+      `SELECT e.Configuration_FK, count(Configuration_FK) AS Count, ic.Type, ic.Processor, ic.OS, ic.Variant 
         FROM Environment as e
           JOIN InstanceConfiguration as ic 
-            ON ic.Id = e.Configuration_Fk 
-        WHERE Created > '2020-07-15 10:00 am'
-          AND CreatedBy_FK <> 2 group by Configuration_FK;`
+            ON ic.Id = e.Configuration_Fk
+          JOIN User as u
+            ON u.Id = e.CreatedBy_FK
+        WHERE e.Created > '2020-07-15 10:00 am'
+          AND u.IsRedTeam = true 
+        GROUP BY e.Configuration_FK
+        ORDER BY ic.SortKey ASC;`
     );
     console.log(
       `Total number of instances by type spinning up since go-live: ${JSON.stringify(
@@ -250,17 +231,9 @@ exports.handler = async (event, context) => {
       )}`
     );
     results.spinupsTotalByType = spinupsTotalByType;
-    // const spinupErrors = await db.query(
-    //   `SELECT COUNT(DISTINCT(Id)) AS DailySpinupErrors FROM Environment WHERE Created > NOW() - INTERVAL 24 HOUR AND Status = 'error' AND CreatedBy_FK <> 2;`
-    // );
-    // console.log(
-    //   `Total number of instances erred out spinning up in the last 24 hours: ${JSON.stringify(
-    //     spinupErrors[0]
-    //   )}`
-    // );
-    // results.spinupErrors = spinupErrors[0];
+
     const spinupErrorsTotal = await db.query(
-      `SELECT COUNT(DISTINCT(Id)) AS SpinupErrors FROM Environment WHERE Created > '2020-07-15 10:00 am' AND Status = 'error' AND CreatedBy_FK <> 2;`
+      `SELECT COUNT(DISTINCT(e.Id)) AS SpinupErrors FROM Environment as e JOIN User as u ON u.Id = e.CreatedBy_FK WHERE e.Created > '2020-07-15 10:00 am' AND e.Status = 'error' AND u.IsRedTeam = true;`
     );
     console.log(
       `Total number of instances erred out spinning up since go-live: ${JSON.stringify(
@@ -268,17 +241,9 @@ exports.handler = async (event, context) => {
       )}`
     );
     results.spinupErrorsTotal = spinupErrorsTotal[0].SpinupErrors;
-    // const terminations = await db.query(
-    //   `SELECT COUNT(DISTINCT(Id)) AS DailyTerminations FROM Environment WHERE Created > NOW() - INTERVAL 24 HOUR AND (Status = 'terminated' OR Status = 'terminating') AND CreatedBy_FK <> 2;`
-    // );
-    // console.log(
-    //   `Total number of instances terminated in the last 24 hours: ${JSON.stringify(
-    //     terminations[0]
-    //   )}`
-    // );
-    // results.terminations = terminations[0];
+
     const terminationsTotal = await db.query(
-      `SELECT COUNT(DISTINCT(Id)) AS Terminations FROM Environment WHERE Created > '2020-07-15 10:00 am' AND (Status = 'terminated' OR Status = 'terminating') AND CreatedBy_FK <> 2;`
+      `SELECT COUNT(DISTINCT(e.Id)) AS Terminations FROM Environment as e JOIN User as u ON u.Id = e.CreatedBy_FK WHERE e.Created > '2020-07-15 10:00 am' AND (e.Status = 'terminated' OR e.Status = 'terminating') AND u.IsRedTeam = true;`
     );
     console.log(
       `Total number of instances terminated since go-live: ${JSON.stringify(
