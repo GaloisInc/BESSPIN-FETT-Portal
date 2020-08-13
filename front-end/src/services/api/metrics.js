@@ -38,3 +38,18 @@ export const getMetrics = () =>
         reject(response.json());
       });
   });
+
+export const getMetricsByType = configurationId =>
+  new Promise(async (resolve, reject) => {
+    fetch(`${BASE_API}/getMetricsByType`, {
+      headers: await makeHeaders(),
+      method: 'POST',
+      body: JSON.stringify({ configurationId: `${configurationId}` }),
+    })
+      .then(handleErrors)
+      .then(response => response.json())
+      .then(body => resolve(body))
+      .catch(response => {
+        reject(response.json());
+      });
+  });
