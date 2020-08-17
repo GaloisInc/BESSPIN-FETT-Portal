@@ -5,12 +5,15 @@ import InstanceManagement from '../Instance/InstanceManagement';
 import { getMetrics } from '../../services/api/metrics';
 import Spinner from '../Spinner';
 import MetricsTypeModal from './MetricsTypeModal';
+import useWindowDimensions from '../../services/useDimensions';
 
 export default function AdminDash() {
   const [open, setOpen] = React.useState(false);
   const [metrics, setMetrics] = useState({});
   const [isLoading, setIsLoading] = useState(false);
   const [modalConfiguration, setModalConfiguration] = useState('');
+
+  const { height } = useWindowDimensions();
 
   const fetchMetrics = async () => {
     const results = await getMetrics();
@@ -167,7 +170,7 @@ export default function AdminDash() {
       </div>
       <Modal open={open} onClose={handleClose}>
         {/* <UserModal handleClose={handleClose} sealectedUser={selectedUser} fetchUsers={fetchUsers} /> */}
-        <MetricsTypeModal handleClose={handleClose} configuration={modalConfiguration} />
+        <MetricsTypeModal handleClose={handleClose} configuration={modalConfiguration} cardHeight={height - 400} />
       </Modal>
     </div>
   );
