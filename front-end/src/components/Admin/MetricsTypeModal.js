@@ -6,7 +6,8 @@ import close from '../../assets/close.svg';
 import { getMetricsByType } from '../../services/api/metrics';
 import Spinner from '../Spinner';
 
-const MetricsTypeModal = ({ handleClose, configuration }) => {
+const MetricsTypeModal = ({ handleClose, configuration, cardHeight }) => {
+  const handleScroll = e => e.target.classList.add('fettScroll');
   const [isLoading, setIsLoading] = useState(false);
   const [metricsByType, setmetricsByType] = useState([]);
 
@@ -36,11 +37,20 @@ const MetricsTypeModal = ({ handleClose, configuration }) => {
 
   return (
     <div
-      className="absolute text-4xl text-gray-200 bg-blue-600"
-      style={{ width: '400px', height: '360px', top: '30%', left: '50%', marginLeft: '-200px' }}
+      className="absolute text-4xl text-gray-200 bg-blue-600 overflow-y-scroll"
+      style={{
+        width: '400px',
+        maxHeight: `${cardHeight}px`,
+        top: '30%',
+        left: '50%',
+        marginLeft: '-200px',
+      }}
+      onScroll={handleScroll}
     >
       <div className="flex flex-row justify-between py-2 pl-8 pr-6 border-b-2 border-blue-800 border-b-solid ">
-        <h4 className="font-medium uppercase">{configuration.Type} user</h4>
+        <h6 className="font-medium uppercase">
+          {configuration.Type} | {configuration.OS} | {configuration.Processor} | {configuration.Variant}
+        </h6>
         <button type="button" onClick={handleClose} className="focus:outline-none">
           <img src={close} alt="" />
         </button>
@@ -53,6 +63,7 @@ const MetricsTypeModal = ({ handleClose, configuration }) => {
 export default MetricsTypeModal;
 
 MetricsTypeModal.propTypes = {
+  cardHeight: PropTypes.number,
   handleClose: PropTypes.func,
   configuration: PropTypes.object,
 };
