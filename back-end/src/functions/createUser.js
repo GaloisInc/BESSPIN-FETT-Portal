@@ -11,12 +11,12 @@ exports.handler = async (event, context) => {
   if (event.body) {
     body = JSON.parse(event.body);
   }
-  console.log(body);
+  console.log(body.username);
 
   try {
     await db.makeConnection();
     if (body.role === 'researcher') {
-      SsmHelper.putNewValue(
+      await SsmHelper.putNewValue(
         `/fettportal/credentials/${body.username}`,
         body.password
       );
@@ -41,6 +41,6 @@ exports.handler = async (event, context) => {
     return new Response({ items: data }).success();
   } catch (err) {
     console.log(err);
-    return new Response({ error: 'Could not retreive data' }).fail();
+    return new Response({ items: { Error: err } }).success();
   }
 };
