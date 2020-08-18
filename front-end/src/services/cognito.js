@@ -3,7 +3,7 @@
 import { Auth } from 'aws-amplify';
 
 // import Generator from 'unique-names-generator';
-import { createUser, disableDBUser } from './api/user';
+import { createUser, disableDBUser, getTeams } from './api/user';
 
 const generate = require('project-name-generator');
 
@@ -149,10 +149,13 @@ const createTeam = (username, password, region) =>
         cognito.adminCreateUser(params, async function(err, data) {
           if (err) {
             console.log(err, err.stack);
+            resolve({ username: `${username} - ${err}`, password });
           } else {
             const role = 'researcher';
             const response = await createUser(username, role, region, username, password);
-            if (response) {
+            if (response && response.Error) {
+              resolve({ username: `${username} - ${response.Error.message}`, password });
+            } else if (response) {
               resolve({ username, password });
             }
           }
@@ -166,6 +169,7 @@ const createTeam = (username, password, region) =>
 
 export const createTeams = async teamNumber => {
   try {
+    const currTeams = await getTeams();
     const teamCreation = [];
     for (let i = 0; i < teamNumber; i += 1) {
       // const team = createUser();
@@ -181,14 +185,20 @@ export const createTeams = async teamNumber => {
       });
       const region = i % 2 === 0 ? 'us-west-2' : 'us-east-1';
       let username;
-      while (!username || username.length > 14) {
+      const dups = team => team.UserName === username;
+      while (!username || username.length > 14 || currTeams.some(dups)) {
+        if (currTeams.some(dups)) {
+          console.log(username);
+        }
         const words = generate({ words: 2, alliterative: true }).raw;
         username = words.join('');
       }
+      // console.log('newName', username);
       const teamPromise = createTeam(username, password, region);
       teamCreation.push(teamPromise);
     }
     const teams = await Promise.all(teamCreation).then(response => response);
+    console.log(teamCreation.length);
     return teams;
   } catch (error) {
     throw new Error(error);

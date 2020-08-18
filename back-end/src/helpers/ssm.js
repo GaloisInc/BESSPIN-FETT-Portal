@@ -63,7 +63,7 @@ class SsmHelper {
         Description: `updated at ${new Date().toLocaleString()}`,
         Overwrite: true,
       };
-      await awsssm
+      return awsssm
         .putParameter(params)
         .promise()
         .catch(e => {
