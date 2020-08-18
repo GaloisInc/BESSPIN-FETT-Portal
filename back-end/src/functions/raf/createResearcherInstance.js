@@ -76,8 +76,9 @@ const getUserData = (f1Config, iName) => {
   pushd SSITH-FETT-Target
   pushd SSITH-FETT-Binaries
   git stash
-  popd    
-  git checkout develop
+  popd
+  git pull    
+  git checkout dev-portal
   git pull        
   git submodule update --init --recursive    
   pushd SSITH-FETT-Binaries    
