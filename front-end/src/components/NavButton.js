@@ -9,14 +9,20 @@ export default function NavButton({ icon, routeName, path, currentRoute }) {
     if (routeName === 'broadcast') {
       return (
         <div className="pr-3 ml-3 md:ml-1">
-          <ChatBubbleOutlineIcon style={{ fontSize: 'calc(10px + (15 - 10) * ((100vw - 600px) / (2560 - 600)))' }} />
+          <ChatBubbleOutlineIcon
+            className="align-middle"
+            style={{ fontSize: 'calc(10px + (20 - 10) * ((100vw - 600px) / (2560 - 600)))' }}
+          />
         </div>
       );
     }
     if (routeName === 'metrics') {
       return (
         <div className="pr-3 ml-3 md:ml-1">
-          <AssessmentOutlinedIcon style={{ fontSize: 'calc(10px + (15 - 10) * ((100vw - 600px) / (2560 - 600)))' }} />
+          <AssessmentOutlinedIcon
+            className="align-middle"
+            style={{ fontSize: 'calc(10px + (20 - 10) * ((100vw - 600px) / (2560 - 600)))' }}
+          />
         </div>
       );
     }

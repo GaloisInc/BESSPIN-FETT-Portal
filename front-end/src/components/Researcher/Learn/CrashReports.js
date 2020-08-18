@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function CrashReports() {
   return (
-    <div className="h-full pt-6 pb-12 pl-12 pr-12">
+    <div className="pt-6 pb-12 pl-12 pr-12 overflow-y-scroll fettScroll" style={{ height: '85vh' }}>
       <h3 className="text-gray-200 uppercase">Crash Reports</h3>
       <p className="pt-4 text-gray-200 ">
         The purpose of this document is to give explicit criteria to help researchers understand when one of the SSITH
@@ -17,25 +17,25 @@ export default function CrashReports() {
           In particular a TFTP client will report a time-out. For example:
         </p>
         <p className=" pl-1 ml-4 text-gray-600 bg-gray-200 text-sm border border-gray-500 border-b-1">
-          [centos@ip-192-168-0-72 assets]$ tftp -m binary 172.16.0.2 -c put ota.htm.sig
+          <code>[centos@ip-192-168-0-72 assets]$ tftp -m binary 172.16.0.2 -c put ota.htm.sig</code>
         </p>
         <p className=" pl-1 ml-4 text-gray-600 bg-gray-200 text-sm border border-gray-500 border-b-1">
-          client: timed out
+          <code>client: timed out</code>
         </p>
         <p className=" pl-1 ml-4 text-gray-600 bg-gray-200 text-sm border border-gray-500 border-b-1">
-          [centos@ip-192-168-0-72 assets]$
+          <code>[centos@ip-192-168-0-72 assets]$</code>
         </p>
         <p className="pt-4 text-gray-200 text-sm">
           An HTTP client will respond with either a time-out or "No route to host" message. For example:
         </p>
         <p className=" pl-1 ml-4 text-gray-600 bg-gray-200 text-sm border border-gray-500 border-b-1">
-          [centos@ip-192-168-0-72 assets]$ curl -i http://172.16.0.2:81/ota.htm
+          <code>[centos@ip-192-168-0-72 assets]$ curl -i http://172.16.0.2:81/ota.htm</code>
         </p>
         <p className=" pl-1 ml-4 text-gray-600 bg-gray-200 text-sm border border-gray-500 border-b-1">
-          curl: (7) Failed connect to 172.16.0.2:81; No route to host
+          <code>curl: (7) Failed connect to 172.16.0.2:81; No route to host</code>
         </p>
         <p className=" pl-1 ml-4 text-gray-600 bg-gray-200 text-sm border border-gray-500 border-b-1">
-          [centos@ip-192-168-0-72 assets]$
+          <code>[centos@ip-192-168-0-72 assets]$</code>
         </p>
       </div>
       <div className="mt-4">
@@ -54,25 +54,52 @@ export default function CrashReports() {
           unrecoverable. What this looks like depends on which application crashes.
         </p>
         <p className="pt-4 text-sm text-gray-200 font-sm">
-          If <span className="text-gray-600 bg-gray-200 px-1">nginx</span> crashes, then the researcher will be
-          completely unable to access any of the voting pages. Any attempted connections on ports 80 and 443 will be
-          refused. This can be fixed by restarting the <span className="text-gray-600 bg-gray-200 px-1">nginx</span>{' '}
-          service (<span className="text-gray-600 bg-gray-200 px-1">systemctl restart nginx.service</span>)
+          If{' '}
+          <span className="text-gray-600 bg-gray-200 px-1">
+            <code>nginx</code>
+          </span>{' '}
+          crashes, then the researcher will be completely unable to access any of the voting pages. Any attempted
+          connections on ports 80 and 443 will be refused. This can be fixed by restarting the{' '}
+          <span className="text-gray-600 bg-gray-200 px-1">
+            <code>nginx</code>
+          </span>{' '}
+          service (
+          <span className="text-gray-600 bg-gray-200 px-1">
+            <code>systemctl restart nginx.service</code>
+          </span>
+          )
         </p>
         <p className="pt-4 text-sm text-gray-200 font-sm">
-          If <span className="text-gray-600 bg-gray-200 px-1">kfcgi</span> crashes and{' '}
-          <span className="text-gray-600 bg-gray-200 px-1">nginx</span> is still running, then it will still be possible
-          to view the static pages on the voting app, but anything beyond that like trying to log in will result in a
-          502.
+          If{' '}
+          <span className="text-gray-600 bg-gray-200 px-1">
+            <code>kfcgi</code>
+          </span>{' '}
+          crashes and{' '}
+          <span className="text-gray-600 bg-gray-200 px-1">
+            <code>nginx</code>
+          </span>{' '}
+          is still running, then it will still be possible to view the static pages on the voting app, but anything
+          beyond that like trying to log in will result in a 502.
         </p>
         <p className="pt-4 text-sm text-gray-200 font-sm">
-          <span className="text-gray-600 bg-gray-200 px-1">nginx</span> can be restarted by root after a crash by
-          running <span className="text-gray-600 bg-gray-200 px-1">systemctl restart nginx.service</span>. It is also
-          possible to manually start <span className="text-gray-600 bg-gray-200 px-1">kfcgi</span> by running:
+          <span className="text-gray-600 bg-gray-200 px-1">
+            <code>nginx</code>
+          </span>{' '}
+          can be restarted by root after a crash by running{' '}
+          <span className="text-gray-600 bg-gray-200 px-1">
+            <code>systemctl restart nginx.service</code>
+          </span>
+          . It is also possible to manually start{' '}
+          <span className="text-gray-600 bg-gray-200 px-1">
+            <code>kfcgi</code>
+          </span>{' '}
+          by running:
         </p>
         <p className=" pl-1 ml-4 text-gray-600 bg-gray-200 text-sm border border-gray-500 border-b-1">
-          /usr/local/sbin/kfcgi -s /var/www/run/httpd.sock -U www-data -u www-data -p / -- /var/www/cgi-bin/bvrs
-          /var/www/data/bvrs.db
+          <code>
+            /usr/local/sbin/kfcgi -s /var/www/run/httpd.sock -U www-data -u www-data -p / -- /var/www/cgi-bin/bvrs
+            /var/www/data/bvrs.db
+          </code>
         </p>
       </div>
       <div className="mt-4">
@@ -106,13 +133,13 @@ export default function CrashReports() {
           An HTTP client will respond with either a time-out or "No route to host" message. For example
         </p>
         <p className=" pl-1 ml-4 text-gray-600 bg-gray-200 text-sm border border-gray-500 border-b-1">
-          [centos@ip-192-168-0-72 assets]$ curl -i http://172.16.0.2:9443/help
+          <code>[centos@ip-192-168-0-72 assets]$ curl -i http://172.16.0.2:9443/help</code>
         </p>
         <p className=" pl-1 ml-4 text-gray-600 bg-gray-200 text-sm border border-gray-500 border-b-1">
-          curl: (7) Failed connect to 172.16.0.2:9443; No route to host
+          <code>curl: (7) Failed connect to 172.16.0.2:9443; No route to host</code>
         </p>
         <p className=" pl-1 ml-4 text-gray-600 bg-gray-200 text-sm border border-gray-500 border-b-1">
-          [centos@ip-192-168-0-72 assets]$
+          <code>[centos@ip-192-168-0-72 assets]$</code>
         </p>
         <p className="pt-4 text-gray-200 text-sm">
           Additionally, a healthy instance of this CPU type is expected to respond to ping requests, so this can be used
@@ -146,25 +173,25 @@ export default function CrashReports() {
           In particular a TFTP client will report a time-out. For example:
         </p>
         <p className=" pl-1 ml-4 text-gray-600 bg-gray-200 text-sm border border-gray-500 border-b-1">
-          [centos@ip-192-168-0-72 assets]$ tftp -m binary 172.16.0.2 -c put ota.htm.sig
+          <code>[centos@ip-192-168-0-72 assets]$ tftp -m binary 172.16.0.2 -c put ota.htm.sig</code>
         </p>
         <p className=" pl-1 ml-4 text-gray-600 bg-gray-200 text-sm border border-gray-500 border-b-1">
-          client: timed out
+          <code>client: timed out</code>
         </p>
         <p className=" pl-1 ml-4 text-gray-600 bg-gray-200 text-sm border border-gray-500 border-b-1">
-          [centos@ip-192-168-0-72 assets]$
+          <code>[centos@ip-192-168-0-72 assets]$</code>
         </p>
         <p className="pt-4 text-gray-200 text-sm">
           An HTTP client will respond with either a time-out or "No route to host" message. For example:
         </p>
         <p className=" pl-1 ml-4 text-gray-600 bg-gray-200 text-sm border border-gray-500 border-b-1">
-          [centos@ip-192-168-0-72 assets]$ curl -i http://172.16.0.2:81/ota.htm
+          <code>[centos@ip-192-168-0-72 assets]$ curl -i http://172.16.0.2:81/ota.htm</code>
         </p>
         <p className=" pl-1 ml-4 text-gray-600 bg-gray-200 text-sm border border-gray-500 border-b-1">
-          curl: (7) Failed connect to 172.16.0.2:81; No route to host
+          <code>curl: (7) Failed connect to 172.16.0.2:81; No route to host</code>
         </p>
         <p className=" pl-1 ml-4 text-gray-600 bg-gray-200 text-sm border border-gray-500 border-b-1">
-          [centos@ip-192-168-0-72 assets]$
+          <code>[centos@ip-192-168-0-72 assets]$</code>
         </p>
       </div>
       <div className="mt-4">
@@ -183,25 +210,52 @@ export default function CrashReports() {
           unrecoverable. What this looks like depends on which application crashes.
         </p>
         <p className="pt-4 text-sm text-gray-200 font-sm">
-          If <span className="text-gray-600 bg-gray-200 px-1">nginx</span> crashes, then the researcher will be
-          completely unable to access any of the voting pages. Any attempted connections on ports 80 and 443 will be
-          refused. This can be fixed by restarting the <span className="text-gray-600 bg-gray-200 px-1">nginx</span>{' '}
-          service (<span className="text-gray-600 bg-gray-200 px-1">systemctl restart nginx.service</span>)
+          If{' '}
+          <span className="text-gray-600 bg-gray-200 px-1">
+            <code>nginx</code>
+          </span>{' '}
+          crashes, then the researcher will be completely unable to access any of the voting pages. Any attempted
+          connections on ports 80 and 443 will be refused. This can be fixed by restarting the{' '}
+          <span className="text-gray-600 bg-gray-200 px-1">
+            <code>nginx</code>
+          </span>{' '}
+          service (
+          <span className="text-gray-600 bg-gray-200 px-1">
+            <code>systemctl restart nginx.service</code>
+          </span>
+          )
         </p>
         <p className="pt-4 text-sm text-gray-200 font-sm">
-          If <span className="text-gray-600 bg-gray-200 px-1">kfcgi</span> crashes and{' '}
-          <span className="text-gray-600 bg-gray-200 px-1">nginx</span> is still running, then it will still be possible
-          to view the static pages on the voting app, but anything beyond that like trying to log in will result in a
-          502.
+          If{' '}
+          <span className="text-gray-600 bg-gray-200 px-1">
+            <code>kfcgi</code>
+          </span>{' '}
+          crashes and{' '}
+          <span className="text-gray-600 bg-gray-200 px-1">
+            <code>nginx</code>
+          </span>{' '}
+          is still running, then it will still be possible to view the static pages on the voting app, but anything
+          beyond that like trying to log in will result in a 502.
         </p>
         <p className="pt-4 text-sm text-gray-200 font-sm">
-          <span className="text-gray-600 bg-gray-200 px-1">nginx</span> can be restarted by root after a crash by
-          running <span className="text-gray-600 bg-gray-200 px-1">systemctl restart nginx.service</span>. It is also
-          possible to manually start <span className="text-gray-600 bg-gray-200 px-1">kfcgi</span> by running:
+          <span className="text-gray-600 bg-gray-200 px-1">
+            <code>nginx</code>
+          </span>{' '}
+          can be restarted by root after a crash by running{' '}
+          <span className="text-gray-600 bg-gray-200 px-1">
+            <code>systemctl restart nginx.service</code>
+          </span>
+          . It is also possible to manually start{' '}
+          <span className="text-gray-600 bg-gray-200 px-1">
+            <code>kfcgi</code>
+          </span>{' '}
+          by running:
         </p>
         <p className=" pl-1 ml-4 text-gray-600 bg-gray-200 text-sm border border-gray-500 border-b-1">
-          /usr/local/sbin/kfcgi -s /var/www/run/httpd.sock -U www-data -u www-data -p / -- /var/www/cgi-bin/bvrs
-          /var/www/data/bvrs.db
+          <code>
+            /usr/local/sbin/kfcgi -s /var/www/run/httpd.sock -U www-data -u www-data -p / -- /var/www/cgi-bin/bvrs
+            /var/www/data/bvrs.db
+          </code>
         </p>
       </div>
       <div className="mt-4">
