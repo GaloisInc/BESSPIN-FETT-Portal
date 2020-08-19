@@ -214,7 +214,7 @@ exports.handler = async (event, context) => {
     results.spinups = spinupsTotal[0].Spinups;
 
     const spinupsTotalByType = await db.query(
-      `SELECT e.Configuration_FK, count(Configuration_FK) AS Count, ic.Type, ic.Processor, ic.OS, ic.Variant 
+      `SELECT e.Configuration_FK, count(Configuration_FK) AS Count, ic.Type, ic.Processor, ic.OS, ic.Variant, SUM(e.ResetCount) As ResetCounts 
         FROM Environment as e
           JOIN InstanceConfiguration as ic 
             ON ic.Id = e.Configuration_Fk

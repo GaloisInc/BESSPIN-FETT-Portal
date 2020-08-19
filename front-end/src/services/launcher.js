@@ -26,9 +26,7 @@ export const ec2Launcher = async configuration =>
 export const ec2StatusUpdate = async (configuration, newStatus) =>
   new Promise(async (resolve, reject) => {
     const environmentRecord = {
-      Id: configuration.Id,
-      Status: configuration.Status,
-      F1EnvironmentId: configuration.F1EnvironmentId,
+      ...configuration,
     };
     console.log(environmentRecord);
     try {
