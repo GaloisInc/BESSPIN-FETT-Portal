@@ -8,7 +8,7 @@ def main(runs, instance_delay):
     # Add header to last results.
     with open("results.txt", "a") as f:
         now = datetime.now()
-        f.write(f"\n ===== NEW RUN AT [ { now.strftime("%H:%M:%S") } ] =====\n\n")
+        f.write(f"\n ===== NEW RUN AT [ { now.strftime('%H:%M:%S') } ] =====\n\n")
         f.close()
 
     # Remove last log.
@@ -19,9 +19,7 @@ def main(runs, instance_delay):
     try:
         # Assemble list of user accounts from file.
         print_and_log(
-            "message", 
-            f"[ { os.getpid() } @ { ct() } ]",
-            f"[ Driver ] Started",
+            "message", f"[ { os.getpid() } @ { ct() } ]", f"[ Driver ] Started",
         )
         run_names = []
 
@@ -50,33 +48,32 @@ def main(runs, instance_delay):
         try:
             driver = webdriver.Chrome()
             driver.get("https://fett.securehardware.org/")
-        except:
+        except Exception as exc:
             print_and_log(
                 "error",
                 f"[ { os.getpid() } @ { ct() } ]",
                 f"[ Driver ] ERROR: Could not start webdriver.",
+                exc,
             )
             exit()
 
-        log_in(driver, accounts[0][0], accounts[0][1])
+        login(driver, accounts[0][0], accounts[0][1])
 
         # Logged in OK, let's check the options for launches
         # Click OK to the popup that appears
         print_and_log(
-            "message",
-            f"[ { os.getpid() } @ { ct() } ]",
-            f"[ Driver ] Closing Popup",
+            "message", f"[ { os.getpid() } @ { ct() } ]", f"[ Driver ] Closing Popup",
         )
 
         ok_button_xpath = (
             '//*[@id="root"]/div/div/div[2]/div[2]/div/div/div[1]/div[1]/button'
         )
 
-        wait_for_xpath_click(ok_button_xpath)
+        wait_for_xpath_click(driver, ok_button_xpath)
 
         # Gather table of launch candidates
         table_xpath = "//*[@id='root']/div/div/div[2]/div[2]/div/div/div/div[2]/div/div/div/div/table/tbody"
-        wait_for_xpath(table_xpath)
+        table = wait_for_xpath(driver, table_xpath)
 
         rows = table.find_elements(By.TAG_NAME, "tr")
 
@@ -88,7 +85,7 @@ def main(runs, instance_delay):
             tl = []
 
             # The name will be these fields (the last one is the launch button)
-            for c in col[0:4]:
+            for c in col[0:-1]:
                 tl.append(c.text)
             run_names.append(tl)
 
@@ -99,25 +96,22 @@ def main(runs, instance_delay):
         )
         [print_and_log("message", "", "\t" + "- " + "-".join(x)) for x in run_names]
 
-    except:
+    except Exception as exc:
 
         print_and_log(
             "error",
             f"[ { os.getpid() } @ { ct() } ]",
             f"[ Driver ] ERROR: Failed to gather list of launch candidates.",
+            exc,
         )
         print_and_log(
-            "message",
-            f"[ { os.getpid() } @ { ct() } ]",
-            f"[ Driver ] Closing Driver",
+            "message", f"[ { os.getpid() } @ { ct() } ]", f"[ Driver ] Closing Driver",
         )
         driver.close()
         exit()
 
     print_and_log(
-        "message",
-        f"[ { os.getpid() } @ { ct() } ]",
-        f"[ Driver ] Closing Driver",
+        "message", f"[ { os.getpid() } @ { ct() } ]", f"[ Driver ] Closing Driver",
     )
     driver.close()
 

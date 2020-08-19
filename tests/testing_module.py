@@ -19,29 +19,42 @@ def ct():
     return now.strftime("%H:%M:%S")
 
 
-def print_and_log(type, header, text):
+def format_exc(exc):
+    """ format the exception for printing """
+    try:
+        return f"<{exc.__class__.__name__}>: {exc}"
+    except:
+        return "<Non-recognized Exception>"
+
+
+def print_and_log(type, header, text, exc=None):
     # log
-    with open("log.txt", "a") as f:
-        f.write(f"{ header } { text }\n")
-        f.close()
+    log(f"{ header } { text }")
 
     # print in color
     if type == "error":
-        print(colored(header, "red") + text)
+        print(f"{ colored(header, 'red') } { text }\n{ format_exc(exc) }")
     if type == "message":
-        print(colored(header, "green") + text)
+        print(f"{ colored(header, 'green') } { text }")
     if type == "command":
-        print(colored(header, "cyan") + text)
+        print(f"{ colored(header, 'cyan') } { text }")
     if type == "warning":
-        print(colored(header, "yellow") + text)
+        print(f"{ colored(header, 'yellow') } { text }")
     if type == "special":
-        print(colored(header, "magenta") + text)
+        print(f"{ colored(header, 'magenta') } { text }")
+
+
+def log(text):
+    with open("log.txt", "a") as f:
+        f.write(text)
+        f.write("\n")
+        f.close()
 
 
 def write_results(name, string):
     with open("results.txt", "a") as f:
         now = datetime.now()
-        f.write(f"[ { now.strftime("%H:%M:%S") } ] : { name } : { string }\n")
+        f.write(f"[ { now.strftime('%H:%M:%S') } ] : { name } : { string }\n")
         f.close()
 
 
@@ -80,20 +93,25 @@ def wait_for_xpath_text(driver, xpath, wait=100):
 
 
 def expect_wait_status(
-    driver, 
-    status_xpath, 
-    expected_terminal_status, 
-    expected_intermediary_status
+    name,
+    un,
+    driver,
+    status_xpath,
+    expected_terminal_status,
+    expected_intermediary_status,
 ):
-    status = wait_for_xpath_text(status_xpath)
+    status = wait_for_xpath_text(driver, status_xpath)
 
-    while not status == expected_terminal_status:
+    while not status.upper() == expected_terminal_status.upper():
+        log(
+            f"[ { os.getpid() } @ { ct() } ] Polling found state of { name } as { status }."
+        )
         time.sleep(2)
-        if status != expected_intermediary_status:
+        if status.upper() != expected_intermediary_status.upper():
             print_and_log(
                 "error",
                 f"[ { os.getpid() } @ { ct() } ]",
-                f"ERROR: Instance { name } using account { un } encountered status: { status } as opposed to expected { expected_intermediary_status }"
+                f"ERROR: Instance { name } using account { un } encountered status: { status } as opposed to expected { expected_intermediary_status }",
             )
             write_results(
                 name,
@@ -102,7 +120,7 @@ def expect_wait_status(
             driver.close()
             exit()
         try:
-            status = wait_for_xpath_text(status_xpath)
+            status = wait_for_xpath_text(driver, status_xpath)
         except:
             print_and_log(
                 "warning",
