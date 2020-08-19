@@ -5,26 +5,10 @@ from testing_module import *
 
 def main(index, name, un, pw):
 
-    # try:
-    #     index = int(sys.argv[1])
-    #     name = sys.argv[2]
-    #     un = sys.argv[3]
-    #     pw = sys.argv[4]
-    # except:
-    #     print_and_log(
-    #         "error",
-    #         "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-    #         "ERROR: Invalid arguments provided to child.",
-    #     )
-    #     write_results(name, "FAILED: invalid arguments")
-    #     exit()
-
     # Start Webdriver
     try:
         print_and_log(
-            "message",
-            "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-            "Starting WebDriver",
+            "message", f"[ { os.getpid() } @ { ct() } ]", f"Starting WebDriver",
         )
         options = webdriver.ChromeOptions()
         options.add_argument("--start-maximized")
@@ -35,8 +19,8 @@ def main(index, name, un, pw):
     except:
         print_and_log(
             "error",
-            "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-            "ERROR: Child failed to open Webdriver, likely because too many are open",
+            f"[ { os.getpid() } @ { ct() } ]",
+            f"ERROR: Child failed to open Webdriver, likely because too many are open",
         )
         write_results(name, "FAILED: could not open WebDriver")
         driver.close()
@@ -46,27 +30,17 @@ def main(index, name, un, pw):
     try:
         print_and_log(
             "message",
-            "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-            "Started WebDriver, Logging In",
+            f"[ { os.getpid() } @ { ct() } ]",
+            f"Started WebDriver, Logging In",
         )
 
-        username = driver.find_element_by_id("username")
-        username.clear()
-        username.send_keys(un)
+        login(driver, un, pw)
 
-        password = driver.find_element_by_id("password")
-        password.clear()
-        password.send_keys(pw)
-
-        driver.find_element_by_css_selector("button").click()
     except:
         print_and_log(
             "error",
-            "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-            "ERROR: Child failed to log in, likely because of bad credentials: "
-            + str(un)
-            + " "
-            + str(pw),
+            f"[ { os.getpid() } @ { ct() } ]",
+            f"ERROR: Child failed to log in, likely because of bad credentials: { un }, { pw }",
         )
         write_results(name, "FAILED: logging in failed")
         driver.close()
@@ -75,170 +49,62 @@ def main(index, name, un, pw):
     # Get table
     try:
         print_and_log(
-            "message",
-            "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-            "Logged In, Getting Table",
+            "message", f"[ { os.getpid() } @ { ct() } ]", f"Logged In, Getting Table",
         )
-        WebDriverWait(driver, 100).until(
-            EC.presence_of_element_located(
-                (
-                    By.XPATH,
-                    '//*[@id="root"]/div/div/div[2]/div[2]/div/div/div[1]/div[1]/button',
-                )
-            )
-        )
-        driver.find_element_by_xpath(
+
+        # Wait for presence and click OK button
+        ok_button_xpath = (
             '//*[@id="root"]/div/div/div[2]/div[2]/div/div/div[1]/div[1]/button'
-        ).click()
+        )
+
+        wait_for_xpath_click(ok_button_xpath)
 
         # Click launch
         print_and_log(
-            "message",
-            "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-            "Launching Instance",
+            "message", f"[ { os.getpid() } @ { ct() } ]", f"Launching Instance",
         )
-        button = WebDriverWait(driver, 100).until(
-            EC.presence_of_element_located(
-                (
-                    By.XPATH,
-                    "//*[@id='root']/div/div/div[2]/div[2]/div/div/div/div[2]/div/div/div/div/table/tbody/tr["
-                    + str(index + 1)
-                    + "]/td[5]/button",
-                )
-            )
-        )
-        button.click()
+
+        launch_button_xpath = f"//*[@id='root']/div/div/div[2]/div[2]/div/div/div/div[2]/div/div/div/div/table/tbody/tr[{ index + 1}]/td[5]/button"
+        wait_for_xpath_click(launch_button_xpath)
 
         # click OK on the time notice dialog
-        button = WebDriverWait(driver, 100).until(
-            EC.presence_of_element_located(
-                (By.XPATH, "/html/body/div[2]/div[3]/div[3]/button")
-            )
-        )
-        button.click()
+        ok_button_xpath = "/html/body/div[2]/div[3]/div[3]/button"
+        wait_for_xpath_click(ok_button_xpath)
+
     except:
         print_and_log(
             "error",
-            "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-            "ERROR: Portal could not load table of launch candidates for user: "
-            + str(un)
-            + " - consider deleting them from accts.txt",
+            f"[ { os.getpid() } @ { ct() } ]",
+            f"ERROR: Portal could not load table of launch candidates for user: { un } - consider deleting them from accts.txt",
         )
-        write_results(name, "FAILED: portal hung on user " + un)
+        write_results(name, f"FAILED: portal hung on user { un }")
         driver.close()
         exit()
 
     # Wait for Provisioning to Start
     print_and_log(
-        "message",
-        "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-        "Instance Launched, Queueing",
+        "message", f"[ { os.getpid() } @ { ct() } ]", f"Instance Launched, Queueing",
     )
-    status = (
-        WebDriverWait(driver, 100)
-        .until(
-            EC.presence_of_element_located(
-                (
-                    By.XPATH,
-                    "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[5]",
-                )
-            )
-        )
-        .text
-    )
-    while not status == "provisioning":
-        time.sleep(2)
-        if status != "queueing":
-            print_and_log(
-                "error",
-                "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-                "ERROR: Instance "
-                + str(name)
-                + " using account "
-                + str(un)
-                + " encountered status '"
-                + status
-                + "' as opposed to expected 'queueing'",
-            )
-            write_results(
-                name,
-                "FAILED: terminated before made it to provisioning during queueing",
-            )
-            driver.close()
-            exit()
-        try:
-            status = (
-                WebDriverWait(driver, 100)
-                .until(
-                    EC.presence_of_element_located(
-                        (
-                            By.XPATH,
-                            "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[5]",
-                        )
-                    )
-                )
-                .text
-            )
-        except:
-            print_and_log(
-                "warning",
-                "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-                "WARNING: Failed to get status once in Queueing",
-            )
+    status_xpath = "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[5]"
+
+    expect_wait_status(status_xpath, "provisioning", "queueing")
 
     # Provisioning Started
     t0 = time.time()
     print_and_log(
         "message",
-        "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-        "First Time Captured at " + str(ct()) + ", Instance Began Provisioning",
+        f"[ { os.getpid() } @ { ct() } ]",
+        f"First Time Captured at { ct() }, Instance Began Provisioning",
     )
 
-    while not status == "running":
-        time.sleep(2)
-        if status != "provisioning":
-            print_and_log(
-                "error",
-                "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-                "ERROR: Instance "
-                + str(name)
-                + " using account "
-                + str(un)
-                + " encountered status '"
-                + status
-                + "' as opposed to expected 'provisioning'",
-            )
-            write_results(
-                name, "FAILED: terminated before made it to running during provisioning"
-            )
-            driver.close()
-            exit()
-        try:
-            status = (
-                WebDriverWait(driver, 100)
-                .until(
-                    EC.presence_of_element_located(
-                        (
-                            By.XPATH,
-                            "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[5]",
-                        )
-                    )
-                )
-                .text
-            )
-        except:
-            print_and_log(
-                "warning",
-                "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-                "WARNING: Failed to get status once in Provisioning",
-            )
+    expect_wait_status(status_xpath, "running", "provisioning")
 
     # Running
     t1 = time.time()
     print_and_log(
         "message",
-        "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-        "Second Time Captured at " + str(ct()) + ", Instance Started",
+        f"[ { os.getpid() } @ { ct() } ]",
+        f"Second Time Captured at { ct() }, Instance Started",
     )
 
     # Try to terminate instance
@@ -246,27 +112,17 @@ def main(index, name, un, pw):
 
         print_and_log(
             "message",
-            "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-            "Terminating Instance, Writing to File",
+            f"[ { os.getpid() } @ { ct() } ]",
+            f"Terminating Instance, Writing to File",
         )
-        WebDriverWait(driver, 100).until(
-            EC.presence_of_element_located(
-                (
-                    By.XPATH,
-                    "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[6]/button",
-                )
-            )
-        )
-        driver.find_element_by_xpath(
-            "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[6]/button"
-        ).click()
 
-        WebDriverWait(driver, 100).until(
-            EC.presence_of_element_located(
-                (By.XPATH, "/html/body/div[3]/div[3]/div[7]/button")
-            )
-        )
-        driver.find_element_by_xpath("/html/body/div[3]/div[3]/div[7]/button").click()
+        # Settings button
+        settings_button_xpath = "//*[@id='root']/div/div/div[2]/div[2]/div/div/div[1]/div[2]/div/div/div/div/table/tbody/tr/td[6]/button"
+        wait_for_xpath_click(settings_button_xpath)
+
+        # Terminate button
+        terminate_button_xpath = "/html/body/div[3]/div[3]/div[7]/button"
+        wait_for_xpath_click(terminate_button_xpath)
 
         # Possibly fix issue where clicking terminate does not affect instance
         time.sleep(10)
@@ -275,17 +131,15 @@ def main(index, name, un, pw):
 
         print_and_log(
             "error",
-            "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-            "ERROR: Failed to terminate; Writing to file",
+            f"[ { os.getpid() } @ { ct() } ]",
+            f"ERROR: Failed to terminate; Writing to file",
         )
 
     # Write Results Out
     write_results(name, str(t1 - t0))
 
     print_and_log(
-        "message",
-        "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-        "Ending Process.",
+        "message", f"[ { os.getpid() } @ { ct() } ]", f"Ending Process.",
     )
     driver.close()
     exit()
@@ -295,8 +149,8 @@ if __name__ == "__main__":
 
     print_and_log(
         "command",
-        "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-        "Child Started with Arguments: " + str(sys.argv[1:5]),
+        f"[ { os.getpid() } @ { ct() } ]",
+        f"Child Started with Arguments: { str(sys.argv[1:5]) }",
     )
 
     # Parse Arguments

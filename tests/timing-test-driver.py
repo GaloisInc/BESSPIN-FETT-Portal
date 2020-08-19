@@ -8,28 +8,20 @@ def main(runs, instance_delay):
     # Add header to last results.
     with open("results.txt", "a") as f:
         now = datetime.now()
-        f.write("\n ===== NEW RUN AT [ " + now.strftime("%H:%M:%S") + "] =====\n\n")
+        f.write(f"\n ===== NEW RUN AT [ { now.strftime("%H:%M:%S") } ] =====\n\n")
         f.close()
 
     # Remove last log.
     if os.path.exists("log.txt"):
         os.remove("log.txt")
 
-    # # Parse CLI Args / default
-    # if len(sys.argv) < 3:
-    #     runs = 2
-    #     instance_delay = 20
-    # else:
-    #     runs = int(sys.argv[1])
-    #     instance_delay = int(sys.argv[2])
-
     # Catch failures in the process of gathering targets.
     try:
         # Assemble list of user accounts from file.
         print_and_log(
-            "message",
-            "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-            "[ Driver ] Started",
+            "message", 
+            f"[ { os.getpid() } @ { ct() } ]",
+            f"[ Driver ] Started",
         )
         run_names = []
 
@@ -43,16 +35,16 @@ def main(runs, instance_delay):
         ]
         print_and_log(
             "message",
-            "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-            "[ Driver ] Found " + str(len(accounts)) + " Accounts",
+            f"[ { os.getpid() } @ { ct() } ]",
+            f"[ Driver ] Found { str(len(accounts)) } Accounts",
         )
 
         # Open webpage and determine the combinations to run
         # Requires a log in first
         print_and_log(
             "message",
-            "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-            "[ Driver ] Logging In to Get Launch Candidates",
+            f"[ { os.getpid() } @ { ct() } ]",
+            f"[ Driver ] Logging In to Get Launch Candidates",
         )
 
         try:
@@ -61,49 +53,31 @@ def main(runs, instance_delay):
         except:
             print_and_log(
                 "error",
-                "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-                "[ Driver ] ERROR: Could not start webdriver.",
+                f"[ { os.getpid() } @ { ct() } ]",
+                f"[ Driver ] ERROR: Could not start webdriver.",
             )
             exit()
 
-        username = driver.find_element_by_id("username")
-        username.clear()
-        username.send_keys(accounts[0][0])
-
-        password = driver.find_element_by_id("password")
-        password.clear()
-        password.send_keys(accounts[0][1])
-
-        driver.find_element_by_css_selector("button").click()
+        log_in(driver, accounts[0][0], accounts[0][1])
 
         # Logged in OK, let's check the options for launches
         # Click OK to the popup that appears
         print_and_log(
             "message",
-            "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-            "[ Driver ] Closing Popup",
+            f"[ { os.getpid() } @ { ct() } ]",
+            f"[ Driver ] Closing Popup",
         )
-        WebDriverWait(driver, 100).until(
-            EC.presence_of_element_located(
-                (
-                    By.XPATH,
-                    '//*[@id="root"]/div/div/div[2]/div[2]/div/div/div[1]/div[1]/button',
-                )
-            )
-        )
-        driver.find_element_by_xpath(
+
+        ok_button_xpath = (
             '//*[@id="root"]/div/div/div[2]/div[2]/div/div/div[1]/div[1]/button'
-        ).click()
+        )
+
+        wait_for_xpath_click(ok_button_xpath)
 
         # Gather table of launch candidates
-        table = WebDriverWait(driver, 100).until(
-            EC.presence_of_element_located(
-                (
-                    By.XPATH,
-                    "//*[@id='root']/div/div/div[2]/div[2]/div/div/div/div[2]/div/div/div/div/table/tbody",
-                )
-            )
-        )
+        table_xpath = "//*[@id='root']/div/div/div[2]/div[2]/div/div/div/div[2]/div/div/div/div/table/tbody"
+        wait_for_xpath(table_xpath)
+
         rows = table.find_elements(By.TAG_NAME, "tr")
 
         # For each row in the table, break into items (row @ col)
@@ -120,8 +94,8 @@ def main(runs, instance_delay):
 
         print_and_log(
             "message",
-            "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-            "[ Driver ] Launch Candidates:",
+            f"[ { os.getpid() } @ { ct() } ]",
+            f"[ Driver ] Launch Candidates:",
         )
         [print_and_log("message", "", "\t" + "- " + "-".join(x)) for x in run_names]
 
@@ -129,21 +103,21 @@ def main(runs, instance_delay):
 
         print_and_log(
             "error",
-            "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-            "[ Driver ] ERROR: Failed to gather list of launch candidates.",
+            f"[ { os.getpid() } @ { ct() } ]",
+            f"[ Driver ] ERROR: Failed to gather list of launch candidates.",
         )
         print_and_log(
             "message",
-            "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-            "[ Driver ] Closing Driver",
+            f"[ { os.getpid() } @ { ct() } ]",
+            f"[ Driver ] Closing Driver",
         )
         driver.close()
         exit()
 
     print_and_log(
         "message",
-        "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-        "[ Driver ] Closing Driver",
+        f"[ { os.getpid() } @ { ct() } ]",
+        f"[ Driver ] Closing Driver",
     )
     driver.close()
 
@@ -166,8 +140,8 @@ def main(runs, instance_delay):
 
             print_and_log(
                 "command",
-                "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-                "[ Driver ] Calling a Child with Command: [" + " ".join(cmd) + "]",
+                f"[ { os.getpid() } @ { ct() } ]",
+                f"[ Driver ] Calling a Child with Command: [{ ' '.join(cmd) }]",
             )
 
             proc = Popen(cmd, stdin=None, stdout=None, stderr=None, close_fds=True)
@@ -176,16 +150,16 @@ def main(runs, instance_delay):
 
     print_and_log(
         "special",
-        "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-        "[ Driver ] Waiting for subprocesses to complete",
+        f"[ { os.getpid() } @ { ct() } ]",
+        f"[ Driver ] Waiting for subprocesses to complete",
     )
 
     exit_codes = [p.wait() for p in processes]
 
     print_and_log(
         "special",
-        "[ " + str(os.getpid()) + " @ " + str(ct()) + " ] ",
-        "[ Driver ] Subprocesses finished. Closing driver.",
+        f"[ { os.getpid() } @ { ct() } ]",
+        f"[ Driver ] Subprocesses finished. Closing driver.",
     )
 
     exit()
