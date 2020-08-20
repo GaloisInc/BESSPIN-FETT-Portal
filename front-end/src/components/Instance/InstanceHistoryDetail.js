@@ -15,7 +15,6 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
     setIsResetDisabled(true);
     setIsLoading(true);
     try {
-      console.log(environment);
       await ec2StatusUpdate(environment, newStatus);
       fetchEnvironments();
       setIsLoading(false);
