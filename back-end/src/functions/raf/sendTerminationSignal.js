@@ -48,14 +48,13 @@ const checkInstanceStatus = async (instanceId, region) => {
     .promise();
 };
 
-const stopInstance = async (instanceId, region) => {
+const terminateInstance = async (instanceId, region) => {
   const ec2 = new aws.EC2({ region });
   const params = {
     InstanceIds: [instanceId],
     DryRun: false,
-    Force: false,
   };
-  return ec2.stopInstances(params).promise();
+  return ec2.terminateInstances(params).promise();
 };
 
 exports.handler = async event => {
@@ -96,15 +95,15 @@ exports.handler = async event => {
     }
     if (running && running === 'running') {
       if (payload.Status === 'provisioning') {
-        await stopInstance(payload.InstanceId);
+        await terminateInstance(payload.InstanceId);
         await updateDBForTermined(payload.InstanceId, region);
       } else {
-        // send file to s3 to signal fett to stop instance
+        // send file to s3 to signal fett to terminate instance
         await sendFile(payload.InstanceId);
       }
     } else if (running && running === 'pending') {
-      // force an instance to stop with sdk
-      await stopInstance(payload.InstanceId);
+      // force an instance to terminate with sdk
+      await terminateInstance(payload.InstanceId);
     } else {
       // just update the DB
       await updateDBForTermined(payload.InstanceId, region);
