@@ -18,10 +18,9 @@ const cleanupInstance = (Id, F1Id, region) =>
       const params = {
         InstanceIds: [F1Id],
         DryRun: false,
-        Force: false,
       };
       return ec2
-        .stopInstances(params)
+        .terminateInstances(params)
         .promise()
         .then(res => {
           console.log(JSON.stringify(res));
