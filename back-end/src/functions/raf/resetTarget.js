@@ -17,11 +17,13 @@ const sendFile = async instanceId => {
   return s3.putObject(params).promise();
 };
 
-const updateStatusToDB = async instanceId => {
+const updateStatusToDB = async (instanceId, resetCount) => {
+  console.log(instanceId, resetCount);
+  const nextCount = parseInt(resetCount) + 1;
   await db.makeConnection();
   const data = await db.query(
-    `UPDATE Environment set Status = "resetting" WHERE F1EnvironmentId = :instanceId`,
-    { instanceId }
+    `UPDATE Environment set Status = "resetting", ResetCount = :resetCount WHERE F1EnvironmentId = :instanceId`,
+    { instanceId, resetCount: nextCount }
   );
   if (data.changedRows === 1) {
     const rowData = await db.query(
@@ -55,7 +57,10 @@ exports.handler = async event => {
   }
   try {
     const payload = JSON.parse(event.body);
-    const dbData = await updateStatusToDB(payload.InstanceId);
+    const dbData = await updateStatusToDB(
+      payload.InstanceId,
+      payload.ResetCount
+    );
     console.log(dbData);
     const region = dbData[0].Region;
     // first need to check region from Environment Table

@@ -78,7 +78,7 @@ const getUserData = (f1Config, iName) => {
   git stash
   popd
   git pull    
-  git checkout dev-portal
+  git checkout develop
   git pull        
   git submodule update --init --recursive    
   pushd SSITH-FETT-Binaries    
@@ -444,7 +444,7 @@ exports.handler = async event => {
       console.log('Error Writing instance information to DB');
       // If we have made it this far, the instance has been spun up but we had an error writing to the DB
       // that means that instance will be orphaned; lets terminate that instance so that doesn't happen
-      await ec2.stopInstances({ InstanceIds: [instanceId] }).promise();
+      await ec2.terminateInstances({ InstanceIds: [instanceId] }).promise();
       // rethrow the error so this SQS message gets retried
       throw e;
     }

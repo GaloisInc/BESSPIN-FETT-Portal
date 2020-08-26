@@ -130,7 +130,12 @@ export const resetTarget = async record =>
   new Promise(async (resolve, reject) => {
     fetch(`${BASE_API}/resetTarget`, {
       headers: await makeHeaders(),
-      body: JSON.stringify({ Id: record.Id, Status: record.Status, InstanceId: record.F1EnvironmentId }),
+      body: JSON.stringify({
+        Id: record.Id,
+        Status: record.Status,
+        InstanceId: record.F1EnvironmentId,
+        ResetCount: record.ResetCount,
+      }),
       method: 'PUT',
     })
       .then(handleErrors)

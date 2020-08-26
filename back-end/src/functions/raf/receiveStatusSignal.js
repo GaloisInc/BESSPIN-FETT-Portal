@@ -3,14 +3,13 @@ const { CloudWatch, Database, SsmHelper } = require('../../helpers');
 
 const db = new Database();
 const sqs = new aws.SQS();
-const stopInstance = async (instanceId, region) => {
+const terminateInstance = async (instanceId, region) => {
   const ec2 = new aws.EC2({ region });
   const params = {
     InstanceIds: [instanceId],
     DryRun: false,
-    Force: false,
   };
-  return ec2.stopInstances(params).promise();
+  return ec2.terminateInstances(params).promise();
 };
 const updateDBForTermination = async instanceId => {
   console.log('updating for termination');
@@ -63,7 +62,7 @@ exports.handler = async event => {
     if (signal === 'termination') {
       try {
         console.log('Message Output: ', message.instance);
-        await stopInstance(message.instance.id, envConf[0].Region);
+        await terminateInstance(message.instance.id, envConf[0].Region);
       } catch (e) {
         if (e.code === 'InvalidInstanceID.NotFound') {
           console.log('msg', e.message);
@@ -84,7 +83,7 @@ exports.handler = async event => {
     } else if (signal === 'deployment' && message.job.status === 'failure') {
       // tear down instance and start over
       try {
-        await stopInstance(message.instance.id);
+        await terminateInstance(message.instance.id);
       } catch (e) {
         if (e.code === 'InvalidInstanceID.NotFound') {
           console.log('msg', e.message);

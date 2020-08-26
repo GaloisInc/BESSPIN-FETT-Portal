@@ -58,6 +58,8 @@ provider:
         - "ce:*"
         - "CloudWatch:PutDashboard"
         - "CloudWatch:DeleteDashboards"
+        - "cognito-identity:*"
+        - "cognito-idp:*"
       Resource: '*'
     - Effect: "Allow"
       Action:
@@ -95,7 +97,8 @@ provider:
     PORTAL_TO_INSTANCE_TERMINATION_QUEUE_URL: ${file(cloudformation/outputs.yml):Outputs.PortalToInstanceTerminationQueueUrl.Value}
     PORTAL_TO_INSTANCE_TERMINATION_QUEUE_ARN: ${file(cloudformation/outputs.yml):Outputs.PortalToInstanceTerminationQueueArn.Value}
     INSTANCE_STATUS_QUEUE_URL: ${file(cloudformation/outputs.yml):Outputs.InstanceStatusQueueUrl.Value}
-
+    COGNITO_USER_POOL_DEV: "us-west-2_TZpbYY6KB"
+    COGNITO_USER_POOL_MASTER: "us-west-2_lbLI2FsNd"
 
 custom:
   vpcId: ${file(config/config.${self:provider.stage}.json):vpcId}
@@ -465,7 +468,7 @@ functions:
     timeout: 90
   usersTest:
     handler: src/functions/usersTest.handler
-    timeout: 90
+    timeout: 300
   reportOutMetrics:
     handler: src/functions/reportOutMetrics.handler
     timeout: 120

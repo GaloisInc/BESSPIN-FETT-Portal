@@ -50,7 +50,10 @@ export default function AdminDash() {
             type.Variant
           }`}</p>
         </div>
-        <p className="text-base text-gray-200 pr-16">{type.Count}</p>
+        <div className="flex flex-row">
+          <p className="text-base text-gray-200 pr-16">{type.Count}</p>
+          {/* <p className="text-base text-gray-200 pr-8">({type.ResetCounts})</p> */}
+        </div>
       </button>
     ));
 
@@ -103,6 +106,7 @@ export default function AdminDash() {
               <div className="flex flex-row py-2 bg-blue-600">
                 <div className="w-full ml-8 mr-8 ">
                   <p className="text-base text-teal-500 uppercase">Launches By Type</p>
+                  {/* <p className="text-base text-teal-500 uppercase">Launches By Type (Resets By Type) </p> */}
                 </div>
               </div>
               <div>{spinupsByType}</div>
