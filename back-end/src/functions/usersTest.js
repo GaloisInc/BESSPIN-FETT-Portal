@@ -1,36 +1,65 @@
 /* eslint-disable no-plusplus */
 const aws = require('aws-sdk');
-const { Database, SsmHelper } = require('../helpers');
+const { Database } = require('../helpers');
 
 const db = new Database();
+const cognito = new aws.CognitoIdentityServiceProvider({
+  apiVersion: '2016-04-18',
+  region: 'us-west-2',
+});
 
-const checkSSM = user =>
-  new Promise(async (resolve, reject) => {
-    try {
-      const password = await SsmHelper.getParameter(
-        `/fettportal/credentials/${user.UserName}`
-      );
-      console.log(`PASSWORD RETRIEVED fOR ${user.UserName}`);
-      if (password) {
-        resolve('success');
+const deleteAccount = username =>
+  new Promise((resolve, reject) => {
+    setTimeout(async () => {
+      try {
+        const params = {
+          UserPoolId:
+            process.env.CURRENT_STAGE && process.env.CURRENT_STAGE === 'develop'
+              ? process.env.COGNITO_USER_POOL_DEV
+              : process.env.COGNITO_USER_POOL_MASTER,
+          Username: username,
+        };
+        const cognitoResponse = await cognito.adminDeleteUser(params).promise();
+        if (cognitoResponse) {
+          await db.query(`DELETE FROM User WHERE UserName = :username`, {
+            username,
+          });
+          resolve(`${username} deleted`);
+        }
+      } catch (error) {
+        reject(error);
       }
-    } catch (error) {
-      resolve(`error getting password for ${user.UserName}`);
-    }
+    }, 200);
   });
 
 exports.handler = async (event, context) => {
   context.callbackWaitsForEmptyEventLoop = false; /* eslint no-param-reassign: 0 */
-  const userPromises = [];
+  const { activeAccounts } = event;
   await db.makeConnection();
-  const users = await db.query(
+  const inactiveAccounts = [];
+  const accountsDeleted = [];
+
+  const dbAccounts = await db.query(
     `SELECT Id, UserName from User WHERE IsActive = true AND Role = 'researcher'`
   );
-  users.forEach(user => {
-    userPromises.push(checkSSM(user));
+
+  dbAccounts.forEach(account => {
+    if (activeAccounts.every(user => user !== account.UserName)) {
+      inactiveAccounts.push(account.UserName);
+    }
   });
-  await Promise.all(userPromises).then(res => console.log(JSON.stringify(res)));
-  console.log('TOTAL ACTIVE USERS', users.length);
-  // await Promise.all(userPromises.map(prom => prom.catch(() => undefined)));
-  // await Promise.all(initializerPromises).then(res => console.log(res));
+
+  console.log(inactiveAccounts);
+  console.log('TOTAL INACTIVE ACCOUNTS - ', inactiveAccounts.length);
+  console.log('TOTAL ACTIVE ACCOUNTS - ', activeAccounts.length);
+  console.log('ACTIVE RESEARCHERS - ', dbAccounts.length);
+  for (const account of inactiveAccounts) {
+    try {
+      const name = await deleteAccount(account);
+      accountsDeleted.push(name);
+    } catch (err) {
+      console.log('error deleting', account, err);
+    }
+  }
+  console.log(accountsDeleted);
 };
