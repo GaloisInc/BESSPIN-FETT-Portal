@@ -173,7 +173,6 @@ export default function AdminDash() {
         </div>
       </div>
       <Modal open={open} onClose={handleClose}>
-        {/* <UserModal handleClose={handleClose} sealectedUser={selectedUser} fetchUsers={fetchUsers} /> */}
         <MetricsTypeModal handleClose={handleClose} configuration={modalConfiguration} cardHeight={height - 400} />
       </Modal>
     </div>
