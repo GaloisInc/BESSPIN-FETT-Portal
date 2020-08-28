@@ -67,22 +67,20 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
         <p className="text-base text-200-gray">{environment.FPGAIp}</p>
       </div>
       <div className="flex flex-row items-center justify-end py-2 my-10 bg-blue-600">
-        {environment.Configuration_FK !== 5 && (
-          <button
-            className={`w-48 px-2 py-1 mr-10 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded ${
-              isLoading || isDisabled || isResetDisabled ? 'opacity-50 cursor-not-allowed' : ''
-            } ${
-              environment.Status !== 'running'
-                ? 'bg-gray-600 cursor-default'
-                : 'bg-gray-200 hover:bg-teal-500 hover:text-gray-200'
-            }`}
-            type="submit"
-            onClick={event => updateInstanceStatus(event, 'resetting')}
-            disabled={isLoading || isResetDisabled || isDisabled || environment.Status !== 'running'}
-          >
-            {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Reset Target'}
-          </button>
-        )}
+        <button
+          className={`w-48 px-2 py-1 mr-10 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded ${
+            isLoading || isDisabled || isResetDisabled ? 'opacity-50 cursor-not-allowed' : ''
+          } ${
+            environment.Status !== 'running'
+              ? 'bg-gray-600 cursor-default'
+              : 'bg-gray-200 hover:bg-teal-500 hover:text-gray-200'
+          }`}
+          type="submit"
+          onClick={event => updateInstanceStatus(event, 'resetting')}
+          disabled={isLoading || isResetDisabled || isDisabled || environment.Status !== 'running'}
+        >
+          {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Reset Target'}
+        </button>
         <button
           className={`w-48 px-2 py-1 mr-10 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded ${
             isLoading || isDisabled ? 'opacity-50 cursor-not-allowed' : ''
