@@ -11,7 +11,7 @@ export default function AdminDash() {
   const [open, setOpen] = React.useState(false);
   const [metrics, setMetrics] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [modalConfiguration, setModalConfiguration] = useState('');
+  const [modalConfiguration, setModalConfiguration] = useState({});
 
   const { height } = useWindowDimensions();
 
