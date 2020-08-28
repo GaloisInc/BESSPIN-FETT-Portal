@@ -12,7 +12,7 @@ import useWindowDimensions from '../../../services/useDimensions';
 const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = React.useState(false);
-  const [selectedUser, setSelectedUser] = useState('');
+  const [selectedUser, setSelectedUser] = useState({});
   const { height } = useWindowDimensions();
 
   useEffect(() => {
