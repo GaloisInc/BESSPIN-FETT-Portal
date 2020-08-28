@@ -5,7 +5,7 @@ import { hot } from 'react-hot-loader/root';
 import { Auth, Hub } from 'aws-amplify';
 import { withRouter } from 'react-router-dom';
 import { ThemeProvider } from '@material-ui/styles';
-import { withStyles, createMuiTheme, mergeClasses } from '@material-ui/core/styles';
+import { withStyles, createMuiTheme } from '@material-ui/core/styles';
 import { CircularProgress } from '@material-ui/core';
 import MainRouter from './containers/MainRouter';
 import { getMyUser } from './services/api/user';
@@ -58,8 +58,9 @@ class App extends React.Component {
   }
 
   async componentDidMount() {
-    const { history } = this.props;
+    const { history, location } = this.props;
     this.setState({ isAuthenticating: true });
+    this.pathname = location.pathname;
     try {
       await Auth.currentSession();
     } catch (error) {
@@ -89,9 +90,17 @@ class App extends React.Component {
         const { isAdmin } = this.state;
         await this.setState({ isLoggedIn: true, isAuthenticating: false });
         if (isAdmin) {
-          history.push('/adminportal');
+          const path =
+            this.pathname.includes('bounty') || this.pathname === '/'
+              ? 'dashboard'
+              : this.pathname.replace(/\/?adminportal\//g, '').replace(/\/$/g, '');
+          history.push(`/adminportal/${path}`);
         } else {
-          history.push('/bountyportal');
+          const path =
+            this.pathname.includes('admin') || this.pathname === '/'
+              ? 'dashboard'
+              : this.pathname.replace(/\/?bountyportal\//g, '').replace(/\/$/g, '');
+          history.push(`/bountyportal/${path}`);
         }
       }
     } catch (error) {
@@ -114,7 +123,11 @@ class App extends React.Component {
     return (
       <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>
         <ThemeProvider theme={theme}>
-          {!isAuthenticating && (
+          {isAuthenticating ? (
+            <div className="flex items-center justify-center w-full h-screen">
+              <CircularProgress style={{ color: '#26343E' }} />
+            </div>
+          ) : (
             <MainRouter
               {...this.props}
               setStorage={this.setStorage}
@@ -124,11 +137,6 @@ class App extends React.Component {
               isAdmin={isAdmin}
               name={name}
             />
-          )}
-          {isAuthenticating && (
-            <div className="flex items-center justify-center w-full h-screen">
-              <CircularProgress style={{ color: '#26343E' }} />
-            </div>
           )}
         </ThemeProvider>
       </div>
@@ -142,4 +150,5 @@ export default (process.env.NODE_ENV === 'development'
 App.propTypes = {
   history: ReactRouterPropTypes.history,
   classes: PropTypes.any,
+  location: ReactRouterPropTypes.location,
 };
