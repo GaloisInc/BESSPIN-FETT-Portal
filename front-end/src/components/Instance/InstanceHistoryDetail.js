@@ -67,7 +67,7 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
         <p className="text-base text-200-gray">{environment.FPGAIp}</p>
       </div>
       <div className="flex flex-row items-center justify-end py-2 my-10 bg-blue-600">
-        {/* <button
+        <button
           className={`w-48 px-2 py-1 mr-10 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded ${
             isLoading || isDisabled || isResetDisabled ? 'opacity-50 cursor-not-allowed' : ''
           } ${
@@ -80,7 +80,7 @@ const InstanceDetail = ({ environment, fetchEnvironments }) => {
           disabled={isLoading || isResetDisabled || isDisabled || environment.Status !== 'running'}
         >
           {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Reset Target'}
-        </button> */}
+        </button>
         <button
           className={`w-48 px-2 py-1 mr-10 text-sm font-medium text-blue-700 uppercase bg-gray-200 rounded ${
             isLoading || isDisabled ? 'opacity-50 cursor-not-allowed' : ''

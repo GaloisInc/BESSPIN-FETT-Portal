@@ -50,9 +50,9 @@ export default function AdminDash() {
             type.Variant
           }`}</p>
         </div>
-        <div className="flex flex-row">
-          <p className="text-base text-gray-200 pr-16">{type.Count}</p>
-          {/* <p className="text-base text-gray-200 pr-8">({type.ResetCounts})</p> */}
+        <div className="flex flex-row justify-between pr-8 w-1/6">
+          <p className="text-base text-gray-200">{type.Count}</p>
+          <p className="text-base text-gray-200">({type.ResetCounts})</p>
         </div>
       </button>
     ));
@@ -89,28 +89,28 @@ export default function AdminDash() {
                 <div className="w-full ml-8 mr-8 ">
                   <p className="text-base text-teal-500 uppercase">Launches</p>
                 </div>
-                <p className="text-base pr-16 text-gray-200">{metrics && metrics.spinups}</p>
+                <p className="text-base pr-8 text-gray-200">{metrics && metrics.spinups}</p>
               </div>
               <div className="flex flex-row py-2 bg-blue-600">
                 <div className="w-full ml-8 mr-8 ">
                   <p className="text-base text-teal-500 uppercase">Terminations</p>
                 </div>
-                <p className="text-base pr-16 text-gray-200">{metrics && metrics.terminationsTotal}</p>
+                <p className="text-base pr-8 text-gray-200">{metrics && metrics.terminationsTotal}</p>
               </div>
               <div className="flex flex-row py-2 bg-blue-700">
                 <div className="w-full ml-8 mr-8 ">
                   <p className="text-base text-teal-500 uppercase">Errors Launching</p>
                 </div>
-                <p className="text-base pr-16 text-gray-200">{metrics && metrics.spinupErrorsTotal}</p>
+                <p className="text-base pr-8 text-gray-200">{metrics && metrics.spinupErrorsTotal}</p>
               </div>
               <div className="flex flex-row py-2 bg-blue-600">
                 <div className="w-full ml-8 mr-8 ">
-                  <p className="text-base text-teal-500 uppercase">Launches By Type</p>
-                  {/* <p className="text-base text-teal-500 uppercase">Launches By Type (Resets By Type) </p> */}
+                  {/* <p className="text-base text-teal-500 uppercase">Launches By Type</p> */}
+                  <p className="text-base text-teal-500 uppercase">Launches By Type (Resets By Type) </p>
                 </div>
               </div>
               <div>{spinupsByType}</div>
-              <p className="text-xs pr-16 pl-4  pb-4 text-gray-500">{`* Data include activity since ${moment(
+              <p className="text-xs pr-8 pl-4  pb-4 text-gray-500">{`* Data include activity since ${moment(
                 '07-15-20 10:00:00 PDT'
               ).format('l, LT')} and do not include test profile activity`}</p>
               <div className=" flex flex-row py-2 px-4 bg-blue-900">
@@ -120,7 +120,7 @@ export default function AdminDash() {
                 <div className="w-full ml-8 mr-8 ">
                   <p className="text-base text-teal-500 uppercase">F1 Running Hours **</p>
                 </div>
-                <p className="text-base pr-16 text-gray-200">
+                <p className="text-base pr-8 text-gray-200">
                   {metrics && metrics.f1Hours && metrics.f1Hours.hoursTotal.toFixed(2)}
                 </p>
               </div>
@@ -128,7 +128,7 @@ export default function AdminDash() {
                 <div className="w-full ml-8 mr-8 ">
                   <p className="text-base text-teal-500 uppercase">F1 Running Hours (MTD)**</p>
                 </div>
-                <p className="text-base pr-16 text-gray-200">
+                <p className="text-base pr-8 text-gray-200">
                   {metrics && metrics.monthlyHours && metrics.monthlyHours.hoursTotal > 0
                     ? metrics.monthlyHours.hoursTotal.toFixed(2)
                     : 'N/A'}
@@ -138,7 +138,7 @@ export default function AdminDash() {
                 <div className="w-full ml-8 mr-8 ">
                   <p className="text-base text-teal-500 uppercase">Account Costs ***</p>
                 </div>
-                <p className="text-base pr-16 text-gray-200">
+                <p className="text-base pr-8 text-gray-200">
                   {metrics && metrics.costData && metrics.costData.costTotal.toFixed(2)}
                 </p>
               </div>
@@ -146,13 +146,13 @@ export default function AdminDash() {
                 <div className="w-full ml-8 mr-8 ">
                   <p className="text-base text-teal-500 uppercase">Account Costs (MTD)***</p>
                 </div>
-                <p className="text-base pr-16 text-gray-200">
+                <p className="text-base pr-8 text-gray-200">
                   {metrics && metrics.monthlyCosts && metrics.monthlyCosts.costTotal > 0
                     ? metrics.monthlyCosts.costTotal.toFixed(2)
                     : 'N/A'}
                 </p>
               </div>
-              <p className="text-xs pr-16 pl-4  pb-2 text-gray-500">
+              <p className="text-xs pr-8 pl-4  pb-2 text-gray-500">
                 {metrics &&
                   metrics.f1Hours &&
                   `** Available data ranges from ${moment('07-15-20 10:00:00 PDT').format('l, LT')} and ${moment(
@@ -161,7 +161,7 @@ export default function AdminDash() {
                     'l, LT'
                   )}. They include hours from all f1 instances (i.e., researchers, developers and infrastructure) `}
               </p>
-              <p className="text-xs pr-16 pl-4  pb-2 text-gray-500">
+              <p className="text-xs pr-8 pl-4  pb-2 text-gray-500">
                 {metrics &&
                   metrics.costData &&
                   `*** Available data ranges from ${moment('07-15-20 10:00:00 PDT').format('l, LT')} and ${moment(
