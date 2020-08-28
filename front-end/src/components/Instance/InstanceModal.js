@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import close from '../../assets/close.svg';
 import InstanceDetail from './InstanceDetail';
 
-const InstanceModal = ({ handleClose, modalData, cardHeight, fetchEnvironments }) => {
+const InstanceModal = React.forwardRef(({ handleClose, modalData, cardHeight, fetchEnvironments }, ref) => {
   console.log(modalData);
   const mappedData = modalData.map((env, index) => (
     <InstanceDetail
@@ -18,8 +18,9 @@ const InstanceModal = ({ handleClose, modalData, cardHeight, fetchEnvironments }
   console.log(cardHeight);
   return (
     <div
-      className="absolute text-4xl text-gray-200 bg-blue-600 "
+      className="absolute text-4xl text-gray-200 bg-blue-600"
       style={{ width: '800px', top: '30%', left: '50%', marginLeft: '-400px', maxHeight: cardHeight + 50 }}
+      ref={ref}
     >
       <div className="flex flex-row items-center justify-between p-4 ">
         <h5 className="uppercase">{username}</h5>
@@ -35,7 +36,7 @@ const InstanceModal = ({ handleClose, modalData, cardHeight, fetchEnvironments }
       <div />
     </div>
   );
-};
+});
 
 export default InstanceModal;
 
