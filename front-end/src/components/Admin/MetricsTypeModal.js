@@ -2,11 +2,12 @@
 /* eslint-disable jsx-a11y/label-has-for */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { Modal } from '@material-ui/core';
 import close from '../../assets/close.svg';
 import { getMetricsByType } from '../../services/api/metrics';
 import Spinner from '../Spinner';
 
-const MetricsTypeModal = ({ handleClose, configuration, cardHeight }) => {
+const MetricsTypeModal = ({ handleClose, configuration, cardHeight, open }) => {
   const handleScroll = e => e.target.classList.add('fettScroll');
   const [isLoading, setIsLoading] = useState(false);
   const [metricsByType, setmetricsByType] = useState([]);
@@ -36,27 +37,29 @@ const MetricsTypeModal = ({ handleClose, configuration, cardHeight }) => {
   ));
 
   return (
-    <div
-      className="absolute text-4xl text-gray-200 bg-blue-600 overflow-y-scroll"
-      style={{
-        width: '400px',
-        maxHeight: `${cardHeight}px`,
-        top: '30%',
-        left: '50%',
-        marginLeft: '-200px',
-      }}
-      onScroll={handleScroll}
-    >
-      <div className="flex flex-row justify-between py-2 pl-8 pr-6 border-b-2 border-blue-800 border-b-solid ">
-        <h6 className="font-medium uppercase">
-          {configuration.Type} | {configuration.OS} | {configuration.Processor} | {configuration.Variant}
-        </h6>
-        <button type="button" onClick={handleClose} className="focus:outline-none">
-          <img src={close} alt="" />
-        </button>
+    <Modal open={open} onClose={handleClose}>
+      <div
+        className="absolute text-4xl text-gray-200 bg-blue-600 overflow-y-scroll"
+        style={{
+          width: '400px',
+          maxHeight: `${cardHeight}px`,
+          top: '30%',
+          left: '50%',
+          marginLeft: '-200px',
+        }}
+        onScroll={handleScroll}
+      >
+        <div className="flex flex-row justify-between py-2 pl-8 pr-6 border-b-2 border-blue-800 border-b-solid ">
+          <h6 className="font-medium uppercase">
+            {configuration.Type} | {configuration.OS} | {configuration.Processor} | {configuration.Variant}
+          </h6>
+          <button type="button" onClick={handleClose} className="focus:outline-none">
+            <img src={close} alt="" />
+          </button>
+        </div>
+        {isLoading ? <Spinner /> : countsByUser}
       </div>
-      {isLoading ? <Spinner /> : countsByUser}
-    </div>
+    </Modal>
   );
 };
 
@@ -66,4 +69,5 @@ MetricsTypeModal.propTypes = {
   cardHeight: PropTypes.number,
   handleClose: PropTypes.func,
   configuration: PropTypes.object,
+  open: PropTypes.bool,
 };

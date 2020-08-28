@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
-import { Modal, Paper } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
 import moment from 'moment';
 import search from '../../assets/search.svg';
 import settings from '../../assets/settings.svg';
@@ -386,15 +386,14 @@ export default function InstanceManagement() {
           <p className="text-xs text-gray-500">Last Updated: {updateTime}</p>
         </div>
       </div>
-      <Modal open={open} onClose={handleClose}>
-        <InstanceModal
-          cardHeight={height - 400}
-          handleClose={handleClose}
-          isModalLoading={isModalLoading}
-          modalData={modalData}
-          fetchEnvironments={fetchEnvironments}
-        />
-      </Modal>
+      <InstanceModal
+        cardHeight={height - 400}
+        handleClose={handleClose}
+        isModalLoading={isModalLoading}
+        modalData={modalData}
+        fetchEnvironments={fetchEnvironments}
+        open={open}
+      />
     </>
   );
 }
