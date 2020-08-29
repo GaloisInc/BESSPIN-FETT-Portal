@@ -18,6 +18,6 @@ return(
 export default Navigation;
 
 Navigation.propTypes = {
-  update: PropTypes.function,
+  update: PropTypes.func,
   setNav: PropTypes.string,
 };
