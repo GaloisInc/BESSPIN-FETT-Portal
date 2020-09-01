@@ -16,7 +16,7 @@ const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => 
   const { height } = useWindowDimensions();
 
   useEffect(() => {
-    fetchUsers();
+    // fetchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 

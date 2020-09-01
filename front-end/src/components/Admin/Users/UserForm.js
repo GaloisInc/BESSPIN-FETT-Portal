@@ -21,10 +21,8 @@ const UserForm = ({ fetchUsers }) => {
     event.preventDefault();
     setIsLoading(true);
     try {
-      const response = await createAdminUser(email);
-      console.log(response);
+      await createAdminUser(email);
       setEmail('');
-      fetchUsers();
       setIsError(false);
       setError('');
       setIsLoading(false);
@@ -36,6 +34,7 @@ const UserForm = ({ fetchUsers }) => {
       // }
       setIsLoading(false);
     }
+    setTimeout(() => fetchUsers(), 1000);
   };
 
   const handleCSVDownload = () => {
