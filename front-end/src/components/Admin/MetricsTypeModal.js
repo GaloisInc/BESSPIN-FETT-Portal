@@ -39,7 +39,7 @@ const MetricsTypeModal = ({ handleClose, configuration, cardHeight, open }) => {
   return (
     <Modal open={open} onClose={handleClose}>
       <div
-        className="absolute text-4xl text-gray-200 bg-blue-600 overflow-y-scroll"
+        className="absolute text-4xl text-gray-200 bg-blue-600 overflow-y-scroll focus:outline-none"
         style={{
           width: '400px',
           maxHeight: `${cardHeight}px`,

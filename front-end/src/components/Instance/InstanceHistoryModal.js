@@ -7,7 +7,7 @@ import InstanceHistoryDetail from './InstanceHistoryDetail';
 const InstanceHistoryModal = ({ handleClose, modalData, fetchEnvironments, open }) => (
   <Modal open={open} onClose={handleClose}>
     <div
-      className="absolute text-4xl text-gray-200 bg-blue-600"
+      className="absolute text-4xl text-gray-200 bg-blue-600 focus:outline-none"
       style={{ width: '800px', top: '30%', left: '50%', marginLeft: '-400px' }}
     >
       <div className="flex flex-row items-center justify-between p-2">
