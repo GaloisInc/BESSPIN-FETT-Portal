@@ -167,8 +167,28 @@ export default function Learn() {
                   <li>
                     Reintroduced kernel vulnerabilities (known to be exploitable on a conventional RISC-V kernel):{' '}
                     <ul className="pl-8 list-disc list-inside">
-                      <li>FreeBSD-SA-18:13.nfs /</li>
-                      <li>FreeBSD-SA-09:06.ktimer</li>
+                      <li>
+                        {' '}
+                        <a
+                          href="https://www.freebsd.org/security/advisories/FreeBSD-SA-18:13.nfs.asc"
+                          target="_blank"
+                          className="text-teal-400 underline"
+                          rel="noopener noreferrer"
+                        >
+                          FreeBSD-SA-18:13.nfs
+                        </a>
+                      </li>
+                      <li>
+                        {' '}
+                        <a
+                          href="https://www.freebsd.org/security/advisories/FreeBSD-SA-09%3A06.ktimer.asc"
+                          target="_blank"
+                          className="text-teal-400 underline"
+                          rel="noopener noreferrer"
+                        >
+                          FreeBSD-SA-09:06.ktimer
+                        </a>
+                      </li>
                     </ul>
                   </li>
                 </ul>
