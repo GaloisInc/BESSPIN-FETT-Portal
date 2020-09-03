@@ -55,8 +55,11 @@ const getParams = async name =>
     });
 
 const getUserData = (f1Config, iName) => {
+  const staging = false;
   const devGitPull =
-    process.env.CURRENT_STAGE && process.env.CURRENT_STAGE === 'develop'
+    process.env.CURRENT_STAGE &&
+    process.env.CURRENT_STAGE === 'develop' &&
+    !staging
       ? `
   cd /home/centos
   echo "Retrieving SSH key..."
