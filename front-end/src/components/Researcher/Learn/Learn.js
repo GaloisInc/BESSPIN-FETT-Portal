@@ -96,7 +96,7 @@ export default function Learn() {
 
       <div className="pt-6 ">
         <h4 className="font-normal text-gray-200">SSITH Processors</h4>
-        <h6 className="pt-2 font-normal leading-tight text-gray-200">SRI/Cambridge Release 1 ("default variant")</h6>
+        <h6 className="pt-2 font-normal leading-tight text-gray-200">SRI/Cambridge</h6>
         <ul className="pl-4 list-disc font-normal list-inside text-gray-200 text-sm">
           <li>
             CPU: Bluespec P2 w/CHERI extension
@@ -113,7 +113,10 @@ export default function Learn() {
                 </a>
                 {` (CHERI-extended FreeBSD)`}
                 <ul className="pl-8 list-disc list-inside">
-                  <li>Contains a pure capability userspace and a hybrid capability kernel</li>
+                  <li>
+                    Contains a pure capability userspace and either a hybrid capability kernel or a pure capability
+                    kernel (see Variants below)
+                  </li>
                 </ul>
               </li>
               <li>
@@ -133,82 +136,80 @@ export default function Learn() {
             </ul>
           </li>
           <li>
-            FAQ:
-            <ul className="pl-8 list-disc list-inside">
-              <li>
-                You can reboot this instance type with one of the following procedures:
-                <ul className="pl-8 list-disc list-inside">
-                  <li>Through the ssh connection: Invoke su, then invoke reboot. [Recommended]</li>
-                  <li>
-                    Through the piped UART on port 8278, Ctrl-a + r may also be used for a hard reset. [Advised to use
-                    only when the target is non-responsive.]
-                  </li>
-                </ul>
-              </li>
-            </ul>
-          </li>
-        </ul>
-        <h6 className="pt-2 font-normal leading-tight text-gray-200">SRI/Cambridge Release 2 ("purecap variant")</h6>
-        <ul className="pl-4 list-disc font-normal list-inside text-gray-200 text-sm">
-          <li>
-            CPU: Bluespec P2 w/CHERI extension
+            Variants
             <ul className="pl-6 list-disc list-inside">
               <li>
-                OS:{' '}
-                <a
-                  href="https://www.cl.cam.ac.uk/research/security/ctsrd/cheri/cheribsd.html"
-                  target="_blank"
-                  className="text-teal-400 underline"
-                  rel="noopener noreferrer"
-                >
-                  CheriBSD
-                </a>
-                {` (CHERI-extended FreeBSD)`}
+                Release 1 ("default variant")
                 <ul className="pl-8 list-disc list-inside">
                   <li>
-                    Enhanced with a pure-capability kernel providing protection from many spatial memory-safety issues
+                    OS:{' '}
+                    <ul className="pl-8 list-disc list-inside">
+                      <li>Contains a hybrid capability kernel</li>
+                    </ul>
                   </li>
                 </ul>
               </li>
               <li>
-                Applications:
+                Release 2 ("purecap variant")
                 <ul className="pl-8 list-disc list-inside">
-                  <li>Web Server (nginx v.1.13.12)</li>
-                  <li>Database (sqlite v.3.22.0)</li>
-                  <li>SSH Daemon (OpenSSH 7.3)</li>
-                  <li>FETT-Voting voter registration application</li>
-                  <li>Additional applications modified to incorporate CHERI protections</li>
-                  <li>Researcher-provided and compiled vulnerable applications</li>
-                  <li>NFS v4 server exporting /</li>
+                  <li>
+                    OS:{' '}
+                    <ul className="pl-8 list-disc list-inside">
+                      <li>Contains a pure capability kernel</li>
+                    </ul>
+                  </li>
+                  <li>
+                    Additional applications:{' '}
+                    <ul className="pl-8 list-disc list-inside">
+                      <li>NFS v4 server exporting /</li>
+                    </ul>
+                  </li>
+                  <li>
+                    Reintroduced kernel vulnerabilities (known to be exploitable on a conventional RISC-V kernel):{' '}
+                    <ul className="pl-8 list-disc list-inside">
+                      <li>
+                        {' '}
+                        <a
+                          href="https://www.freebsd.org/security/advisories/FreeBSD-SA-18:13.nfs.asc"
+                          target="_blank"
+                          className="text-teal-400 underline"
+                          rel="noopener noreferrer"
+                        >
+                          FreeBSD-SA-18:13.nfs
+                        </a>
+                      </li>
+                      <li>
+                        {' '}
+                        <a
+                          href="https://www.freebsd.org/security/advisories/FreeBSD-SA-09%3A06.ktimer.asc"
+                          target="_blank"
+                          className="text-teal-400 underline"
+                          rel="noopener noreferrer"
+                        >
+                          FreeBSD-SA-09:06.ktimer
+                        </a>
+                      </li>
+                    </ul>
+                  </li>
                 </ul>
               </li>
               <li>
-                Reintroduced kernel vulnerabilities (known to be exploitable on a conventional RISC-V kernel)::
+                Release 3 ("temporal variant")
                 <ul className="pl-8 list-disc list-inside">
                   <li>
-                    <a
-                      href="https://www.freebsd.org/security/advisories/FreeBSD-SA-18:13.nfs.asc"
-                      target="_blank"
-                      className="text-teal-400 underline"
-                      rel="noopener noreferrer"
-                    >
-                      FreeBSD-SA-18:13.nfs
-                    </a>
+                    OS:{' '}
+                    <ul className="pl-8 list-disc list-inside">
+                      <li>Contains a hybrid capability kernel</li>
+                      <li>Adds userspace heap temporal safety</li>
+                    </ul>
                   </li>
                   <li>
-                    <a
-                      href="https://www.freebsd.org/security/advisories/FreeBSD-SA-09%3A06.ktimer.asc"
-                      target="_blank"
-                      className="text-teal-400 underline"
-                      rel="noopener noreferrer"
-                    >
-                      FreeBSD-SA-09:06.ktimer
-                    </a>
+                    Additional applications:{' '}
+                    <ul className="pl-8 list-disc list-inside">
+                      <li>NFS v4 server exporting /</li>
+                    </ul>
                   </li>
                 </ul>
-              </li>
-              <li>
-                Security researchers are given access to a root shell to interact with custom applications via "su -"
               </li>
             </ul>
           </li>
