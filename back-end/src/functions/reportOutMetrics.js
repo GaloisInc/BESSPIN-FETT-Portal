@@ -62,6 +62,11 @@ const getMonthlyCosts = () =>
     };
     console.log('calling cost explorer', ceParams);
 
+    if (endDate === monthStart) {
+      const result = { costTotal: 0 };
+      resolve(result);
+    }
+
     costexplorer.getCostAndUsage(ceParams, function(err, data) {
       if (err) console.log(err, err.stack);
       // an error occurred
@@ -166,6 +171,11 @@ const getMonthlyHours = () =>
         Metrics: ['UsageQuantity'],
       };
       console.log('calling cost explorer monthly hours', ceParams);
+
+      if (endDate === monthStart) {
+        const result = { hoursTotal: 0 };
+        resolve(result);
+      }
 
       costexplorer.getCostAndUsage(ceParams, function(err, data) {
         if (err) console.log(err, err.stack);
