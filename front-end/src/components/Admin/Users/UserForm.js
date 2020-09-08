@@ -79,7 +79,6 @@ const UserForm = ({ fetchUsers }) => {
           onChange={event => setTeamNumber(event.target.value)}
           className="w-full p-1 pl-4 text-gray-200 bg-blue-600 border border-gray-200 border-solid rounded"
           autoComplete="off"
-          auto
         />
         <button
           type="submit"
@@ -112,7 +111,7 @@ const UserForm = ({ fetchUsers }) => {
             isLoading ? 'opacity-50 cursor-not-allowed' : ''
           }`}
           type="submit"
-          disable={isLoading}
+          disabled={isLoading}
           onClick={event => handleCreateUser(event)}
         >
           {isLoading ? <CircularProgress size={12} style={{ color: '#F4F4F4' }} /> : 'Send Invite'}

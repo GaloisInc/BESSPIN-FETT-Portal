@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import MaterialTable from 'material-table';
-import { Paper, Modal } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
 import moment from 'moment';
 import settings from '../../assets/settings.svg';
 import rocketDark from '../../assets/rocketDark.svg';
@@ -179,14 +179,13 @@ const InstanceHistory = params => {
           Provisioned instances are limited to two (2), and automatic instance shutdown will occur after an instance has
           been active for eight (8) hours.
         </p>
-        <Modal open={open} onClose={handleClose}>
-          <InstanceHistoryModal
-            handleClose={handleClose}
-            isModalLoading={isModalLoading}
-            modalData={modalData}
-            fetchEnvironments={fetchEnvironments}
-          />
-        </Modal>
+        <InstanceHistoryModal
+          handleClose={handleClose}
+          isModalLoading={isModalLoading}
+          modalData={modalData}
+          fetchEnvironments={fetchEnvironments}
+          open={open}
+        />
       </div>
     </>
   );
