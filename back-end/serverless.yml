@@ -119,7 +119,7 @@ custom:
     develop: arn:aws:cognito-idp:us-west-2:363527286999:userpool/us-west-2_TZpbYY6KB
     master: arn:aws:cognito-idp:us-west-2:065510690417:userpool/us-west-2_lbLI2FsNd
   splitStacks:
-    perFunction: false
+    perFunction: true
     perType: true
     perGroupFunction: false
     force: true
@@ -360,12 +360,12 @@ functions:
         authorizer:
           name: authorizer
           arn: ${self:custom.authorizerPool.${self:provider.stage}}
-  disableUser:
-    handler: src/functions/disableUser.handler
+  updateUser:
+    handler: src/functions/updateUser.handler
     timeout: 60
     events:
     - http:
-        path: disableUser
+        path: updateUser
         method: put
         cors: true
         authorizer:
