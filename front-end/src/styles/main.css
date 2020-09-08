@@ -11006,6 +11006,10 @@ th.MuiTableCell-root {
   text-transform: uppercase;
 }
 
+code {
+  font-size: 80%;
+}
+
 @media (min-width: 640px) {
   .sm\:space-y-0 > :not(template) ~ :not(template) {
     --space-y-reverse: 0;
