@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import MaterialTable from 'material-table';
-import { Paper, Modal } from '@material-ui/core';
+import { Paper } from '@material-ui/core';
 import PropTypes from 'prop-types';
 import search from '../../../assets/search.svg';
 import chevronRight from '../../../assets/chevronRight.svg';
@@ -12,11 +12,11 @@ import useWindowDimensions from '../../../services/useDimensions';
 const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => {
   const [searchTerm, setSearchTerm] = useState('');
   const [open, setOpen] = React.useState(false);
-  const [selectedUser, setSelectedUser] = useState('');
+  const [selectedUser, setSelectedUser] = useState({});
   const { height } = useWindowDimensions();
 
   useEffect(() => {
-    fetchUsers();
+    // fetchUsers();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -114,9 +114,7 @@ const ManageUsers = ({ users, fetchUsers, filteredUsers, setFilteredUsers }) => 
           data={filteredUsers}
         />
       </div>
-      <Modal open={open} onClose={handleClose}>
-        <UserModal handleClose={handleClose} selectedUser={selectedUser} fetchUsers={fetchUsers} />
-      </Modal>
+      <UserModal handleClose={handleClose} selectedUser={selectedUser} fetchUsers={fetchUsers} open={open} />
     </div>
   );
 };

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import moment from 'moment';
-import { Modal } from '@material-ui/core';
-import InstanceManagement from '../Instance/InstanceManagement';
 import { getMetrics } from '../../services/api/metrics';
 import Spinner from '../Spinner';
 import MetricsTypeModal from './MetricsTypeModal';
@@ -11,7 +9,7 @@ export default function AdminDash() {
   const [open, setOpen] = React.useState(false);
   const [metrics, setMetrics] = useState({});
   const [isLoading, setIsLoading] = useState(false);
-  const [modalConfiguration, setModalConfiguration] = useState('');
+  const [modalConfiguration, setModalConfiguration] = useState({});
 
   const { height } = useWindowDimensions();
 
@@ -172,9 +170,12 @@ export default function AdminDash() {
           )}
         </div>
       </div>
-      <Modal open={open} onClose={handleClose}>
-        <MetricsTypeModal handleClose={handleClose} configuration={modalConfiguration} cardHeight={height - 400} />
-      </Modal>
+      <MetricsTypeModal
+        handleClose={handleClose}
+        configuration={modalConfiguration}
+        cardHeight={height - 400}
+        open={open}
+      />
     </div>
   );
 }
