@@ -6,7 +6,7 @@ import Spinner from  '../../Spinner.js'
 import { getConversations } from '../../../services/api/messages';
 import arrowRight from '../../../assets/arrowRight.svg'
 import search from '../../../assets/search.svg';
-import moment from 'moment';
+import moment from 'moment/min/moment-with-locales';
 import MessagesChat from './MessagesChat';
 import { getTeams } from '../../../services/api/user';
 

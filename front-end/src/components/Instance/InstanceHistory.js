@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 import MaterialTable from 'material-table';
 import { Paper } from '@material-ui/core';
-import moment from 'moment';
+import moment from 'moment/min/moment-with-locales';
 import settings from '../../assets/settings.svg';
 import rocketDark from '../../assets/rocketDark.svg';
 import { getMyEnvironments } from '../../services/api/environment';

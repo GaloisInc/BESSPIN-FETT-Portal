@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import moment from 'moment';
+import moment from 'moment/min/moment-with-locales';
 import { getMetrics } from '../../services/api/metrics';
 import Spinner from '../Spinner';
 import MetricsTypeModal from './MetricsTypeModal';
