@@ -20,9 +20,9 @@ const MetricsTypeModal = ({ handleClose, configuration, cardHeight, open }) => {
 
   useEffect(() => {
     setIsLoading(true);
-    fetchMetricsByType();
+    if (Object.keys(configuration).length > 0) fetchMetricsByType();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [configuration]);
 
   const countsByUser = metricsByType.map((type, index) => (
     <div

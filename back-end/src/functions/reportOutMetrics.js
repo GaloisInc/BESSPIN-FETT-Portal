@@ -214,7 +214,15 @@ exports.handler = async (event, context) => {
     const results = {};
 
     const spinupsTotal = await db.query(
-      `SELECT COUNT(DISTINCT(Id)) AS Spinups FROM Environment WHERE Created > '2020-07-15 10:00 am' AND CreatedBy_FK <> 2`
+      `SELECT 
+      COUNT(IF(u.IsRedTeam = TRUE, 1, NULL)) AS Spinups,
+      COUNT(IF(u.IsRedTeam = FALSE, 1, NULL)) AS NonRedSpinups
+  FROM
+      Environment AS e
+          JOIN
+      User AS u ON e.CreatedBy_FK = u.Id
+  WHERE
+      e.Created > '2020-07-15 10:00 am'`
     );
     console.log(
       `Total number of instances launched since go-live: ${JSON.stringify(
@@ -222,18 +230,28 @@ exports.handler = async (event, context) => {
       )}`
     );
     results.spinups = spinupsTotal[0].Spinups;
+    results.nonRedSpinups = spinupsTotal[0].NonRedSpinups;
 
     const spinupsTotalByType = await db.query(
-      `SELECT e.Configuration_FK, count(Configuration_FK) AS Count, ic.Type, ic.Processor, ic.OS, ic.Variant, SUM(e.ResetCount) As ResetCounts 
-        FROM Environment as e
-          JOIN InstanceConfiguration as ic 
-            ON ic.Id = e.Configuration_Fk
-          JOIN User as u
-            ON u.Id = e.CreatedBy_FK
-        WHERE e.Created > '2020-07-15 10:00 am'
-          AND u.IsRedTeam = true 
-        GROUP BY e.Configuration_FK
-        ORDER BY ic.SortKey ASC;`
+      `SELECT 
+      e.Configuration_FK,
+      COUNT(IF(u.IsRedTeam = true, 1, null)) As Count,
+      COUNT(IF(u.IsRedTeam = false, 1, null)) As NonRedCount,
+      ic.Type,
+      ic.Processor,
+      ic.OS,
+      ic.Variant,
+      SUM(e.ResetCount) AS ResetCounts
+  FROM
+      Environment AS e
+          JOIN
+      InstanceConfiguration AS ic ON ic.Id = e.Configuration_Fk
+          JOIN
+      User AS u ON u.Id = e.CreatedBy_FK
+  WHERE
+      e.Created > '2020-07-15 10:00 am'
+  GROUP BY e.Configuration_FK
+  ORDER BY ic.SortKey ASC;`
     );
     console.log(
       `Total number of instances by type spinning up since go-live: ${JSON.stringify(
@@ -243,7 +261,16 @@ exports.handler = async (event, context) => {
     results.spinupsTotalByType = spinupsTotalByType;
 
     const spinupErrorsTotal = await db.query(
-      `SELECT COUNT(DISTINCT(e.Id)) AS SpinupErrors FROM Environment as e JOIN User as u ON u.Id = e.CreatedBy_FK WHERE e.Created > '2020-07-15 10:00 am' AND e.Status = 'error' AND u.IsRedTeam = true;`
+      `SELECT 
+      COUNT(IF(u.IsRedTeam = TRUE, 1, NULL)) AS SpinupErrors,
+      COUNT(IF(u.IsRedTeam = FALSE, 1, NULL)) AS NonRedSpinupErrors
+  FROM
+      Environment AS e
+          JOIN
+      User AS u ON u.Id = e.CreatedBy_FK
+  WHERE
+      e.Created > '2020-07-15 10:00 am'
+          AND e.Status = 'error'`
     );
     console.log(
       `Total number of instances erred out spinning up since go-live: ${JSON.stringify(
@@ -251,9 +278,20 @@ exports.handler = async (event, context) => {
       )}`
     );
     results.spinupErrorsTotal = spinupErrorsTotal[0].SpinupErrors;
+    results.nonRedSpinupErrorsTotal = spinupErrorsTotal[0].NonRedSpinupErrors;
 
     const terminationsTotal = await db.query(
-      `SELECT COUNT(DISTINCT(e.Id)) AS Terminations FROM Environment as e JOIN User as u ON u.Id = e.CreatedBy_FK WHERE e.Created > '2020-07-15 10:00 am' AND (e.Status = 'terminated' OR e.Status = 'terminating') AND u.IsRedTeam = true;`
+      `SELECT 
+      COUNT(IF(u.IsRedTeam = true, 1, null)) As Terminations,
+      COUNT(IF(u.IsRedTeam = false, 1, null)) As NonRedTerminations
+  FROM
+      Environment AS e
+          JOIN
+      User AS u ON u.Id = e.CreatedBy_FK
+  WHERE
+      e.Created > '2020-07-15 10:00 am'
+          AND (e.Status = 'terminated'
+          OR e.Status = 'terminating')`
     );
     console.log(
       `Total number of instances terminated since go-live: ${JSON.stringify(
@@ -261,6 +299,7 @@ exports.handler = async (event, context) => {
       )}`
     );
     results.terminationsTotal = terminationsTotal[0].Terminations;
+    results.nonRedTerminationsTotal = terminationsTotal[0].NonRedTerminations;
 
     // NOTE: costs and hours are daily and remove the offset from 0:00 to 17:00 UTC on 07/15 when portal went live.
     const costData = await getCosts();
