@@ -1,5 +1,5 @@
 import React from 'react';
-// import moment from 'moment';
+// import moment from 'moment/min/moment-with-locales';
 // import classes from '../../../styles/scrollbar.css';
 // import Spinner from '../../Spinner.js';
 // import { getMyMessages, createMessage } from '../../../services/api/messages';
@@ -12,7 +12,7 @@ export default function Messages() {
   // const [researcherID, setResearcherId] = useState('');
   // const [newMessage, setNewMessage] = useState('');
   // const [isLoading, setIsLoading] = useState(true);
-  const { height } = useWindowDimensions();
+  // const { height } = useWindowDimensions();
 
   // const fetchMessages = async () => {
   //   try {

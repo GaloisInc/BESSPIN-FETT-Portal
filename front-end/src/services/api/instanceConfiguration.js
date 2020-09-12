@@ -1,5 +1,5 @@
 import { Auth, Hub } from 'aws-amplify';
-import moment from 'moment';
+import moment from 'moment/min/moment-with-locales';
 
 const BASE_API = process.env.REACT_APP_BASE_API_URI;
 
