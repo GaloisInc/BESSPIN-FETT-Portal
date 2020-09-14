@@ -118,7 +118,7 @@ export default function AdminDash() {
                 <div>{spinupsByType}</div>
                 <p className="text-xs pr-8 pl-4  pb-4 text-gray-500">{`* Data include activity since ${moment(
                   '07-15-20 10:00:00 PDT'
-                ).format('l, LT')} and do not include test profile activity`}</p>
+                ).format('l, LT')} and include data for red team members`}</p>
                 <div className=" flex flex-row py-2 px-4 bg-blue-900">
                   <p className="text-base text-teal-500 uppercase">AWS Account Data</p>
                 </div>
