@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import moment from 'moment/min/moment-with-locales';
 import { CircularProgress } from '@material-ui/core';
 import { ec2StatusUpdate } from '../../services/launcher';
 import Alert from './Alert';

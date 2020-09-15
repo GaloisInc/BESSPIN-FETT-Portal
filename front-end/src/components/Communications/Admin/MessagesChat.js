@@ -2,7 +2,7 @@
 /* eslint-disable jsx-a11y/label-has-for */
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+import moment from 'moment/min/moment-with-locales';
 import Spinner from '../../Spinner.js';
 import send from '../../../assets/send.svg';
 import { getConversationById, createMessage } from '../../../services/api/messages';
