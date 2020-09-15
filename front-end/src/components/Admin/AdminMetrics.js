@@ -49,9 +49,10 @@ export default function AdminDash() {
             type.Variant
           }`}</p>
         </div>
-        <div className="flex flex-row justify-between pr-8 w-1/6">
+        <div className="flex flex-row justify-between pr-8 w-1/5">
           <p className="text-base text-gray-200">{type.Count}</p>
           <p className="text-base text-gray-200">({type.ResetCounts})</p>
+          <p className="text-base text-gray-200">[{type.NonRedCount}]</p>
         </div>
       </button>
     ));
@@ -79,36 +80,45 @@ export default function AdminDash() {
                   <div className="flex flex-row items-center mr-4" />
                 </div>
                 <div className="flex flex-row py-2 px-4 bg-blue-900">
-                  <p className="text-base text-teal-500 uppercase">Portal Data *</p>
+                  <p className="text-base text-teal-500 uppercase">Portal Data * [non Red Team]</p>
                 </div>
                 <div className="flex flex-row py-2 bg-blue-700">
                   <div className="w-full ml-8 mr-8 ">
                     <p className="text-base text-teal-500 uppercase">Launches</p>
                   </div>
-                  <p className="text-base pr-8 text-gray-200">{metrics && metrics.spinups}</p>
+                  <div className="flex flex-row justify-between pr-8 w-1/5">
+                    <p className="text-base text-gray-200">{metrics && metrics.spinups}</p>
+                    <p className="text-base text-gray-200">[{metrics && metrics.nonRedSpinups}]</p>
+                  </div>
                 </div>
                 <div className="flex flex-row py-2 bg-blue-600">
                   <div className="w-full ml-8 mr-8 ">
                     <p className="text-base text-teal-500 uppercase">Terminations</p>
                   </div>
-                  <p className="text-base pr-8 text-gray-200">{metrics && metrics.terminationsTotal}</p>
+                  <div className="flex flex-row justify-between pr-8 w-1/5">
+                    <p className="text-base  text-gray-200">{metrics && metrics.terminationsTotal}</p>
+                    <p className="text-base  text-gray-200">[{metrics && metrics.nonRedTerminationsTotal}]</p>
+                  </div>
                 </div>
                 <div className="flex flex-row py-2 bg-blue-700">
                   <div className="w-full ml-8 mr-8 ">
                     <p className="text-base text-teal-500 uppercase">Errors Launching</p>
                   </div>
-                  <p className="text-base pr-8 text-gray-200">{metrics && metrics.spinupErrorsTotal}</p>
+                  <div className="flex flex-row justify-between pr-8 w-1/5">
+                    <p className="text-base  text-gray-200">{metrics && metrics.spinupErrorsTotal}</p>
+                    <p className="text-base  text-gray-200">[{metrics && metrics.nonRedSpinupErrorsTotal}]</p>
+                  </div>
                 </div>
                 <div className="flex flex-row py-2 bg-blue-600">
                   <div className="w-full ml-8 mr-8 ">
                     {/* <p className="text-base text-teal-500 uppercase">Launches By Type</p> */}
-                    <p className="text-base text-teal-500 uppercase">Launches By Type (Resets By Type) </p>
+                    <p className="text-base text-teal-500 uppercase">Launches By Type (Resets) [non Red Team]</p>
                   </div>
                 </div>
                 <div>{spinupsByType}</div>
-                <p className="text-xs pr-8 pl-4  pb-4 text-gray-500">{`* Data include activity since ${moment(
+                <p className="text-xs pr-8 pl-4  pb-4 text-gray-500">{`* Data include Red Team activity since ${moment(
                   '07-15-20 10:00:00 PDT'
-                ).format('l, LT')} and do not include test profile activity`}</p>
+                ).format('l, LT')}`}</p>
                 <div className=" flex flex-row py-2 px-4 bg-blue-900">
                   <p className="text-base text-teal-500 uppercase">AWS Account Data</p>
                 </div>
