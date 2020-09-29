@@ -1,7 +1,7 @@
-## FETT AWS Structure
+# FETT AWS Structure
 ![](Architecture-AWSControlTower.png)
 
-##FETT Portal
+# FETT Portal and Researchers Environment
 ![](Architecture-FettPortalResearcherEnvironments.png)
 
 
@@ -31,7 +31,7 @@ On both the front-end and the back-end there are pre-commit hooks installed whic
 
 
 
-## FETT Portal CICD Structure
+# FETT Portal CICD Structure
 ![](Architecture-FettPortalCICD.png)
 
 
