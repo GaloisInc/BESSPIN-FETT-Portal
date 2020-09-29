@@ -1,7 +1,7 @@
 # FETT AWS Structure
 ![](Architecture-AWSControlTower.png)
 
-# FETT Portal and Researchers Environment
+# FETT Portal and Researchers Environment 
 ![](Architecture-FettPortalResearcherEnvironments.png)
 
 
